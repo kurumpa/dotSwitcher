@@ -16,7 +16,10 @@ namespace dotSwitcher
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new SysTrayApp());
+
+            var engine = new Switcher();
+            Application.ApplicationExit += (s, a) => { engine.Dispose(); };
+            Application.Run(new SysTrayApp(engine));
         }
     }
 }

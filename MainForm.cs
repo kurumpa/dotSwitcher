@@ -9,16 +9,18 @@ namespace dotSwitcher
 {
     public class SysTrayApp : Form
     {
+        private Switcher engine;
         private NotifyIcon trayIcon;
         private ContextMenu trayMenu;
         private MenuItem power;
         private bool running = false;
 
-        public SysTrayApp()
+        public SysTrayApp(Switcher engine)
         {
+            this.engine = engine;
             trayMenu = new ContextMenu();
             trayMenu.MenuItems.Add("Exit", OnExit);
-            power = new MenuItem("Turn on", OnPower);
+            power = new MenuItem("", OnPower);
             trayMenu.MenuItems.Add(power);
 
 
@@ -28,33 +30,54 @@ namespace dotSwitcher
 
             trayIcon.ContextMenu = trayMenu;
             trayIcon.Visible = true;
+
+            
         }
 
         protected override void OnLoad(EventArgs e)
         {
             Visible = false;
             ShowInTaskbar = false;
-            trayIcon.ShowBalloonTip(2000, "dotSwitcher", "dotSwitcher started", ToolTipIcon.None);
 
+            engine.Error += OnEngineError;
+            engine.Start();
+            UpdateMenu();
             base.OnLoad(e);
+        }
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            engine.Error -= OnEngineError;
+            base.OnClosing(e);
+        }
+
+        private void OnEngineError(object sender, SwitcherErrorArgs args)
+        {
+            var ex = args.Error;
+            trayIcon.ShowBalloonTip(2000, "dotSwitcher error", ex.ToString(), ToolTipIcon.None);
         }
 
         private void OnExit(object sender, EventArgs e)
         {
             Application.Exit();
         }
-        private void OnPower(object sender, EventArgs e)
+
+        private void UpdateMenu()
         {
-            if (running)
+            if (engine.IsStarted())
             {
-                running = false;
-                power.Text = "Turn on";
+                power.Text = "Turn off";
             }
             else
             {
-                running = true;
-                power.Text = "Turn off";
+                power.Text = "Turn on";
             }
+        }
+        private void OnPower(object sender, EventArgs e)
+        {
+            if (engine.IsStarted()) { engine.Stop(); }
+            else { engine.Start(); }
+            UpdateMenu();
         }
 
         protected override void Dispose(bool isDisposing)
