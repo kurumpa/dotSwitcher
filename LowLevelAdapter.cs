@@ -57,9 +57,13 @@ namespace dotSwitcher
 
         #region consts
         private const int WH_KEYBOARD_LL = 13;
+        private const int WH_MOUSE_LL = 14;
         private const int WM_KEYDOWN = 0x0100;
         private const int WM_KEYUP = 0x0100;
         private const int WM_SYSKEYDOWN = 0x0104;
+
+        private const int WM_LBUTTONDOWN = 0x0201;
+        private const int WM_RBUTTONDOWN = 0x0204;
 
         private const int INPUT_KEYBOARD = 1;
         private const uint KEYEVENTF_KEYUP = 0x0002;
@@ -74,8 +78,21 @@ namespace dotSwitcher
         private const uint EM_REPLACESEL = 0xC2;
         #endregion
 
-        private static HookProc callbackDelegate;
+        private static HookProc kbdCallbackDelegate;
+        private static HookProc mouseCallbackDelegate;
 
+        public static HookId SetMouseHook(Action<HookEventData> cb)
+        {
+            var process = Process.GetCurrentProcess();
+            var module = process.MainModule;
+            var hModule = GetModuleHandle(module.ModuleName);
+            var hookResult = IntPtr.Zero;
+            mouseCallbackDelegate = (int code, IntPtr wParam, IntPtr lParam) =>
+                    ProcessMouse(hookResult, code, wParam, lParam, cb);
+
+            hookResult = SetWindowsHookEx(WH_MOUSE_LL, mouseCallbackDelegate, hModule, 0);
+            return new HookId { HookResult = hookResult };
+        }
         public static HookId SetKeyboardHook(Action<HookEventData> cb)
         {
             var process = Process.GetCurrentProcess();
@@ -83,19 +100,24 @@ namespace dotSwitcher
             var hModule = GetModuleHandle(module.ModuleName);
             var hookResult = IntPtr.Zero;
 
-            callbackDelegate = (int code, IntPtr wParam, IntPtr lParam) =>
+            kbdCallbackDelegate = (int code, IntPtr wParam, IntPtr lParam) =>
                     ProcessKeyPress(hookResult, code, wParam, lParam, cb);
 
-            hookResult = SetWindowsHookEx(WH_KEYBOARD_LL, callbackDelegate, hModule, 0);
+            hookResult = SetWindowsHookEx(WH_KEYBOARD_LL, kbdCallbackDelegate, hModule, 0);
             return new HookId { HookResult = hookResult };
         }
 
         public static void ReleaseKeyboardHook(HookId id)
         {
             UnhookWindowsHookEx(id.HookResult);
-            callbackDelegate = null;
+            kbdCallbackDelegate = null;
         }
 
+        public static void ReleaseMouseHook(HookId id)
+        {
+            UnhookWindowsHookEx(id.HookResult);
+            mouseCallbackDelegate = null;
+        }
 
         public static void SetNextKeyboardLayout()
         {
@@ -104,22 +126,46 @@ namespace dotSwitcher
 
         private static IntPtr ProcessKeyPress(IntPtr hookResult, int nCode, IntPtr wParam, IntPtr lParam, Action<HookEventData> cb)
         {
-            if (nCode >= 0)
+            try
             {
-                switch (wParam.ToInt32())
+                if (nCode >= 0)
                 {
-                    case WM_KEYDOWN:
-                    case WM_SYSKEYDOWN:
-                        var ctrl = (GetKeyState(VirtualKeyStates.VK_CONTROL) & 0x8000) != 0;
-                        var alt = (GetKeyState(VirtualKeyStates.VK_MENU) & 0x8000) != 0;
-                        var shift = (GetKeyState(VirtualKeyStates.VK_SHIFT) & 0x8000) != 0;
+                    switch (wParam.ToInt32())
+                    {
+                        case WM_KEYDOWN:
+                        case WM_SYSKEYDOWN:
+                            var ctrl = (GetKeyState(VirtualKeyStates.VK_CONTROL) & 0x8000) != 0;
+                            var alt = (GetKeyState(VirtualKeyStates.VK_MENU) & 0x8000) != 0;
+                            var shift = (GetKeyState(VirtualKeyStates.VK_SHIFT) & 0x8000) != 0;
 
-                        var keyData = (KeyData)Marshal.PtrToStructure(lParam, typeof(KeyData));
-                        cb(new HookEventData(keyData, ctrl, alt, shift));
-                        break;
+                            var keyData = (KeyData)Marshal.PtrToStructure(lParam, typeof(KeyData));
+                            cb(new HookEventData(keyData, ctrl, alt, shift));
+                            break;
 
+                    }
                 }
             }
+            catch { }
+            return CallNextHookEx(hookResult, nCode, wParam, lParam);
+        }
+
+        private static IntPtr ProcessMouse(IntPtr hookResult, int nCode, IntPtr wParam, IntPtr lParam, Action<HookEventData> cb)
+        {
+            try
+            {
+                if (nCode >= 0)
+                {
+                    switch (wParam.ToInt32())
+                    {
+                        case WM_LBUTTONDOWN:
+                        case WM_RBUTTONDOWN:
+                            cb(new DummyHookEventData());
+                            break;
+
+                    }
+                }
+            }
+            catch { }
             return CallNextHookEx(hookResult, nCode, wParam, lParam);
         }
 

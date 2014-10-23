@@ -42,6 +42,19 @@ namespace dotSwitcher
         }
     }
 
+    public class DummyHookEventData : HookEventData
+    {
+        public new KeyData KeyData { get { WrongUsage(); return new KeyData(); } private set { } }
+        public new bool CtrlIsPressed { get { WrongUsage(); return false; } private set { } }
+        public new bool AltIsPressed { get { WrongUsage(); return false; } private set { } }
+        public new bool ShiftIsPressed { get { WrongUsage(); return false; } private set { } }
+        public DummyHookEventData() : base(new KeyData(), false, false, false) { }
+        public void WrongUsage()
+        {
+            throw new NotImplementedException("This is a DummyHookEventData");
+        }
+    }
+
     public class HookId
     {
         public IntPtr HookResult { get; set; }
@@ -66,6 +79,7 @@ namespace dotSwitcher
         public HARDWAREINPUT Hardware;
     }
 
+    #pragma warning disable 649
     struct MOUSEINPUT
     {
         public Int32 X;
@@ -91,5 +105,6 @@ namespace dotSwitcher
         public UInt16 ParamL;
         public UInt16 ParamH;
     }
+    #pragma warning restore 649
 
 }

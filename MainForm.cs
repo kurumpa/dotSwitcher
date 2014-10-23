@@ -13,7 +13,6 @@ namespace dotSwitcher
         private NotifyIcon trayIcon;
         private ContextMenu trayMenu;
         private MenuItem power;
-        private bool running = false;
 
         public SysTrayApp(Switcher engine)
         {

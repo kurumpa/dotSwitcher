@@ -12,6 +12,7 @@ namespace dotSwitcher
     {
         public event EventHandler<SwitcherErrorArgs> Error;
         private HookId keyboardHook = HookId.Empty;
+        private HookId mouseHook = HookId.Empty;
         private List<HookEventData> currentWord = new List<HookEventData>();
 
         public bool IsStarted()
@@ -22,11 +23,14 @@ namespace dotSwitcher
         {
             if (IsStarted()) { return; }
             keyboardHook = LowLevelAdapter.SetKeyboardHook(ProcessKeyPress);
+            mouseHook = LowLevelAdapter.SetMouseHook(ProcessMousePress);
         }
         public void Stop()
         {
             if (!IsStarted()) { return; }
             LowLevelAdapter.ReleaseKeyboardHook(keyboardHook);
+            LowLevelAdapter.ReleaseKeyboardHook(mouseHook);
+            mouseHook = HookId.Empty;
             keyboardHook = HookId.Empty;
         }
 
@@ -42,6 +46,18 @@ namespace dotSwitcher
             }
         }
 
+        private void ProcessMousePress(HookEventData evtData)
+        {
+            try
+            {
+                BeginNewWord();
+            }
+            catch (Exception ex)
+            {
+                OnError(ex);
+            }
+        }
+
         private void OnKeyPress(HookEventData evtData)
         {
             var vkCode = evtData.KeyData.vkCode;
@@ -50,7 +66,6 @@ namespace dotSwitcher
             var notModified = !ctrl && !alt;
             var shift = evtData.ShiftIsPressed;
 
-            Debug.WriteLine(vkCode);
             if (vkCode == VirtualKeyStates.VK_CONTROL ||
                 vkCode == VirtualKeyStates.VK_LCONTROL ||
                 vkCode == VirtualKeyStates.VK_RCONTROL) 
