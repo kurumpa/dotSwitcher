@@ -123,9 +123,19 @@ namespace dotSwitcher
             return CallNextHookEx(hookResult, nCode, wParam, lParam);
         }
 
-        public static void SendKeyPress(int vkCode)
+        public static void SendKeyPress(uint vkCode)
         {
-            var down = new INPUT
+            var down = MakeKeyInput(vkCode, true);
+            var up = MakeKeyInput(vkCode, false);
+
+            SendInput(2, new INPUT[2] { down, up }, Marshal.SizeOf(typeof(INPUT)));
+
+        }
+
+
+        private static INPUT MakeKeyInput(uint vkCode, bool down)
+        {
+            return new INPUT
             {
                 Type = INPUT_KEYBOARD,
                 Data = new MOUSEKEYBDHARDWAREINPUT
@@ -134,32 +144,14 @@ namespace dotSwitcher
                         {
                             Vk = (UInt16)vkCode,
                             Scan = 0,
-                            Flags = 0,
+                            Flags = down ? 0 : KEYEVENTF_KEYUP,
                             Time = 0,
                             ExtraInfo = IntPtr.Zero
                         }
                 }
             };
-
-            var up = new INPUT
-            {
-                Type = INPUT_KEYBOARD,
-                Data = new MOUSEKEYBDHARDWAREINPUT
-                {
-                    Keyboard = new KEYBDINPUT
-                    {
-                        Vk = (UInt16)vkCode,
-                        Scan = 0,
-                        Flags = KEYEVENTF_KEYUP,
-                        Time = 0,
-                        ExtraInfo = IntPtr.Zero
-                    }
-                }
-            };
-
-            SendInput(2, new INPUT[2] { down, up }, Marshal.SizeOf(typeof(INPUT)));
-
         }
+
 
     }
 }

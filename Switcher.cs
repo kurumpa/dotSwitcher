@@ -50,7 +50,13 @@ namespace dotSwitcher
             var notModified = !ctrl && !alt;
             var shift = evtData.ShiftIsPressed;
 
-            if (vkCode == VirtualKeyStates.VK_CONTROL) { return; }
+            Debug.WriteLine(vkCode);
+            if (vkCode == VirtualKeyStates.VK_CONTROL ||
+                vkCode == VirtualKeyStates.VK_LCONTROL ||
+                vkCode == VirtualKeyStates.VK_RCONTROL) 
+            { 
+                return; 
+            }
             if (vkCode == VirtualKeyStates.VK_SPACE && notModified) { AddToCurrentWord(evtData); return; }
             if (vkCode == VirtualKeyStates.VK_BACK && notModified) { RemoveLast(); return; }
             if (VirtualKeyStates.IsPrintable(evtData))
@@ -104,25 +110,13 @@ namespace dotSwitcher
         }
         private void ConvertLast()
         {
-            //var word = GetCurrentWord();
-            //var backspaces = Enumerable.Repeat<uint>(VirtualKeyStates.VK_BACK, word.Count);
+            var word = GetCurrentWord();
+            var backspaces = Enumerable.Repeat<uint>(VirtualKeyStates.VK_BACK, word.Count);
 
-            //LowLevelAdapter.SetNextKeyboardLayout();
-            //foreach (var vkCode in backspaces.Concat(word))
-            //{
-            //    LowLevelAdapter.SendKeyPress(vkCode);
-            //}
-
-            var list = GetCurrentWord().ToList();
-            foreach (var t in list)
-            {
-                
-                LowLevelAdapter.SendKeyPress(VirtualKeyStates.VK_BACK);
-            }
             LowLevelAdapter.SetNextKeyboardLayout();
-            foreach (var t in list)
+            foreach (var vkCode in backspaces.Concat(word))
             {
-                LowLevelAdapter.SendKeyPress((int)t);
+                LowLevelAdapter.SendKeyPress(vkCode);
             }
         }
 
