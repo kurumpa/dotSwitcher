@@ -68,8 +68,12 @@ namespace dotSwitcher
 
             if (vkCode == VirtualKeyStates.VK_CONTROL ||
                 vkCode == VirtualKeyStates.VK_LCONTROL ||
-                vkCode == VirtualKeyStates.VK_RCONTROL) 
-            { 
+                vkCode == VirtualKeyStates.VK_RCONTROL ||
+                vkCode == VirtualKeyStates.VK_SNAPSHOT ||
+                vkCode == VirtualKeyStates.VK_SHIFT ||
+                vkCode == VirtualKeyStates.VK_RSHIFT ||
+                vkCode == VirtualKeyStates.VK_LSHIFT) 
+            {
                 return; 
             }
             if (vkCode == VirtualKeyStates.VK_SPACE && notModified) { AddToCurrentWord(evtData); return; }

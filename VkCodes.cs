@@ -196,7 +196,12 @@ namespace dotSwitcher
         public static bool IsPrintable(HookEventData evtData)
         {
             if (evtData.AltIsPressed || evtData.CtrlIsPressed) { return false; }
-            return evtData.KeyData.vkCode >= 0x30 && evtData.KeyData.vkCode <= 0x5A;
+            var vkCode = evtData.KeyData.vkCode;
+            if (vkCode >= 0x30 && vkCode <= 0x5A) { return true; }
+            if (vkCode >= VK_OEM_1 && vkCode <= VK_OEM_3) { return true; }
+            if (vkCode == VK_OEM_102 || vkCode == VK_ICO_00) { return true; }
+            if (vkCode >= VK_OEM_4 && vkCode <= VK_OEM_8) { return true; }
+            return false;
         }
     }
 }
