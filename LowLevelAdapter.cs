@@ -169,12 +169,21 @@ namespace dotSwitcher
             return CallNextHookEx(hookResult, nCode, wParam, lParam);
         }
 
-        public static void SendKeyPress(uint vkCode)
+        public static void SendKeyPress(uint vkCode, bool shift = false)
         {
             var down = MakeKeyInput(vkCode, true);
             var up = MakeKeyInput(vkCode, false);
 
-            SendInput(2, new INPUT[2] { down, up }, Marshal.SizeOf(typeof(INPUT)));
+            if (shift)
+            {
+                var shiftDown = MakeKeyInput(VirtualKeyStates.VK_SHIFT, true);
+                var shiftUp = MakeKeyInput(VirtualKeyStates.VK_SHIFT, false);
+                SendInput(4, new INPUT[4] { shiftDown, down, up, shiftUp }, Marshal.SizeOf(typeof(INPUT)));
+            }
+            else
+            {
+                SendInput(2, new INPUT[2] { down, up }, Marshal.SizeOf(typeof(INPUT)));
+            }
 
         }
 

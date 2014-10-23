@@ -110,10 +110,6 @@ namespace dotSwitcher
             if (currentWord.Count == 0) { return 0; }
             return currentWord.Last().KeyData.vkCode;
         }
-        private List<uint> GetCurrentWord()
-        {
-            return currentWord.ConvertAll<uint>(item => item.KeyData.vkCode);
-        }
         private void BeginNewWord() { currentWord.Clear(); }
         private void AddToCurrentWord(HookEventData data) { currentWord.Add(data); }
         private void RemoveLast()
@@ -129,13 +125,14 @@ namespace dotSwitcher
         }
         private void ConvertLast()
         {
-            var word = GetCurrentWord();
+            var word = currentWord.ToList();
             var backspaces = Enumerable.Repeat<uint>(VirtualKeyStates.VK_BACK, word.Count);
 
             LowLevelAdapter.SetNextKeyboardLayout();
-            foreach (var vkCode in backspaces.Concat(word))
+            foreach (var vkCode in backspaces) { LowLevelAdapter.SendKeyPress(vkCode, false); }
+            foreach (var data in word)
             {
-                LowLevelAdapter.SendKeyPress(vkCode);
+                LowLevelAdapter.SendKeyPress(data.KeyData.vkCode, data.ShiftIsPressed);
             }
         }
 
