@@ -121,7 +121,20 @@ namespace dotSwitcher
 
         public static void SetNextKeyboardLayout()
         {
-            PostMessage(GetForegroundWindow(), WM_INPUTLANGCHANGEREQUEST, INPUTLANGCHANGE_FORWARD, HKL_NEXT);
+//            if (gti.hwndFocus! =0)  
+//      wnd = gti.hwndFocus; 
+//else 
+//    wnd = gti.hwndActive; 
+            IntPtr hWnd = GetForegroundWindow();
+            uint processId;
+            uint activeThreadId = GetWindowThreadProcessId(hWnd, out processId);
+            uint currentThreadId = GetCurrentThreadId();
+
+            AttachThreadInput(activeThreadId, currentThreadId, true);
+            IntPtr focusedHandle = GetFocus();
+            AttachThreadInput(activeThreadId, currentThreadId, false);
+
+            PostMessage(focusedHandle == IntPtr.Zero ? hWnd : focusedHandle, WM_INPUTLANGCHANGEREQUEST, INPUTLANGCHANGE_FORWARD, HKL_NEXT);
         }
 
         private static IntPtr ProcessKeyPress(IntPtr hookResult, int nCode, IntPtr wParam, IntPtr lParam, Action<HookEventData> cb)
