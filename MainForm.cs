@@ -18,9 +18,9 @@ namespace dotSwitcher
         {
             this.engine = engine;
             trayMenu = new ContextMenu();
-            trayMenu.MenuItems.Add("Exit", OnExit);
             power = new MenuItem("", OnPower);
             trayMenu.MenuItems.Add(power);
+            trayMenu.MenuItems.Add("Exit", OnExit);
 
 
             trayIcon = new NotifyIcon();
