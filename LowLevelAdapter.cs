@@ -93,7 +93,7 @@ namespace dotSwitcher
             hookResult = SetWindowsHookEx(WH_MOUSE_LL, mouseCallbackDelegate, hModule, 0);
             return new HookId { HookResult = hookResult };
         }
-        public static HookId SetKeyboardHook(Action<HookEventData> cb)
+        public static HookId SetKeyboardHook(Func<HookEventData, bool> cb)
         {
             var process = Process.GetCurrentProcess();
             var module = process.MainModule;
@@ -137,7 +137,7 @@ namespace dotSwitcher
             PostMessage(focusedHandle == IntPtr.Zero ? hWnd : focusedHandle, WM_INPUTLANGCHANGEREQUEST, INPUTLANGCHANGE_FORWARD, HKL_NEXT);
         }
 
-        private static IntPtr ProcessKeyPress(IntPtr hookResult, int nCode, IntPtr wParam, IntPtr lParam, Action<HookEventData> cb)
+        private static IntPtr ProcessKeyPress(IntPtr hookResult, int nCode, IntPtr wParam, IntPtr lParam, Func<HookEventData, bool> cb)
         {
             try
             {
@@ -151,9 +151,15 @@ namespace dotSwitcher
                             var alt = (GetKeyState(VirtualKeyStates.VK_MENU) & 0x8000) != 0;
                             var shift = (GetKeyState(VirtualKeyStates.VK_SHIFT) & 0x8000) != 0;
 
+                            var win = (GetKeyState(VirtualKeyStates.VK_LWIN) & 0x8000) != 0;
+                            win |= (GetKeyState(VirtualKeyStates.VK_RWIN) & 0x8000) != 0;
+
                             var keyData = (KeyData)Marshal.PtrToStructure(lParam, typeof(KeyData));
-                            cb(new HookEventData(keyData, ctrl, alt, shift));
-                            break;
+                            var withdrawMessage = cb(new HookEventData(keyData, ctrl, alt, shift, win));
+
+                            return withdrawMessage ?
+                                new IntPtr(1) :
+                                CallNextHookEx(hookResult, nCode, wParam, lParam);
 
                     }
                 }

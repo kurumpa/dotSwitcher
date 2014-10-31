@@ -34,16 +34,18 @@ namespace dotSwitcher
             keyboardHook = HookId.Empty;
         }
 
-        private void ProcessKeyPress(HookEventData evtData)
+        // should return true if the key is recognized as hotkey and doesn't need further processing
+        private bool ProcessKeyPress(HookEventData evtData)
         {
             try
             {
-                OnKeyPress(evtData);
+                return OnKeyPress(evtData);
             }
             catch (Exception ex)
             {
                 OnError(ex);
             }
+            return false;
         }
 
         private void ProcessMousePress(HookEventData evtData)
@@ -58,43 +60,50 @@ namespace dotSwitcher
             }
         }
 
-        private void OnKeyPress(HookEventData evtData)
+        private bool OnKeyPress(HookEventData evtData)
         {
             var vkCode = evtData.KeyData.vkCode;
+            var shift = evtData.ShiftIsPressed;
+            
             var ctrl = evtData.CtrlIsPressed;
             var alt = evtData.AltIsPressed;
-            var notModified = !ctrl && !alt;
-            var shift = evtData.ShiftIsPressed;
+            var win = evtData.WinIsPressed;
+
+            var notModified = !ctrl && !alt && !win;
 
             if (vkCode == VirtualKeyStates.VK_CONTROL ||
                 vkCode == VirtualKeyStates.VK_LCONTROL ||
                 vkCode == VirtualKeyStates.VK_RCONTROL ||
+                // yes, don't interrupt the tracking on PrtSc!
                 vkCode == VirtualKeyStates.VK_SNAPSHOT ||
                 vkCode == VirtualKeyStates.VK_SHIFT ||
                 vkCode == VirtualKeyStates.VK_RSHIFT ||
                 vkCode == VirtualKeyStates.VK_LSHIFT) 
             {
-                return; 
+                return false; 
             }
-            if (vkCode == VirtualKeyStates.VK_SPACE && notModified) { AddToCurrentWord(evtData); return; }
-            if (vkCode == VirtualKeyStates.VK_BACK && notModified) { RemoveLast(); return; }
+            if (vkCode == VirtualKeyStates.VK_SPACE && notModified) { AddToCurrentWord(evtData); return false; }
+            if (vkCode == VirtualKeyStates.VK_BACK && notModified) { RemoveLast(); return false; }
             if (VirtualKeyStates.IsPrintable(evtData))
             {
                 if (GetPreviousVkCode() == VirtualKeyStates.VK_SPACE) { BeginNewWord(); }
                 AddToCurrentWord(evtData);
-                return;
+                return false;
             }
             // todo make it global hotkey someday
-            if (vkCode == VirtualKeyStates.VK_PAUSE)
+            // warning: ctrl+pause = VK_CANCEL
+            if (vkCode == VirtualKeyStates.VK_PAUSE && notModified)
             {
-                if (shift) { ConvertSelection(); }
-                else { ConvertLast(); }
-                return;
+                if (shift) ConvertSelection();
+                else ConvertLast();
+                return true;
             }
+
             // default: 
             BeginNewWord();
-
+            return false;
         }
+
         private void OnError(Exception ex)
         {
             if (Error != null)

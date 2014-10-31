@@ -32,13 +32,15 @@ namespace dotSwitcher
         public bool CtrlIsPressed { get; private set; }
         public bool AltIsPressed { get; private set; }
         public bool ShiftIsPressed { get; private set; }
+        public bool WinIsPressed { get; private set; }
 
-        public HookEventData(KeyData data, bool ctrl, bool alt, bool shift)
+        public HookEventData(KeyData data, bool ctrl = false, bool alt = false, bool shift = false, bool win = false)
         {
             KeyData = data;
             CtrlIsPressed = ctrl;
             AltIsPressed = alt;
             ShiftIsPressed = shift;
+            WinIsPressed = win;
         }
     }
 
@@ -48,7 +50,8 @@ namespace dotSwitcher
         public new bool CtrlIsPressed { get { WrongUsage(); return false; } private set { } }
         public new bool AltIsPressed { get { WrongUsage(); return false; } private set { } }
         public new bool ShiftIsPressed { get { WrongUsage(); return false; } private set { } }
-        public DummyHookEventData() : base(new KeyData(), false, false, false) { }
+        public new bool WinIsPressed { get { WrongUsage(); return false; } private set { } }
+        public DummyHookEventData() : base(new KeyData()) { }
         public void WrongUsage()
         {
             throw new NotImplementedException("This is a DummyHookEventData");
