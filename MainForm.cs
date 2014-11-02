@@ -20,16 +20,16 @@ namespace dotSwitcher
             trayMenu = new ContextMenu();
             power = new MenuItem("", OnPower);
             trayMenu.MenuItems.Add(power);
+            //trayMenu.MenuItems.Add("Settings", OnSettings);
+            trayMenu.MenuItems.Add("-");
             trayMenu.MenuItems.Add("Exit", OnExit);
-
-
+            
             trayIcon = new NotifyIcon();
             trayIcon.Text = "dotSwitcher";
             trayIcon.Icon = Properties.Resources.icon;
 
             trayIcon.ContextMenu = trayMenu;
             trayIcon.Visible = true;
-
             
         }
 
@@ -63,20 +63,20 @@ namespace dotSwitcher
 
         private void UpdateMenu()
         {
-            if (engine.IsStarted())
-            {
-                power.Text = "Turn off";
-            }
-            else
-            {
-                power.Text = "Turn on";
-            }
+            power.Text = engine.IsStarted() ? "Turn off" : "Turn on";
         }
+
         private void OnPower(object sender, EventArgs e)
         {
             if (engine.IsStarted()) { engine.Stop(); }
             else { engine.Start(); }
             UpdateMenu();
+        }
+
+        private void OnSettings(object sender, EventArgs e)
+        {
+            var settingsForm = new SettingsForm();
+            settingsForm.ShowDialog();
         }
 
         protected override void Dispose(bool isDisposing)
