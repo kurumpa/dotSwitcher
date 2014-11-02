@@ -42,6 +42,35 @@ namespace dotSwitcher
             ShiftIsPressed = shift;
             WinIsPressed = win;
         }
+
+        public static HookEventData FromKeyCode(UInt32 vkCode, bool ctrl = false, bool alt = false, bool shift = false, bool win = false)
+        {
+            var data = new KeyData {vkCode = vkCode};
+            return new HookEventData(data, ctrl, alt, shift, win);
+        }
+
+        public override bool Equals(Object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+
+            var p = obj as HookEventData;
+            if (p == null)
+            {
+                return false;
+            }
+
+            return KeyData.vkCode == p.KeyData.vkCode && //mb compare all KeyData ?
+                   CtrlIsPressed == p.CtrlIsPressed && AltIsPressed == p.AltIsPressed &&
+                   ShiftIsPressed == p.ShiftIsPressed && WinIsPressed == p.WinIsPressed;
+        }
+
+        public override int GetHashCode()//TODO
+        {
+            return (int) (base.GetHashCode() ^ KeyData.vkCode);
+        }
     }
 
     public class DummyHookEventData : HookEventData

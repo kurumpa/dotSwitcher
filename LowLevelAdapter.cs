@@ -53,6 +53,9 @@ namespace dotSwitcher
         private static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
         [DllImport("user32.dll", SetLastError = true)]
         static extern UInt32 SendInput(UInt32 numberOfInputs, INPUT[] inputs, Int32 sizeOfInputStructure);
+
+        [DllImport("user32.dll")]
+        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
         #endregion
 
         #region consts
@@ -139,33 +142,42 @@ namespace dotSwitcher
 
         private static IntPtr ProcessKeyPress(IntPtr hookResult, int nCode, IntPtr wParam, IntPtr lParam, Func<HookEventData, bool> cb)
         {
+            return ProcessKeyPressInt(nCode, wParam, lParam, cb) ?
+                new IntPtr(1) :
+                CallNextHookEx(hookResult, nCode, wParam, lParam);
+        }
+
+        private static bool ProcessKeyPressInt(int nCode, IntPtr wParam, IntPtr lParam, Func<HookEventData, bool> cb)
+        {
             try
             {
-                if (nCode >= 0)
+
+                if (nCode < 0)
+                    return false;
+
+                if ("dotSwitcher Settings".Equals(GetActiveWindowTitle())) //Ignore settings windows TODO use const
+                    return false;
+
+                switch (wParam.ToInt32())
                 {
-                    switch (wParam.ToInt32())
-                    {
-                        case WM_KEYDOWN:
-                        case WM_SYSKEYDOWN:
-                            var ctrl = (GetKeyState(VirtualKeyStates.VK_CONTROL) & 0x8000) != 0;
-                            var alt = (GetKeyState(VirtualKeyStates.VK_MENU) & 0x8000) != 0;
-                            var shift = (GetKeyState(VirtualKeyStates.VK_SHIFT) & 0x8000) != 0;
+                    case WM_KEYDOWN:
+                    case WM_SYSKEYDOWN:
+                        var ctrl = (GetKeyState(VirtualKeyStates.VK_CONTROL) & 0x8000) != 0;
+                        var alt = (GetKeyState(VirtualKeyStates.VK_MENU) & 0x8000) != 0;
+                        var shift = (GetKeyState(VirtualKeyStates.VK_SHIFT) & 0x8000) != 0;
 
-                            var win = (GetKeyState(VirtualKeyStates.VK_LWIN) & 0x8000) != 0;
-                            win |= (GetKeyState(VirtualKeyStates.VK_RWIN) & 0x8000) != 0;
+                        var win = (GetKeyState(VirtualKeyStates.VK_LWIN) & 0x8000) != 0;
+                        win |= (GetKeyState(VirtualKeyStates.VK_RWIN) & 0x8000) != 0;
 
-                            var keyData = (KeyData)Marshal.PtrToStructure(lParam, typeof(KeyData));
-                            var withdrawMessage = cb(new HookEventData(keyData, ctrl, alt, shift, win));
+                        var keyData = (KeyData)Marshal.PtrToStructure(lParam, typeof(KeyData));
+                        var withdrawMessage = cb(new HookEventData(keyData, ctrl, alt, shift, win));
 
-                            return withdrawMessage ?
-                                new IntPtr(1) :
-                                CallNextHookEx(hookResult, nCode, wParam, lParam);
-
-                    }
+                        return withdrawMessage;
                 }
+
             }
             catch { }
-            return CallNextHookEx(hookResult, nCode, wParam, lParam);
+            return false;
         }
 
         private static IntPtr ProcessMouse(IntPtr hookResult, int nCode, IntPtr wParam, IntPtr lParam, Action<HookEventData> cb)
@@ -226,6 +238,18 @@ namespace dotSwitcher
             };
         }
 
+        private static string GetActiveWindowTitle()
+        {
+            const int nChars = 256;
+            var buff = new StringBuilder(nChars);
+            var handle = GetForegroundWindow();
+
+            if (GetWindowText(handle, buff, nChars) > 0)
+            {
+                return buff.ToString();
+            }
+            return null;
+        }
 
     }
 }

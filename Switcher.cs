@@ -15,6 +15,8 @@ namespace dotSwitcher
         private HookId mouseHook = HookId.Empty;
         private List<HookEventData> currentWord = new List<HookEventData>();
 
+        private HookEventData toggleLayoutShortcut = HookEventData.FromKeyCode(VirtualKeyStates.VK_PAUSE);
+
         public bool IsStarted()
         {
             return !keyboardHook.IsEmpty();
@@ -92,7 +94,7 @@ namespace dotSwitcher
             }
             // todo make it global hotkey someday
             // warning: ctrl+pause = VK_CANCEL
-            if (vkCode == VirtualKeyStates.VK_PAUSE && notModified)
+            if (toggleLayoutShortcut.Equals(evtData))
             {
                 if (shift) ConvertSelection();
                 else ConvertLast();
