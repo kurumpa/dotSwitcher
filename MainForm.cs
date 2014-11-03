@@ -20,7 +20,7 @@ namespace dotSwitcher
             trayMenu = new ContextMenu();
             power = new MenuItem("", OnPower);
             trayMenu.MenuItems.Add(power);
-            //trayMenu.MenuItems.Add("Settings", OnSettings);
+            trayMenu.MenuItems.Add("Settings", OnSettings);
             trayMenu.MenuItems.Add("-");
             trayMenu.MenuItems.Add("Exit", OnExit);
             

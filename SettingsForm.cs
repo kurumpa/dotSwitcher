@@ -27,11 +27,6 @@ namespace dotSwitcher
             shortcutTextBox.Text = Properties.Settings.Default.toggleLayoutShortcut;
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void txtButton_KeyDown(object sender, KeyEventArgs e)
         {
             e.SuppressKeyPress = true;  //Suppress the key from being processed by the underlying control.
