@@ -15,7 +15,14 @@ namespace dotSwitcher
         private HookId mouseHook = HookId.Empty;
         private List<HookEventData> currentWord = new List<HookEventData>();
 
-        private HookEventData toggleLayoutShortcut = HookEventData.FromKeyCode(VirtualKeyStates.VK_PAUSE);
+        public HookEventData ConvertLastShortcut { get; set; }
+        public HookEventData ConvertSelectionShortcut { get; set; }
+
+        public Switcher()
+        {
+            ConvertLastShortcut = HookEventData.FromKeyCode(VirtualKeyStates.VK_PAUSE);
+            ConvertSelectionShortcut = HookEventData.FromKeyCode(VirtualKeyStates.VK_PAUSE, false, false, true);
+        }
 
         public bool IsStarted()
         {
@@ -94,10 +101,15 @@ namespace dotSwitcher
             }
             // todo make it global hotkey someday
             // warning: ctrl+pause = VK_CANCEL
-            if (toggleLayoutShortcut.Equals(evtData))
+            if (ConvertLastShortcut.Equals(evtData))
             {
-                if (shift) ConvertSelection();
-                else ConvertLast();
+                ConvertLast();
+                return true;
+            }
+
+            if (ConvertSelectionShortcut.Equals(evtData))
+            {
+                ConvertSelection();
                 return true;
             }
 

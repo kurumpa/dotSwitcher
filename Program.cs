@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace dotSwitcher
@@ -18,7 +15,7 @@ namespace dotSwitcher
             Application.SetCompatibleTextRenderingDefault(false);
 
             var engine = new Switcher();
-            Application.ApplicationExit += (s, a) => { engine.Dispose(); };
+            Application.ApplicationExit += (s, a) => engine.Dispose();
             Application.Run(new SysTrayApp(engine));
         }
     }

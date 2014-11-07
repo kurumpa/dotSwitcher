@@ -19,6 +19,9 @@ namespace dotSwitcher
             this.engine = engine;
             trayMenu = new ContextMenu();
             power = new MenuItem("", OnPower);
+
+            LoadSettings();
+            
             trayMenu.MenuItems.Add(power);
             trayMenu.MenuItems.Add("Settings", OnSettings);
             trayMenu.MenuItems.Add("-");
@@ -76,7 +79,33 @@ namespace dotSwitcher
         private void OnSettings(object sender, EventArgs e)
         {
             var settingsForm = new SettingsForm();
-            settingsForm.ShowDialog();
+            DialogResult result = settingsForm.ShowDialog();
+            if (result == DialogResult.OK) UpdateSettings();
+        }
+
+        private void LoadSettings()
+        {
+            try
+            {
+                LoadSettingsShortcut();
+            }
+            catch (Exception ex)
+            {
+                //TODO
+            }
+        }
+
+        private void LoadSettingsShortcut()
+        {
+            var convertLastShortcut = HookEventData.Deserialize(dotSwitcher.Properties.Settings.Default.convertLastShortcut);
+            var convertSelectionShortcut = HookEventData.Deserialize(dotSwitcher.Properties.Settings.Default.convertSelectionShortcut);
+            if (convertLastShortcut != null) engine.ConvertLastShortcut = convertLastShortcut;
+            if (convertSelectionShortcut != null) engine.ConvertSelectionShortcut = convertSelectionShortcut;
+        }
+
+        private void UpdateSettings()
+        {
+            //throw new NotImplementedException();
         }
 
         protected override void Dispose(bool isDisposing)
