@@ -144,7 +144,8 @@ namespace dotSwitcher
 
         private void ConvertSelection()
         {
-            throw new NotImplementedException();
+            var sel = Selection.GetSelectionByAutomation();
+            //TODO try other if sel null
         }
         private void ConvertLast()
         {
