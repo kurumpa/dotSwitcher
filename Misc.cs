@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace dotSwitcher
 {
@@ -28,11 +29,15 @@ namespace dotSwitcher
 
     public class HookEventData
     {
-        public KeyData KeyData { get; private set; }
-        public bool CtrlIsPressed { get; private set; }
-        public bool AltIsPressed { get; private set; }
-        public bool ShiftIsPressed { get; private set; }
-        public bool WinIsPressed { get; private set; }
+        public KeyData KeyData { get; set; }
+        public bool CtrlIsPressed { get; set; }
+        public bool AltIsPressed { get; set; }
+        public bool ShiftIsPressed { get; set; }
+        public bool WinIsPressed { get; set; }
+
+        public HookEventData()
+        {
+        }
 
         public HookEventData(KeyData data, bool ctrl = false, bool alt = false, bool shift = false, bool win = false)
         {
@@ -70,6 +75,16 @@ namespace dotSwitcher
         public override int GetHashCode()//TODO
         {
             return (int) (base.GetHashCode() ^ KeyData.vkCode);
+        }
+
+        public static String Serialize(HookEventData data)
+        {
+            return JsonConvert.SerializeObject(data);
+        }
+
+        public static HookEventData Deserialize(String data)
+        {
+            return JsonConvert.DeserializeObject<HookEventData>(data);
         }
     }
 

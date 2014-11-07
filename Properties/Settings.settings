@@ -2,8 +2,11 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="dotSwitcher.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="toggleLayoutShortcut" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Pause</Value>
+    <Setting Name="convertLastShortcut" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{"KeyData":{"vkCode":19,"scanCode":0,"flags":0,"time":0,"dwExtraInfo":{"value":0}},"CtrlIsPressed":false,"AltIsPressed":false,"ShiftIsPressed":false,"WinIsPressed":false}</Value>
+    </Setting>
+    <Setting Name="convertSelectionShortcut" Type="System.String" Scope="User">
+      <Value Profile="(Default)">{"KeyData":{"vkCode":19,"scanCode":0,"flags":0,"time":0,"dwExtraInfo":{"value":0}},"CtrlIsPressed":false,"AltIsPressed":false,"ShiftIsPressed":true,"WinIsPressed":false}</Value>
     </Setting>
   </Settings>
 </SettingsFile>

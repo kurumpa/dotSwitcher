@@ -25,13 +25,29 @@ namespace dotSwitcher.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Pause")]
-        public string toggleLayoutShortcut {
+        [global::System.Configuration.DefaultSettingValueAttribute("{\"KeyData\":{\"vkCode\":19,\"scanCode\":0,\"flags\":0,\"time\":0,\"dwExtraInfo\":{\"value\":0}" +
+            "},\"CtrlIsPressed\":false,\"AltIsPressed\":false,\"ShiftIsPressed\":false,\"WinIsPresse" +
+            "d\":false}")]
+        public string convertLastShortcut {
             get {
-                return ((string)(this["toggleLayoutShortcut"]));
+                return ((string)(this["convertLastShortcut"]));
             }
             set {
-                this["toggleLayoutShortcut"] = value;
+                this["convertLastShortcut"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("{\"KeyData\":{\"vkCode\":19,\"scanCode\":0,\"flags\":0,\"time\":0,\"dwExtraInfo\":{\"value\":0}" +
+            "},\"CtrlIsPressed\":false,\"AltIsPressed\":false,\"ShiftIsPressed\":true,\"WinIsPressed" +
+            "\":false}")]
+        public string convertSelectionShortcut {
+            get {
+                return ((string)(this["convertSelectionShortcut"]));
+            }
+            set {
+                this["convertSelectionShortcut"] = value;
             }
         }
     }

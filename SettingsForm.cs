@@ -22,7 +22,7 @@ namespace dotSwitcher
 
         private void InitializeValues()
         {
-            shortcutTextBox.Text = Properties.Settings.Default.toggleLayoutShortcut;
+            shortcutTextBox.Text = Properties.Settings.Default.convertLastShortcut;
         }
 
         private void txtButton_KeyDown(object sender, KeyEventArgs e)
