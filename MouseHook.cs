@@ -13,7 +13,7 @@ namespace dotSwitcher
 
         public bool IsStarted()
         {
-            return hookId == IntPtr.Zero;
+            return hookId != IntPtr.Zero;
         }
         public void Start()
         {

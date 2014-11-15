@@ -76,6 +76,7 @@ namespace dotSwitcher
 
         private void OnKeyPress(KeyboardEventArgs evtData)
         {
+            Debug.WriteLine("pressed: " + evtData.ToString());
             var vkCode = evtData.KeyCode;
             var shift = evtData.Shift;
             
@@ -84,7 +85,6 @@ namespace dotSwitcher
             var win = evtData.Win;
 
             var notModified = !ctrl && !alt && !win;
-            Debug.WriteLine("is modified = {0}", !notModified);
 
             if (vkCode == Keys.ControlKey ||
                 vkCode == Keys.LControlKey ||

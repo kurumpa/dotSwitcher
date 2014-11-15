@@ -37,19 +37,19 @@ namespace dotSwitcher
 
         private void txtButton_KeyDown(object sender, KeyEventArgs e)
         {
-            //Debug.WriteLine("code: {0}, data: {1}, modifiers: {2}", e.KeyCode, e.KeyData, e.Modifiers);
-            e.SuppressKeyPress = true;
-            //todo not working?
-            e.Handled = true;
+            ////Debug.WriteLine("code: {0}, data: {1}, modifiers: {2}", e.KeyCode, e.KeyData, e.Modifiers);
+            //e.SuppressKeyPress = true;
+            ////todo not working?
+            //e.Handled = true;
 
-            shortcutTextBox.Text = string.Empty; 
-            keyIsSet = false; 
+            //shortcutTextBox.Text = string.Empty; 
+            //keyIsSet = false; 
 
-            if (e.KeyData == Keys.Back)
-            {
-                shortcutTextBox.Text = Keys.None.ToString();
-                return;
-            }
+            //if (e.KeyData == Keys.Back)
+            //{
+            //    shortcutTextBox.Text = Keys.None.ToString();
+            //    return;
+            //}
             //if (e.Alt || e.Control || e.Shift)
             //{
             //    foreach (string modifier in e.Modifiers.ToString().Split(new Char[] { ',' }))

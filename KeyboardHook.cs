@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -14,7 +15,7 @@ namespace dotSwitcher
         private IntPtr hookId = IntPtr.Zero;
         public bool IsStarted()
         {
-            return hookId == IntPtr.Zero;
+            return hookId != IntPtr.Zero;
         }
         public void Start()
         {

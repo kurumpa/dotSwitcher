@@ -37,15 +37,16 @@ namespace dotSwitcher
         //{
         //    return (int)(base.GetHashCode() ^ KeyData.vkCode);
         //}
-        //public override string ToString()
-        //{
-        //    var result =
-        //        (ShiftIsPressed ? Keys.Shift.ToString() + " + " : "") +
-        //        (CtrlIsPressed ? Keys.Control.ToString() + " + " : "") +
-        //        (AltIsPressed ? Keys.Alt.ToString() + " + " : "") +
-        //        ((Keys)KeyData.vkCode).ToString();
-        //    return result;
-        //}
+        public override string ToString()
+        {
+            var result =
+                (Shift ? Keys.Shift.ToString() + " + " : "") +
+                (Control ? Keys.Control.ToString() + " + " : "") +
+                (Alt ? Keys.Alt.ToString() + " + " : "") +
+                (Win ? "Win + " : "") +
+                ((Keys)KeyCode).ToString();
+            return result;
+        }
 
     }
 }

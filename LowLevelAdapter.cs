@@ -26,7 +26,7 @@ namespace dotSwitcher
 
         public static bool KeyPressed(Keys keyCode)
         {
-            return GetKeyState((int)keyCode & 0x8000) == 0;
+            return (GetKeyState((int)keyCode) & 0x8000) == 0x8000;
         }
 
        
