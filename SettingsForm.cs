@@ -15,11 +15,35 @@ namespace dotSwitcher
     public partial class SettingsForm : Form
     {
         bool keyIsSet;
+        KeyboardHook kbdHook;
+        TextBox currentTextBox;
 
         public SettingsForm()
         {
+            currentTextBox = null;
+            kbdHook = new KeyboardHook();
+            kbdHook.KeyboardEvent += kbdHook_KeyboardEvent;
             InitializeComponent();
             InitializeValues();
+        }
+
+        
+
+        void kbdHook_KeyboardEvent(object sender, KeyboardEventArgs e)
+        {
+            if (currentTextBox != null)
+            {
+                var vk = e.KeyCode;
+                if (vk != Keys.LMenu && vk != Keys.RMenu
+                    && vk != Keys.LWin && vk != Keys.RWin
+                    && vk != Keys.LShiftKey && vk != Keys.RShiftKey
+                    && vk != Keys.LControlKey && vk != Keys.RControlKey)
+                {
+                    e.Handled = true;
+                }
+                Invoke((MethodInvoker)delegate { currentTextBox.Text = e.ToString(); }); 
+                
+            }
         }
 
         private void InitializeValues()
@@ -29,54 +53,42 @@ namespace dotSwitcher
             shortcutTextBox.Text = config.SwitchLayoutHotkey.ToString();
         }
 
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            Debug.WriteLine("cmd");
-            return base.ProcessCmdKey(ref msg, keyData);
-        }
 
         private void txtButton_KeyDown(object sender, KeyEventArgs e)
         {
-            ////Debug.WriteLine("code: {0}, data: {1}, modifiers: {2}", e.KeyCode, e.KeyData, e.Modifiers);
-            //e.SuppressKeyPress = true;
-            ////todo not working?
-            //e.Handled = true;
-
-            //shortcutTextBox.Text = string.Empty; 
-            //keyIsSet = false; 
-
-            //if (e.KeyData == Keys.Back)
-            //{
-            //    shortcutTextBox.Text = Keys.None.ToString();
-            //    return;
-            //}
-            //if (e.Alt || e.Control || e.Shift)
-            //{
-            //    foreach (string modifier in e.Modifiers.ToString().Split(new Char[] { ',' }))
-            //    {
-            //        shortcutTextBox.Text += modifier + " + ";
-            //    }
-            //}
-
-            //var data = new KeyboardEventData(e);
-            //shortcutTextBox.Text = data.ToString();
-
-            //keyIsSet = e.KeyCode != Keys.ShiftKey 
-            //    && e.KeyCode != Keys.ControlKey 
-            //    && e.KeyCode == Keys.Menu;
+            //keyIsSet = e.KeyCode != Keys.ShiftKey  etc
         }
 
         private void txtButton_KeyUp(object sender, KeyEventArgs e)
         {
-            if (keyIsSet == false)
-            {
-                shortcutTextBox.Text = Keys.None.ToString();
-            }
+            //if (keyIsSet == false)
+            //{
+            //    shortcutTextBox.Text = Keys.None.ToString();
+            //}
         }
 
-        private void shortcutTextBox_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+
+        private void SettingsForm_Load(object sender, EventArgs e)
         {
-            e.IsInputKey = true;
+            shortcutTextBox.LostFocus += unsetCurrentInput;
+            shortcutTextBox.Leave += unsetCurrentInput;
+            shortcutTextBox.GotFocus += setCurrentInput;
+            shortcutTextBox.Enter += setCurrentInput;
+            kbdHook.Start();
+        }
+
+        private void SettingsForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            kbdHook.Stop();
+        }
+
+        private void setCurrentInput(object sender, EventArgs e)
+        {
+            currentTextBox = (TextBox)sender;
+        }
+        private void unsetCurrentInput(object sender, EventArgs e)
+        {
+            currentTextBox = null;
         }
     }
 }

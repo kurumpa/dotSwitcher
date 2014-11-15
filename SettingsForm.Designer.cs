@@ -46,7 +46,6 @@
             this.shortcutTextBox.TabIndex = 6;
             this.shortcutTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtButton_KeyDown);
             this.shortcutTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtButton_KeyUp);
-            this.shortcutTextBox.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.shortcutTextBox_PreviewKeyDown);
             // 
             // buttonSave
             // 
@@ -119,6 +118,8 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "SettingsForm";
             this.Text = "dotSwitcher Settings";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SettingsForm_FormClosing);
+            this.Load += new System.EventHandler(this.SettingsForm_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
