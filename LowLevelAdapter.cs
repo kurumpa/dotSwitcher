@@ -84,7 +84,7 @@ namespace dotSwitcher
         private static HookProc kbdCallbackDelegate;
         private static HookProc mouseCallbackDelegate;
 
-        public static HookId SetMouseHook(Action<HookEventData> cb)
+        public static HookId SetMouseHook(Action<EventArgs> cb)
         {
             var process = Process.GetCurrentProcess();
             var module = process.MainModule;
@@ -96,7 +96,7 @@ namespace dotSwitcher
             hookResult = SetWindowsHookEx(WH_MOUSE_LL, mouseCallbackDelegate, hModule, 0);
             return new HookId { HookResult = hookResult };
         }
-        public static HookId SetKeyboardHook(Func<HookEventData, bool> cb)
+        public static HookId SetKeyboardHook(Func<KeyboardEventArgs, bool> cb)
         {
             var process = Process.GetCurrentProcess();
             var module = process.MainModule;
@@ -124,15 +124,12 @@ namespace dotSwitcher
 
         public static void SetNextKeyboardLayout()
         {
-//            if (gti.hwndFocus! =0)  
-//      wnd = gti.hwndFocus; 
-//else 
-//    wnd = gti.hwndActive; 
             IntPtr hWnd = GetForegroundWindow();
             uint processId;
             uint activeThreadId = GetWindowThreadProcessId(hWnd, out processId);
             uint currentThreadId = GetCurrentThreadId();
 
+            // todo: refactor this
             AttachThreadInput(activeThreadId, currentThreadId, true);
             IntPtr focusedHandle = GetFocus();
             AttachThreadInput(activeThreadId, currentThreadId, false);
@@ -140,14 +137,19 @@ namespace dotSwitcher
             PostMessage(focusedHandle == IntPtr.Zero ? hWnd : focusedHandle, WM_INPUTLANGCHANGEREQUEST, INPUTLANGCHANGE_FORWARD, HKL_NEXT);
         }
 
-        private static IntPtr ProcessKeyPress(IntPtr hookResult, int nCode, IntPtr wParam, IntPtr lParam, Func<HookEventData, bool> cb)
+        private static IntPtr ProcessKeyPress(IntPtr hookResult, int nCode, IntPtr wParam, IntPtr lParam, Func<KeyboardEventArgs, bool> cb)
         {
             return ProcessKeyPressInt(nCode, wParam, lParam, cb) ?
                 new IntPtr(1) :
                 CallNextHookEx(hookResult, nCode, wParam, lParam);
         }
 
-        private static bool ProcessKeyPressInt(int nCode, IntPtr wParam, IntPtr lParam, Func<HookEventData, bool> cb)
+        private static bool KeyPressed(Keys keyCode)
+        {
+            return GetKeyState((int)keyCode & 0x8000) == 0;
+        }
+
+        private static bool ProcessKeyPressInt(int nCode, IntPtr wParam, IntPtr lParam, Func<KeyboardEventArgs, bool> cb)
         {
             try
             {
@@ -162,15 +164,17 @@ namespace dotSwitcher
                 {
                     case WM_KEYDOWN:
                     case WM_SYSKEYDOWN:
-                        var ctrl = (GetKeyState(VirtualKeyStates.VK_CONTROL) & 0x8000) != 0;
-                        var alt = (GetKeyState(VirtualKeyStates.VK_MENU) & 0x8000) != 0;
-                        var shift = (GetKeyState(VirtualKeyStates.VK_SHIFT) & 0x8000) != 0;
 
-                        var win = (GetKeyState(VirtualKeyStates.VK_LWIN) & 0x8000) != 0;
-                        win |= (GetKeyState(VirtualKeyStates.VK_RWIN) & 0x8000) != 0;
+                        var keybdinput = (KeyData)Marshal.PtrToStructure(lParam, typeof(KeyData));
+                        var keyData = (Keys)keybdinput.vkCode;
+ 
+                        keyData |= KeyPressed(Keys.ControlKey) ? Keys.Control : 0;
+                        keyData |= KeyPressed(Keys.Menu) ? Keys.Alt : 0;
+                        keyData |= KeyPressed(Keys.ShiftKey) ? Keys.Shift : 0;
 
-                        var keyData = (KeyData)Marshal.PtrToStructure(lParam, typeof(KeyData));
-                        var withdrawMessage = cb(new HookEventData(keyData, ctrl, alt, shift, win));
+                        var winPressed = KeyPressed(Keys.LWin) || KeyPressed(Keys.RWin);
+
+                        var withdrawMessage = cb(new KeyboardEventArgs(keyData, winPressed));
 
                         return withdrawMessage;
                 }
@@ -180,7 +184,7 @@ namespace dotSwitcher
             return false;
         }
 
-        private static IntPtr ProcessMouse(IntPtr hookResult, int nCode, IntPtr wParam, IntPtr lParam, Action<HookEventData> cb)
+        private static IntPtr ProcessMouse(IntPtr hookResult, int nCode, IntPtr wParam, IntPtr lParam, Action<EventArgs> cb)
         {
             try
             {
@@ -190,7 +194,7 @@ namespace dotSwitcher
                     {
                         case WM_LBUTTONDOWN:
                         case WM_RBUTTONDOWN:
-                            cb(new DummyHookEventData());
+                            cb(new EventArgs());
                             break;
 
                     }
@@ -200,15 +204,15 @@ namespace dotSwitcher
             return CallNextHookEx(hookResult, nCode, wParam, lParam);
         }
 
-        public static void SendKeyPress(uint vkCode, bool shift = false)
+        public static void SendKeyPress(Keys vkCode, bool shift = false)
         {
             var down = MakeKeyInput(vkCode, true);
             var up = MakeKeyInput(vkCode, false);
 
             if (shift)
             {
-                var shiftDown = MakeKeyInput(VirtualKeyStates.VK_SHIFT, true);
-                var shiftUp = MakeKeyInput(VirtualKeyStates.VK_SHIFT, false);
+                var shiftDown = MakeKeyInput(Keys.ShiftKey, true);
+                var shiftUp = MakeKeyInput(Keys.ShiftKey, false);
                 SendInput(4, new INPUT[4] { shiftDown, down, up, shiftUp }, Marshal.SizeOf(typeof(INPUT)));
             }
             else
@@ -219,7 +223,7 @@ namespace dotSwitcher
         }
 
 
-        private static INPUT MakeKeyInput(uint vkCode, bool down)
+        private static INPUT MakeKeyInput(Keys vkCode, bool down)
         {
             return new INPUT
             {

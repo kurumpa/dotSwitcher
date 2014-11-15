@@ -46,6 +46,7 @@
             this.shortcutTextBox.TabIndex = 6;
             this.shortcutTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtButton_KeyDown);
             this.shortcutTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtButton_KeyUp);
+            this.shortcutTextBox.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.shortcutTextBox_PreviewKeyDown);
             // 
             // buttonSave
             // 

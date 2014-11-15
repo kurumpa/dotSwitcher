@@ -13,9 +13,18 @@ namespace dotSwitcher
         public event EventHandler<SwitcherErrorArgs> Error;
         private HookId keyboardHook = HookId.Empty;
         private HookId mouseHook = HookId.Empty;
-        private List<HookEventData> currentWord = new List<HookEventData>();
+        private List<KeyboardEventArgs> currentWord = new List<KeyboardEventArgs>();
 
-        private HookEventData toggleLayoutShortcut = HookEventData.FromKeyCode(VirtualKeyStates.VK_PAUSE);
+        private KeyboardEventArgs toggleLayoutShortcut = new KeyboardEventArgs(Keys.Pause, false);
+
+        public static bool IsPrintable(KeyboardEventArgs evtData)
+        {
+            if (evtData.Alt || evtData.Control || evtData.Win) { return false; }
+            var keyCode = evtData.KeyCode;
+            if (keyCode >= Keys.D0 && keyCode <= Keys.Z) { return true; }
+            if (keyCode >= Keys.Oem1 && keyCode <= Keys.OemBackslash) { return true; }
+            return false;
+        }
 
         public bool IsStarted()
         {
@@ -37,7 +46,7 @@ namespace dotSwitcher
         }
 
         // should return true if the key is recognized as hotkey and doesn't need further processing
-        private bool ProcessKeyPress(HookEventData evtData)
+        private bool ProcessKeyPress(KeyboardEventArgs evtData)
         {
             try
             {
@@ -50,7 +59,7 @@ namespace dotSwitcher
             return false;
         }
 
-        private void ProcessMousePress(HookEventData evtData)
+        private void ProcessMousePress(EventArgs evtData)
         {
             try
             {
@@ -62,33 +71,34 @@ namespace dotSwitcher
             }
         }
 
-        private bool OnKeyPress(HookEventData evtData)
+        private bool OnKeyPress(KeyboardEventArgs evtData)
         {
-            var vkCode = evtData.KeyData.vkCode;
-            var shift = evtData.ShiftIsPressed;
+            var vkCode = evtData.KeyCode;
+            var shift = evtData.Shift;
             
-            var ctrl = evtData.CtrlIsPressed;
-            var alt = evtData.AltIsPressed;
-            var win = evtData.WinIsPressed;
+            var ctrl = evtData.Control;
+            var alt = evtData.Alt;
+            var win = evtData.Win;
 
             var notModified = !ctrl && !alt && !win;
+            Debug.WriteLine("is modified = {0}", !notModified);
 
-            if (vkCode == VirtualKeyStates.VK_CONTROL ||
-                vkCode == VirtualKeyStates.VK_LCONTROL ||
-                vkCode == VirtualKeyStates.VK_RCONTROL ||
+            if (vkCode == Keys.ControlKey ||
+                vkCode == Keys.LControlKey ||
+                vkCode == Keys.RControlKey ||
                 // yes, don't interrupt the tracking on PrtSc!
-                vkCode == VirtualKeyStates.VK_SNAPSHOT ||
-                vkCode == VirtualKeyStates.VK_SHIFT ||
-                vkCode == VirtualKeyStates.VK_RSHIFT ||
-                vkCode == VirtualKeyStates.VK_LSHIFT) 
+                vkCode == Keys.PrintScreen ||
+                vkCode == Keys.ShiftKey ||
+                vkCode == Keys.RShiftKey ||
+                vkCode == Keys.LShiftKey) 
             {
                 return false; 
             }
-            if (vkCode == VirtualKeyStates.VK_SPACE && notModified) { AddToCurrentWord(evtData); return false; }
-            if (vkCode == VirtualKeyStates.VK_BACK && notModified) { RemoveLast(); return false; }
-            if (VirtualKeyStates.IsPrintable(evtData))
+            if (vkCode == Keys.Space && notModified) { AddToCurrentWord(evtData); return false; }
+            if (vkCode == Keys.Back && notModified) { RemoveLast(); return false; }
+            if (IsPrintable(evtData))
             {
-                if (GetPreviousVkCode() == VirtualKeyStates.VK_SPACE) { BeginNewWord(); }
+                if (GetPreviousVkCode() == Keys.Space) { BeginNewWord(); }
                 AddToCurrentWord(evtData);
                 return false;
             }
@@ -115,14 +125,13 @@ namespace dotSwitcher
         }
 
         #region word manipulation
-        // returns 0 if currentWord is empty
-        private uint GetPreviousVkCode()
+        private Keys GetPreviousVkCode()
         {
-            if (currentWord.Count == 0) { return 0; }
-            return currentWord.Last().KeyData.vkCode;
+            if (currentWord.Count == 0) { return Keys.None; }
+            return currentWord.Last().KeyCode;
         }
         private void BeginNewWord() { currentWord.Clear(); }
-        private void AddToCurrentWord(HookEventData data) { currentWord.Add(data); }
+        private void AddToCurrentWord(KeyboardEventArgs data) { currentWord.Add(data); }
         private void RemoveLast()
         {
             if (currentWord.Count == 0) { return; }
@@ -137,13 +146,13 @@ namespace dotSwitcher
         private void ConvertLast()
         {
             var word = currentWord.ToList();
-            var backspaces = Enumerable.Repeat<uint>(VirtualKeyStates.VK_BACK, word.Count);
+            var backspaces = Enumerable.Repeat<Keys>(Keys.Back, word.Count);
 
             LowLevelAdapter.SetNextKeyboardLayout();
             foreach (var vkCode in backspaces) { LowLevelAdapter.SendKeyPress(vkCode, false); }
             foreach (var data in word)
             {
-                LowLevelAdapter.SendKeyPress(data.KeyData.vkCode, data.ShiftIsPressed);
+                LowLevelAdapter.SendKeyPress(data.KeyCode, data.Shift);
             }
         }
 
@@ -161,4 +170,5 @@ namespace dotSwitcher
             Error = ex;
         }
     }
+
 }

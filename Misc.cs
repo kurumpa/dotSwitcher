@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Forms;
 
 namespace dotSwitcher
 {
@@ -26,66 +27,48 @@ namespace dotSwitcher
         KEYEVENTF_KEYUP = 0x02
     }
 
-    public class HookEventData
+    public class KeyboardEventArgs : KeyEventArgs
     {
-        public KeyData KeyData { get; private set; }
-        public bool CtrlIsPressed { get; private set; }
-        public bool AltIsPressed { get; private set; }
-        public bool ShiftIsPressed { get; private set; }
-        public bool WinIsPressed { get; private set; }
-
-        public HookEventData(KeyData data, bool ctrl = false, bool alt = false, bool shift = false, bool win = false)
+        public bool Win { get; private set; }
+        public KeyboardEventArgs(Keys keyData, bool isWinDown) : base(keyData)
         {
-            KeyData = data;
-            CtrlIsPressed = ctrl;
-            AltIsPressed = alt;
-            ShiftIsPressed = shift;
-            WinIsPressed = win;
+            Win = isWinDown;
         }
+        //public override bool Equals(Object obj)
+        //{
+        //    if (obj == null)
+        //    {
+        //        return false;
+        //    }
 
-        public static HookEventData FromKeyCode(UInt32 vkCode, bool ctrl = false, bool alt = false, bool shift = false, bool win = false)
-        {
-            var data = new KeyData {vkCode = vkCode};
-            return new HookEventData(data, ctrl, alt, shift, win);
-        }
+        //    var p = obj as KeyboardEventData;
+        //    if (p == null)
+        //    {
+        //        return false;
+        //    }
 
-        public override bool Equals(Object obj)
-        {
-            if (obj == null)
-            {
-                return false;
-            }
+        //    return KeyData.vkCode == p.KeyData.vkCode && //mb compare all KeyData ?
+        //           CtrlIsPressed == p.CtrlIsPressed && AltIsPressed == p.AltIsPressed &&
+        //           ShiftIsPressed == p.ShiftIsPressed && WinIsPressed == p.WinIsPressed;
+        //}
 
-            var p = obj as HookEventData;
-            if (p == null)
-            {
-                return false;
-            }
-
-            return KeyData.vkCode == p.KeyData.vkCode && //mb compare all KeyData ?
-                   CtrlIsPressed == p.CtrlIsPressed && AltIsPressed == p.AltIsPressed &&
-                   ShiftIsPressed == p.ShiftIsPressed && WinIsPressed == p.WinIsPressed;
-        }
-
-        public override int GetHashCode()//TODO
-        {
-            return (int) (base.GetHashCode() ^ KeyData.vkCode);
-        }
+        //public override int GetHashCode()//TODO
+        //{
+        //    return (int)(base.GetHashCode() ^ KeyData.vkCode);
+        //}
+        //public override string ToString()
+        //{
+        //    var result =
+        //        (ShiftIsPressed ? Keys.Shift.ToString() + " + " : "") +
+        //        (CtrlIsPressed ? Keys.Control.ToString() + " + " : "") +
+        //        (AltIsPressed ? Keys.Alt.ToString() + " + " : "") +
+        //        ((Keys)KeyData.vkCode).ToString();
+        //    return result;
+        //}
+        
     }
 
-    public class DummyHookEventData : HookEventData
-    {
-        public new KeyData KeyData { get { WrongUsage(); return new KeyData(); } private set { } }
-        public new bool CtrlIsPressed { get { WrongUsage(); return false; } private set { } }
-        public new bool AltIsPressed { get { WrongUsage(); return false; } private set { } }
-        public new bool ShiftIsPressed { get { WrongUsage(); return false; } private set { } }
-        public new bool WinIsPressed { get { WrongUsage(); return false; } private set { } }
-        public DummyHookEventData() : base(new KeyData()) { }
-        public void WrongUsage()
-        {
-            throw new NotImplementedException("This is a DummyHookEventData");
-        }
-    }
+   
 
     public class HookId
     {
