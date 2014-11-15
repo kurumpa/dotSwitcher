@@ -11,8 +11,8 @@ namespace dotSwitcher
     public class Switcher : IDisposable
     {
         public event EventHandler<SwitcherErrorArgs> Error;
-        private HookId keyboardHook = HookId.Empty;
-        private HookId mouseHook = HookId.Empty;
+        private IntPtr keyboardHook = IntPtr.Zero;
+        private IntPtr mouseHook = IntPtr.Zero;
         private List<KeyboardEventArgs> currentWord = new List<KeyboardEventArgs>();
 
         private KeyboardEventArgs toggleLayoutShortcut = new KeyboardEventArgs(Keys.Pause, false);
@@ -28,7 +28,7 @@ namespace dotSwitcher
 
         public bool IsStarted()
         {
-            return !keyboardHook.IsEmpty();
+            return keyboardHook == IntPtr.Zero;
         }
         public void Start()
         {
@@ -41,8 +41,8 @@ namespace dotSwitcher
             if (!IsStarted()) { return; }
             LowLevelAdapter.ReleaseKeyboardHook(keyboardHook);
             LowLevelAdapter.ReleaseKeyboardHook(mouseHook);
-            mouseHook = HookId.Empty;
-            keyboardHook = HookId.Empty;
+            mouseHook = IntPtr.Zero;
+            keyboardHook = IntPtr.Zero;
         }
 
         // should return true if the key is recognized as hotkey and doesn't need further processing
