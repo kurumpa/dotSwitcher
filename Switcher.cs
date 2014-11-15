@@ -76,7 +76,7 @@ namespace dotSwitcher
 
         private void OnKeyPress(KeyboardEventArgs evtData)
         {
-            Debug.WriteLine("pressed: " + evtData.ToString());
+            //Debug.WriteLine("pressed: " + evtData.ToString());
             var vkCode = evtData.KeyCode;
             var shift = evtData.Shift;
             

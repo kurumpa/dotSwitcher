@@ -15,28 +15,28 @@ namespace dotSwitcher
         {
             Win = isWinDown;
         }
-        //public override bool Equals(Object obj)
-        //{
-        //    if (obj == null)
-        //    {
-        //        return false;
-        //    }
+        public override bool Equals(Object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
 
-        //    var p = obj as KeyboardEventData;
-        //    if (p == null)
-        //    {
-        //        return false;
-        //    }
+            var p = obj as KeyboardEventArgs;
+            if (p == null)
+            {
+                return false;
+            }
 
-        //    return KeyData.vkCode == p.KeyData.vkCode && //mb compare all KeyData ?
-        //           CtrlIsPressed == p.CtrlIsPressed && AltIsPressed == p.AltIsPressed &&
-        //           ShiftIsPressed == p.ShiftIsPressed && WinIsPressed == p.WinIsPressed;
-        //}
+            return p.KeyData == KeyData &&
+                p.KeyCode == KeyCode &&
+                p.Win == Win;
+        }
 
-        //public override int GetHashCode()//TODO
-        //{
-        //    return (int)(base.GetHashCode() ^ KeyData.vkCode);
-        //}
+        public override int GetHashCode()
+        {
+            return (int)(base.GetHashCode() ^  Win.GetHashCode());
+        }
         public override string ToString()
         {
             var result =
