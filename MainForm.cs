@@ -75,7 +75,9 @@ namespace dotSwitcher
 
         private void OnSettings(object sender, EventArgs e)
         {
+            engine.Stop();
             var settingsForm = new SettingsForm();
+            settingsForm.FormClosed += (a, b) => engine.Start();
             settingsForm.ShowDialog();
         }
 

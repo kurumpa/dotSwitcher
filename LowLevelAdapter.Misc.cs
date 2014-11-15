@@ -56,30 +56,46 @@ namespace dotSwitcher
         static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
         #endregion
 
-        private const int WH_KEYBOARD_LL = 13;
-        private const int WH_MOUSE_LL = 14;
-        private const int WM_KEYDOWN = 0x0100;
-        private const int WM_KEYUP = 0x0100;
-        private const int WM_SYSKEYDOWN = 0x0104;
+        public const int WH_KEYBOARD_LL = 13;
+        public const int WH_MOUSE_LL = 14;
+        public const int WM_KEYDOWN = 0x0100;
+        public const int WM_KEYUP = 0x0100;
+        public const int WM_SYSKEYDOWN = 0x0104;
+        public const int WM_LBUTTONDOWN = 0x0201;
+        public const int WM_RBUTTONDOWN = 0x0204;
+        public const int INPUT_KEYBOARD = 1;
+        public const uint KEYEVENTF_KEYUP = 0x0002;
+        public const uint WM_INPUTLANGCHANGEREQUEST = 0x50;
+        public const uint INPUTLANGCHANGE_FORWARD = 0x02;
+        public const uint HKL_NEXT = 1;
+        public const uint WM_GETTEXT = 0x0D;
+        public const uint WM_GETTEXTLENGTH = 0x0E;
+        public const uint EM_GETSEL = 0xB0;
+        public const uint EM_SETSEL = 0xB1;
+        public const uint EM_REPLACESEL = 0xC2;
 
-        private const int WM_LBUTTONDOWN = 0x0201;
-        private const int WM_RBUTTONDOWN = 0x0204;
-
-        private const int INPUT_KEYBOARD = 1;
-        private const uint KEYEVENTF_KEYUP = 0x0002;
-
-        private const uint WM_INPUTLANGCHANGEREQUEST = 0x50;
-        private const uint INPUTLANGCHANGE_FORWARD = 0x02;
-        private const uint HKL_NEXT = 1;
-        private const uint WM_GETTEXT = 0x0D;
-        private const uint WM_GETTEXTLENGTH = 0x0E;
-        private const uint EM_GETSEL = 0xB0;
-        private const uint EM_SETSEL = 0xB1;
-        private const uint EM_REPLACESEL = 0xC2;
+        private static INPUT MakeKeyInput(Keys vkCode, bool down)
+        {
+            return new INPUT
+            {
+                Type = INPUT_KEYBOARD,
+                Data = new MOUSEKEYBDHARDWAREINPUT
+                {
+                    Keyboard = new KEYBDINPUT
+                    {
+                        Vk = (UInt16)vkCode,
+                        Scan = 0,
+                        Flags = down ? 0 : KEYEVENTF_KEYUP,
+                        Time = 0,
+                        ExtraInfo = IntPtr.Zero
+                    }
+                }
+            };
+        }
 
     }
 
-    delegate IntPtr HookProc(int code, IntPtr wParam, IntPtr lParam);
+    public delegate IntPtr HookProc(int code, IntPtr wParam, IntPtr lParam);
 
     struct INPUT
     {

@@ -1,7 +1,4 @@
-﻿
-using System;
-using System.Text;
-using System.Collections.Generic;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Diagnostics;
@@ -10,47 +7,29 @@ namespace dotSwitcher
 {
     public static partial class LowLevelAdapter
     {
-        private static HookProc kbdCallbackDelegate;
-        private static HookProc mouseCallbackDelegate;
 
-        public static IntPtr SetMouseHook(Action<EventArgs> cb)
+        public static IntPtr SetHook(int type, HookProc callback)
         {
             var process = Process.GetCurrentProcess();
             var module = process.MainModule;
-            var hModule = GetModuleHandle(module.ModuleName);
-            var hookResult = IntPtr.Zero;
-            mouseCallbackDelegate = (int code, IntPtr wParam, IntPtr lParam) =>
-                    ProcessMouse(hookResult, code, wParam, lParam, cb);
-
-            hookResult = SetWindowsHookEx(WH_MOUSE_LL, mouseCallbackDelegate, hModule, 0);
-            return hookResult;
+            var handle = GetModuleHandle(module.ModuleName);
+            return SetWindowsHookEx(type, callback, handle, 0);
         }
-        public static IntPtr SetKeyboardHook(Action<KeyboardEventArgs> cb)
-        {
-            var process = Process.GetCurrentProcess();
-            var module = process.MainModule;
-            var hModule = GetModuleHandle(module.ModuleName);
-            var hookResult = IntPtr.Zero;
-
-            kbdCallbackDelegate = (int code, IntPtr wParam, IntPtr lParam) =>
-                    ProcessKeyPress(hookResult, code, wParam, lParam, cb);
-
-            hookResult = SetWindowsHookEx(WH_KEYBOARD_LL, kbdCallbackDelegate, hModule, 0);
-            return hookResult;
-        }
-
-        public static void ReleaseKeyboardHook(IntPtr id)
+        public static void ReleaseHook(IntPtr id)
         {
             UnhookWindowsHookEx(id);
-            kbdCallbackDelegate = null;
         }
-
-        public static void ReleaseMouseHook(IntPtr id)
+        public static IntPtr NextHook(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            UnhookWindowsHookEx(id);
-            mouseCallbackDelegate = null;
+            return CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
         }
 
+        public static bool KeyPressed(Keys keyCode)
+        {
+            return GetKeyState((int)keyCode & 0x8000) == 0;
+        }
+
+       
         public static void SetNextKeyboardLayout()
         {
             IntPtr hWnd = GetForegroundWindow();
@@ -64,75 +43,6 @@ namespace dotSwitcher
             AttachThreadInput(activeThreadId, currentThreadId, false);
 
             PostMessage(focusedHandle == IntPtr.Zero ? hWnd : focusedHandle, WM_INPUTLANGCHANGEREQUEST, INPUTLANGCHANGE_FORWARD, HKL_NEXT);
-        }
-
-        private static IntPtr ProcessKeyPress(IntPtr hookResult, int nCode, IntPtr wParam, IntPtr lParam, Action<KeyboardEventArgs> cb)
-        {
-            return ProcessKeyPressInt(nCode, wParam, lParam, cb) ?
-                new IntPtr(1) :
-                CallNextHookEx(hookResult, nCode, wParam, lParam);
-        }
-
-        private static bool KeyPressed(Keys keyCode)
-        {
-            return GetKeyState((int)keyCode & 0x8000) == 0;
-        }
-
-        private static bool ProcessKeyPressInt(int nCode, IntPtr wParam, IntPtr lParam, Action<KeyboardEventArgs> cb)
-        {
-            try
-            {
-
-                if (nCode < 0)
-                    return false;
-
-                if ("dotSwitcher Settings".Equals(GetActiveWindowTitle())) //Ignore settings windows TODO use const
-                    return false;
-
-                switch (wParam.ToInt32())
-                {
-                    case WM_KEYDOWN:
-                    case WM_SYSKEYDOWN:
-
-                        var keybdinput = (KEYBDINPUT)Marshal.PtrToStructure(lParam, typeof(KEYBDINPUT));
-                        var keyData = (Keys)keybdinput.Vk;
- 
-                        keyData |= KeyPressed(Keys.ControlKey) ? Keys.Control : 0;
-                        keyData |= KeyPressed(Keys.Menu) ? Keys.Alt : 0;
-                        keyData |= KeyPressed(Keys.ShiftKey) ? Keys.Shift : 0;
-
-                        var winPressed = KeyPressed(Keys.LWin) || KeyPressed(Keys.RWin);
-
-                        var args = new KeyboardEventArgs(keyData, winPressed);
-                        cb(args);
-                        var withdrawMessage = args.Handled;
-
-                        return withdrawMessage;
-                }
-
-            }
-            catch { }
-            return false;
-        }
-
-        private static IntPtr ProcessMouse(IntPtr hookResult, int nCode, IntPtr wParam, IntPtr lParam, Action<EventArgs> cb)
-        {
-            try
-            {
-                if (nCode >= 0)
-                {
-                    switch (wParam.ToInt32())
-                    {
-                        case WM_LBUTTONDOWN:
-                        case WM_RBUTTONDOWN:
-                            cb(new EventArgs());
-                            break;
-
-                    }
-                }
-            }
-            catch { }
-            return CallNextHookEx(hookResult, nCode, wParam, lParam);
         }
 
         public static void SendKeyPress(Keys vkCode, bool shift = false)
@@ -153,38 +63,18 @@ namespace dotSwitcher
 
         }
 
+        //private static string GetActiveWindowTitle()
+        //{
+        //    const int nChars = 256;
+        //    var buff = new StringBuilder(nChars);
+        //    var handle = GetForegroundWindow();
 
-        private static INPUT MakeKeyInput(Keys vkCode, bool down)
-        {
-            return new INPUT
-            {
-                Type = INPUT_KEYBOARD,
-                Data = new MOUSEKEYBDHARDWAREINPUT
-                {
-                    Keyboard = new KEYBDINPUT
-                        {
-                            Vk = (UInt16)vkCode,
-                            Scan = 0,
-                            Flags = down ? 0 : KEYEVENTF_KEYUP,
-                            Time = 0,
-                            ExtraInfo = IntPtr.Zero
-                        }
-                }
-            };
-        }
-
-        private static string GetActiveWindowTitle()
-        {
-            const int nChars = 256;
-            var buff = new StringBuilder(nChars);
-            var handle = GetForegroundWindow();
-
-            if (GetWindowText(handle, buff, nChars) > 0)
-            {
-                return buff.ToString();
-            }
-            return null;
-        }
+        //    if (GetWindowText(handle, buff, nChars) > 0)
+        //    {
+        //        return buff.ToString();
+        //    }
+        //    return null;
+        //}
 
     }
 }

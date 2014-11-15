@@ -11,9 +11,17 @@ namespace dotSwitcher
     public class Switcher : IDisposable
     {
         public event EventHandler<SwitcherErrorArgs> Error;
-        private IntPtr keyboardHook = IntPtr.Zero;
-        private IntPtr mouseHook = IntPtr.Zero;
         private List<KeyboardEventArgs> currentWord = new List<KeyboardEventArgs>();
+        private KeyboardHook kbdHook;
+        private MouseHook mouseHook;
+
+        public Switcher()
+        {
+            kbdHook = new KeyboardHook();
+            kbdHook.KeyboardEvent += ProcessKeyPress;
+            mouseHook = new MouseHook();
+            mouseHook.MouseEvent += ProcessMousePress;
+        }
 
         private KeyboardEventArgs toggleLayoutShortcut = new KeyboardEventArgs(Keys.Pause, false);
 
@@ -28,25 +36,21 @@ namespace dotSwitcher
 
         public bool IsStarted()
         {
-            return keyboardHook == IntPtr.Zero;
+            return kbdHook.IsStarted() || mouseHook.IsStarted();
         }
         public void Start()
         {
-            if (IsStarted()) { return; }
-            keyboardHook = LowLevelAdapter.SetKeyboardHook(ProcessKeyPress);
-            mouseHook = LowLevelAdapter.SetMouseHook(ProcessMousePress);
+            kbdHook.Start();
+            mouseHook.Start();
         }
         public void Stop()
         {
-            if (!IsStarted()) { return; }
-            LowLevelAdapter.ReleaseKeyboardHook(keyboardHook);
-            LowLevelAdapter.ReleaseKeyboardHook(mouseHook);
-            mouseHook = IntPtr.Zero;
-            keyboardHook = IntPtr.Zero;
+            kbdHook.Stop();
+            mouseHook.Stop();
         }
 
-        // should return true if the key is recognized as hotkey and doesn't need further processing
-        private void ProcessKeyPress(KeyboardEventArgs evtData)
+        // evtData.Handled must be set to true if the key is recognized as hotkey and doesn't need further processing
+        private void ProcessKeyPress(object sender, KeyboardEventArgs evtData)
         {
             try
             {
@@ -58,7 +62,7 @@ namespace dotSwitcher
             }
         }
 
-        private void ProcessMousePress(EventArgs evtData)
+        private void ProcessMousePress(object sender, EventArgs evtData)
         {
             try
             {
