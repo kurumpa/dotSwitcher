@@ -8,7 +8,6 @@ using System.Diagnostics;
 
 namespace dotSwitcher
 {
-    delegate IntPtr HookProc(int code, IntPtr wParam, IntPtr lParam);
     public static partial class LowLevelAdapter
     {
         private static HookProc kbdCallbackDelegate;
@@ -26,7 +25,7 @@ namespace dotSwitcher
             hookResult = SetWindowsHookEx(WH_MOUSE_LL, mouseCallbackDelegate, hModule, 0);
             return hookResult;
         }
-        public static IntPtr SetKeyboardHook(Func<KeyboardEventArgs, bool> cb)
+        public static IntPtr SetKeyboardHook(Action<KeyboardEventArgs> cb)
         {
             var process = Process.GetCurrentProcess();
             var module = process.MainModule;
@@ -67,7 +66,7 @@ namespace dotSwitcher
             PostMessage(focusedHandle == IntPtr.Zero ? hWnd : focusedHandle, WM_INPUTLANGCHANGEREQUEST, INPUTLANGCHANGE_FORWARD, HKL_NEXT);
         }
 
-        private static IntPtr ProcessKeyPress(IntPtr hookResult, int nCode, IntPtr wParam, IntPtr lParam, Func<KeyboardEventArgs, bool> cb)
+        private static IntPtr ProcessKeyPress(IntPtr hookResult, int nCode, IntPtr wParam, IntPtr lParam, Action<KeyboardEventArgs> cb)
         {
             return ProcessKeyPressInt(nCode, wParam, lParam, cb) ?
                 new IntPtr(1) :
@@ -79,7 +78,7 @@ namespace dotSwitcher
             return GetKeyState((int)keyCode & 0x8000) == 0;
         }
 
-        private static bool ProcessKeyPressInt(int nCode, IntPtr wParam, IntPtr lParam, Func<KeyboardEventArgs, bool> cb)
+        private static bool ProcessKeyPressInt(int nCode, IntPtr wParam, IntPtr lParam, Action<KeyboardEventArgs> cb)
         {
             try
             {
@@ -104,7 +103,9 @@ namespace dotSwitcher
 
                         var winPressed = KeyPressed(Keys.LWin) || KeyPressed(Keys.RWin);
 
-                        var withdrawMessage = cb(new KeyboardEventArgs(keyData, winPressed));
+                        var args = new KeyboardEventArgs(keyData, winPressed);
+                        cb(args);
+                        var withdrawMessage = args.Handled;
 
                         return withdrawMessage;
                 }

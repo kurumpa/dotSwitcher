@@ -46,17 +46,16 @@ namespace dotSwitcher
         }
 
         // should return true if the key is recognized as hotkey and doesn't need further processing
-        private bool ProcessKeyPress(KeyboardEventArgs evtData)
+        private void ProcessKeyPress(KeyboardEventArgs evtData)
         {
             try
             {
-                return OnKeyPress(evtData);
+                OnKeyPress(evtData);
             }
             catch (Exception ex)
             {
                 OnError(ex);
             }
-            return false;
         }
 
         private void ProcessMousePress(EventArgs evtData)
@@ -71,7 +70,7 @@ namespace dotSwitcher
             }
         }
 
-        private bool OnKeyPress(KeyboardEventArgs evtData)
+        private void OnKeyPress(KeyboardEventArgs evtData)
         {
             var vkCode = evtData.KeyCode;
             var shift = evtData.Shift;
@@ -92,15 +91,15 @@ namespace dotSwitcher
                 vkCode == Keys.RShiftKey ||
                 vkCode == Keys.LShiftKey) 
             {
-                return false; 
+                return; 
             }
-            if (vkCode == Keys.Space && notModified) { AddToCurrentWord(evtData); return false; }
-            if (vkCode == Keys.Back && notModified) { RemoveLast(); return false; }
+            if (vkCode == Keys.Space && notModified) { AddToCurrentWord(evtData); return; }
+            if (vkCode == Keys.Back && notModified) { RemoveLast(); return; }
             if (IsPrintable(evtData))
             {
                 if (GetPreviousVkCode() == Keys.Space) { BeginNewWord(); }
                 AddToCurrentWord(evtData);
-                return false;
+                return;
             }
             // todo make it global hotkey someday
             // warning: ctrl+pause = VK_CANCEL
@@ -108,12 +107,12 @@ namespace dotSwitcher
             {
                 if (shift) ConvertSelection();
                 else ConvertLast();
-                return true;
+                evtData.Handled = true;
+                return;
             }
 
             // default: 
             BeginNewWord();
-            return false;
         }
 
         private void OnError(Exception ex)

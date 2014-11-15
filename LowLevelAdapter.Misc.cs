@@ -79,6 +79,8 @@ namespace dotSwitcher
 
     }
 
+    delegate IntPtr HookProc(int code, IntPtr wParam, IntPtr lParam);
+
     struct INPUT
     {
         public UInt32 Type;
