@@ -48,23 +48,11 @@ namespace dotSwitcher
 
         private void InitializeValues()
         {
-            var config = ConfigurationManager.GetSection("hotkeys") as HotkeyConfigurationSection;
-
-            shortcutTextBox.Text = config.SwitchLayoutHotkey.ToString();
-        }
-
-
-        private void txtButton_KeyDown(object sender, KeyEventArgs e)
-        {
-            //keyIsSet = e.KeyCode != Keys.ShiftKey  etc
-        }
-
-        private void txtButton_KeyUp(object sender, KeyEventArgs e)
-        {
-            //if (keyIsSet == false)
-            //{
-            //    shortcutTextBox.Text = Keys.None.ToString();
-            //}
+            HotkeysConfig config =
+            (HotkeysConfig)System.Configuration.ConfigurationManager.GetSection(
+            "hotkeys");
+            //var config = ConfigurationManager.GetSection("hotkeys") as HotkeyConfigurationSection;
+            //shortcutTextBox.Text = config.SwitchLayoutHotkey.ToString();
         }
 
 
