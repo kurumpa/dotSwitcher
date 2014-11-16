@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace dotSwitcher
@@ -13,10 +10,14 @@ namespace dotSwitcher
         private NotifyIcon trayIcon;
         private ContextMenu trayMenu;
         private MenuItem power;
+        private Settings settings;
 
         public SysTrayApp(Switcher engine)
         {
+
             this.engine = engine;
+            InitSettings();
+
             trayMenu = new ContextMenu();
             power = new MenuItem("", OnPower);
             trayMenu.MenuItems.Add(power);
@@ -31,6 +32,23 @@ namespace dotSwitcher
             trayIcon.ContextMenu = trayMenu;
             trayIcon.Visible = true;
             
+        }
+
+        private void InitSettings()
+        {
+            settings = new Settings();
+            settings.Reload();
+            if (settings.SwitchHotkey.KeyData == Keys.None)
+            {
+                settings.SwitchHotkey = new KeyboardEventArgs(Keys.Pause, false);
+            }
+            SaveSettings();
+        }
+
+        private void SaveSettings()
+        {
+            engine.SwitchHotkey = settings.SwitchHotkey;
+            settings.Save();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -76,9 +94,17 @@ namespace dotSwitcher
         private void OnSettings(object sender, EventArgs e)
         {
             engine.Stop();
-            var settingsForm = new SettingsForm();
+            var settingsForm = new SettingsForm(settings);
             settingsForm.FormClosed += (a, b) => engine.Start();
-            settingsForm.ShowDialog();
+            var result = settingsForm.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                SaveSettings();
+            }
+            else
+            {
+                settings.Reload();
+            }
         }
 
         protected override void Dispose(bool isDisposing)

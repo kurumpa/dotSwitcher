@@ -10,6 +10,12 @@ namespace dotSwitcher
     {
         public event EventHandler<EventArgs> MouseEvent;
         private IntPtr hookId = IntPtr.Zero;
+        private HookProc callback;
+        public MouseHook()
+        {
+            callback = ProcessMouse;
+        }
+
 
         public bool IsStarted()
         {
@@ -18,7 +24,7 @@ namespace dotSwitcher
         public void Start()
         {
             if (IsStarted()) { return; }
-            hookId = LowLevelAdapter.SetHook(LowLevelAdapter.WH_MOUSE_LL, ProcessMouse);
+            hookId = LowLevelAdapter.SetHook(LowLevelAdapter.WH_MOUSE_LL, callback);
         }
         public void Stop()
         {

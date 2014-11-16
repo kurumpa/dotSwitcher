@@ -15,6 +15,10 @@ namespace dotSwitcher
         private KeyboardHook kbdHook;
         private MouseHook mouseHook;
 
+        public KeyboardEventArgs SwitchHotkey { get; set; }
+        public KeyboardEventArgs ConvertSelectionHotkey { get; set; }
+
+
         public Switcher()
         {
             kbdHook = new KeyboardHook();
@@ -23,7 +27,6 @@ namespace dotSwitcher
             mouseHook.MouseEvent += ProcessMousePress;
         }
 
-        private KeyboardEventArgs toggleLayoutShortcut = new KeyboardEventArgs(Keys.Pause, false);
 
         public static bool IsPrintable(KeyboardEventArgs evtData)
         {
@@ -76,13 +79,23 @@ namespace dotSwitcher
 
         private void OnKeyPress(KeyboardEventArgs evtData)
         {
-            //Debug.WriteLine("pressed: " + evtData.ToString());
             var vkCode = evtData.KeyCode;
-            var shift = evtData.Shift;
             
             var ctrl = evtData.Control;
             var alt = evtData.Alt;
             var win = evtData.Win;
+
+            if (evtData.Equals(SwitchHotkey))
+            {
+                ConvertLast();
+                evtData.Handled = true;
+                return;
+            }
+
+            if (evtData.Equals(ConvertSelectionHotkey))
+            {
+                ConvertSelection();
+            }
 
             var notModified = !ctrl && !alt && !win;
 
@@ -103,15 +116,6 @@ namespace dotSwitcher
             {
                 if (GetPreviousVkCode() == Keys.Space) { BeginNewWord(); }
                 AddToCurrentWord(evtData);
-                return;
-            }
-            // todo make it global hotkey someday
-            // warning: ctrl+pause = VK_CANCEL
-            if (toggleLayoutShortcut.Equals(evtData))
-            {
-                if (shift) ConvertSelection();
-                else ConvertLast();
-                evtData.Handled = true;
                 return;
             }
 

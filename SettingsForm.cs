@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Configuration;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace dotSwitcher
@@ -17,17 +9,18 @@ namespace dotSwitcher
         bool keyIsSet;
         KeyboardHook kbdHook;
         TextBox currentTextBox;
+        Settings settings;
+        KeyboardEventArgs currentHotkey;
 
-        public SettingsForm()
+        public SettingsForm(Settings settings)
         {
+            this.settings = settings;
             currentTextBox = null;
             kbdHook = new KeyboardHook();
             kbdHook.KeyboardEvent += kbdHook_KeyboardEvent;
             InitializeComponent();
             InitializeValues();
         }
-
-        
 
         void kbdHook_KeyboardEvent(object sender, KeyboardEventArgs e)
         {
@@ -41,27 +34,23 @@ namespace dotSwitcher
                 {
                     e.Handled = true;
                 }
-                Invoke((MethodInvoker)delegate { currentTextBox.Text = e.ToString(); }); 
-                
+                Invoke((MethodInvoker)delegate { currentTextBox.Text = e.ToString(); });
+                currentHotkey = e;
             }
         }
 
         private void InitializeValues()
         {
-            HotkeysConfig config =
-            (HotkeysConfig)System.Configuration.ConfigurationManager.GetSection(
-            "hotkeys");
-            //var config = ConfigurationManager.GetSection("hotkeys") as HotkeyConfigurationSection;
-            //shortcutTextBox.Text = config.SwitchLayoutHotkey.ToString();
+            shortcutTextBox.LostFocus += unsetCurrentInput;
+            shortcutTextBox.Leave += unsetCurrentInput;
+            shortcutTextBox.GotFocus += setCurrentInput;
+            shortcutTextBox.Enter += setCurrentInput;
+            shortcutTextBox.Text = settings.SwitchHotkey.ToString();
         }
 
 
         private void SettingsForm_Load(object sender, EventArgs e)
         {
-            shortcutTextBox.LostFocus += unsetCurrentInput;
-            shortcutTextBox.Leave += unsetCurrentInput;
-            shortcutTextBox.GotFocus += setCurrentInput;
-            shortcutTextBox.Enter += setCurrentInput;
             kbdHook.Start();
         }
 
@@ -77,6 +66,17 @@ namespace dotSwitcher
         private void unsetCurrentInput(object sender, EventArgs e)
         {
             currentTextBox = null;
+        }
+
+        private void shortcutTextBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            settings.SwitchHotkey = currentHotkey;
+        }
+
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+            Close();
         }
     }
 }

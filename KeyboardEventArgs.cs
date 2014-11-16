@@ -1,15 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using System.Runtime.Serialization;
 using System.Windows.Forms;
 
 namespace dotSwitcher
 {
-    public class KeyboardEventArgs : KeyEventArgs
+    [Serializable]
+    public class KeyboardEventArgs : KeyEventArgs, ISerializable
     {
+        public KeyboardEventArgs() : base(Keys.None) { }
         public bool Win { get; private set; }
+        public KeyboardEventArgs(SerializationInfo info, StreamingContext context)
+            : base((Keys)info.GetValue("keyData", typeof(Keys)))
+        {
+            Win = (bool)info.GetValue("winMod", typeof(bool));
+        }
         public KeyboardEventArgs(Keys keyData, bool isWinDown)
             : base(keyData)
         {
@@ -27,10 +32,11 @@ namespace dotSwitcher
             {
                 return false;
             }
-
-            return p.KeyData == KeyData &&
+            var equals = p.KeyData == KeyData &&
                 p.KeyCode == KeyCode &&
                 p.Win == Win;
+
+            return equals;
         }
 
         public override int GetHashCode()
@@ -48,5 +54,10 @@ namespace dotSwitcher
             return result;
         }
 
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("keyData", KeyData, typeof(Keys));
+            info.AddValue("winMod", Win, typeof(bool));
+        }
     }
 }

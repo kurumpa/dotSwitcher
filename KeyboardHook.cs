@@ -12,7 +12,12 @@ namespace dotSwitcher
     public class KeyboardHook
     {
         public event EventHandler<KeyboardEventArgs> KeyboardEvent;
+        private HookProc callback;
         private IntPtr hookId = IntPtr.Zero;
+        public KeyboardHook()
+        {
+            callback = ProcessKeyPress;
+        }
         public bool IsStarted()
         {
             return hookId != IntPtr.Zero;
@@ -20,7 +25,7 @@ namespace dotSwitcher
         public void Start()
         {
             if (IsStarted()) { return; }
-            hookId = LowLevelAdapter.SetHook(LowLevelAdapter.WH_KEYBOARD_LL, ProcessKeyPress);
+            hookId = LowLevelAdapter.SetHook(LowLevelAdapter.WH_KEYBOARD_LL, callback);
         }
         public void Stop()
         {

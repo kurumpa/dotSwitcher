@@ -44,6 +44,7 @@
             this.shortcutTextBox.Name = "shortcutTextBox";
             this.shortcutTextBox.Size = new System.Drawing.Size(169, 20);
             this.shortcutTextBox.TabIndex = 6;
+            this.shortcutTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.shortcutTextBox_KeyUp);
             // 
             // buttonSave
             // 
@@ -53,6 +54,7 @@
             this.buttonSave.TabIndex = 7;
             this.buttonSave.Text = "&Save";
             this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
             // buttonCancel
             // 
