@@ -77,13 +77,34 @@ namespace dotSwitcher
             }
         }
 
-        private void OnKeyPress(KeyboardEventArgs evtData)
+        private bool HaveModifiers(KeyboardEventArgs evtData)
         {
-            var vkCode = evtData.KeyCode;
-            
             var ctrl = evtData.Control;
             var alt = evtData.Alt;
             var win = evtData.Win;
+
+            return ctrl || alt || win;
+        }
+
+      private bool HaveTrackingKeys(KeyboardEventArgs evtData)
+      {
+          var vkCode = evtData.KeyCode;
+
+          return evtData.KeyCode == Keys.ControlKey ||
+            vkCode == Keys.LControlKey ||
+            vkCode == Keys.RControlKey ||
+            // yes, don't interrupt the tracking on PrtSc!
+            vkCode == Keys.PrintScreen ||
+            vkCode == Keys.ShiftKey ||
+            vkCode == Keys.RShiftKey ||
+            vkCode == Keys.LShiftKey ||
+            vkCode == Keys.NumLock || 
+            vkCode == Keys.Scroll;
+      }
+
+        private void OnKeyPress(KeyboardEventArgs evtData)
+        {
+            var vkCode = evtData.KeyCode;           
 
             if (evtData.Equals(SwitchHotkey))
             {
@@ -97,19 +118,11 @@ namespace dotSwitcher
                 ConvertSelection();
             }
 
-            var notModified = !ctrl && !alt && !win;
+            if (this.HaveTrackingKeys(evtData))
+              return;
 
-            if (vkCode == Keys.ControlKey ||
-                vkCode == Keys.LControlKey ||
-                vkCode == Keys.RControlKey ||
-                // yes, don't interrupt the tracking on PrtSc!
-                vkCode == Keys.PrintScreen ||
-                vkCode == Keys.ShiftKey ||
-                vkCode == Keys.RShiftKey ||
-                vkCode == Keys.LShiftKey) 
-            {
-                return; 
-            }
+            var notModified = !this.HaveModifiers(evtData);
+
             if (vkCode == Keys.Space && notModified) { AddToCurrentWord(evtData); return; }
             if (vkCode == Keys.Back && notModified) { RemoveLast(); return; }
             if (IsPrintable(evtData))
