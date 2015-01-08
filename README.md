@@ -18,4 +18,4 @@ Improvements to be implemented
 
 Known bugs
 ----------
-Does not work in skype.
+[Does not work](http://stackoverflow.com/questions/27720728/cant-send-wm-inputlangchangerequest-to-some-controls) in skype.
