@@ -31,7 +31,6 @@ namespace dotSwitcher
 
             trayIcon.ContextMenu = trayMenu;
             trayIcon.Visible = true;
-            
         }
 
         private void InitSettings()

@@ -165,6 +165,7 @@ namespace dotSwitcher
         }
         private void ConvertLast()
         {
+            LowLevelAdapter.ReleasePressedFnKeys();
             var word = currentWord.ToList();
             var backspaces = Enumerable.Repeat<Keys>(Keys.Back, word.Count);
 

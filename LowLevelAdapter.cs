@@ -117,20 +117,17 @@ namespace dotSwitcher
 
         }
 
-        public static bool[] ReleasePressedKeys()
+        public static void ReleasePressedFnKeys()
         {
             // temp solution
-            return new bool[8] 
-            {
-                ReleasePressedKey(Keys.LMenu, true),
-                ReleasePressedKey(Keys.RMenu, true),
-                ReleasePressedKey(Keys.LWin, true),
-                ReleasePressedKey(Keys.RWin, true),
-                ReleasePressedKey(Keys.RControlKey, false),
-                ReleasePressedKey(Keys.LControlKey, false),
-                ReleasePressedKey(Keys.LShiftKey, false),
-                ReleasePressedKey(Keys.RShiftKey, false)
-            };
+            //ReleasePressedKey(Keys.LMenu, true),
+            //ReleasePressedKey(Keys.RMenu, true),
+            //ReleasePressedKey(Keys.LWin, true),
+            //ReleasePressedKey(Keys.RWin, true),
+            ReleasePressedKey(Keys.RControlKey, false);
+            ReleasePressedKey(Keys.LControlKey, false);
+            ReleasePressedKey(Keys.LShiftKey, false);
+            ReleasePressedKey(Keys.RShiftKey, false);
         }
 
         public static bool ReleasePressedKey(Keys keyCode, bool releaseTwice)

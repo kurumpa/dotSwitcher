@@ -75,6 +75,11 @@ namespace dotSwitcher
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
+            if (settings.SwitchHotkey.Alt || settings.SwitchHotkey.Win)
+            {
+                MessageBox.Show("Sorry, win+ and alt+ hotkeys are not supported yet");
+                return;
+            }
             DialogResult = DialogResult.OK;
             Close();
         }
