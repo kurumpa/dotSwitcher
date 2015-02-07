@@ -168,8 +168,10 @@ namespace dotSwitcher
             var word = currentWord.ToList();
             var backspaces = Enumerable.Repeat<Keys>(Keys.Back, word.Count);
 
-            LowLevelAdapter.SetNextKeyboardLayout();
             foreach (var vkCode in backspaces) { LowLevelAdapter.SendKeyPress(vkCode, false); }
+            // funny fix for my skype
+            Thread.Sleep(20);
+            LowLevelAdapter.SetNextKeyboardLayout();
             foreach (var data in word)
             {
                 LowLevelAdapter.SendKeyPress(data.KeyCode, data.Shift);

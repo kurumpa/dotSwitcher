@@ -51,9 +51,9 @@ namespace dotSwitcher
         private static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
         [DllImport("user32.dll", SetLastError = true)]
         static extern UInt32 SendInput(UInt32 numberOfInputs, INPUT[] inputs, Int32 sizeOfInputStructure);
-
         [DllImport("user32.dll")]
-        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool GetGUIThreadInfo(uint idThread, ref GUITHREADINFO lpgui);
         #endregion
 
         public const int WH_KEYBOARD_LL = 13;
@@ -142,5 +142,19 @@ namespace dotSwitcher
         public UInt16 ParamH;
     }
     #pragma warning restore 649
+
+    public struct GUITHREADINFO
+    {
+        public int cbSize;
+        public int flags;
+        public IntPtr hwndActive;
+        public IntPtr hwndFocus;
+        public IntPtr hwndCapture;
+        public IntPtr hwndMenuOwner;
+        public IntPtr hwndMoveSize;
+        public IntPtr hwndCaret;
+        public System.Drawing.Rectangle rcCaret;
+    }
+
 
 }
