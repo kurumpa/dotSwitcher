@@ -16,6 +16,8 @@ namespace dotSwitcher
         private MouseHook mouseHook;
 
         public KeyboardEventArgs SwitchHotkey { get; set; }
+
+        public KeyboardEventArgs SwitchKeyboardLayout { get; set; }
         public KeyboardEventArgs ConvertSelectionHotkey { get; set; }
 
 
@@ -111,6 +113,11 @@ namespace dotSwitcher
                 ConvertLast();
                 evtData.Handled = true;
                 return;
+            }
+
+            if (evtData.Equals(SwitchKeyboardLayout))
+            {
+                LowLevelAdapter.SetNextKeyboardLayout();
             }
 
             if (evtData.Equals(ConvertSelectionHotkey))

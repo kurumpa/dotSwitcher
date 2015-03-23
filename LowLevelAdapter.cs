@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net.Configuration;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Diagnostics;
@@ -63,6 +65,13 @@ namespace dotSwitcher
 
         public static void SetNextKeyboardLayout()
         {
+            var hWnd = WindowPtr();
+
+            PostMessage(hWnd, WM_INPUTLANGCHANGEREQUEST, INPUTLANGCHANGE_FORWARD, HKL_NEXT);
+        }
+
+        private static IntPtr WindowPtr()
+        {
             IntPtr hWnd = IntPtr.Zero;
             var threadId = GetWindowThreadProcessId(GetForegroundWindow(), IntPtr.Zero);
             var info = new GUITHREADINFO();
@@ -94,9 +103,47 @@ namespace dotSwitcher
             {
                 hWnd = focusedHandle;
             }
-            if(hWnd == IntPtr.Zero) { hWnd = GetForegroundWindow();  }
+            if (hWnd == IntPtr.Zero)
+            {
+                hWnd = GetForegroundWindow();
+            }
+            return hWnd;
+        }
 
-            PostMessage(hWnd, WM_INPUTLANGCHANGEREQUEST, INPUTLANGCHANGE_FORWARD, HKL_NEXT);
+        public static Locale[] GetkeyboardLayouts()
+        {
+            uint nElements = GetKeyboardLayoutList(0, null);
+            IntPtr[] list = new IntPtr[nElements];
+            List<Locale> locales = new List<Locale>();
+            GetKeyboardLayoutList(3, list);
+
+            foreach (IntPtr ptr in list)
+            {
+                Locale locale = new Locale { LocaleId = (ptr.ToInt32() * 0xFFFF) };
+                locale.Lang = ExecuteGetlocaleInfo(locale.LocaleId, LOCALE_SNATIVELANGNAME).ToLower();
+                locales.Add(locale);
+            }
+            return locales.ToArray();
+
+        }
+
+        public struct Locale
+        {
+            public string Lang { get; set; }
+            public int LocaleId { get; set; }
+        }
+
+        public static bool SetLayout(int locale)
+        {
+            var hWnd = WindowPtr();
+            return PostMessage(hWnd, WM_INPUTLANGCHANGEREQUEST, INPUTLANGCHANGE_SYSCHARSET, (uint)locale * 0xFFFF);
+        }
+
+        private static string ExecuteGetlocaleInfo(int localeId, int localeInfo)
+        {
+            StringBuilder locale = new StringBuilder();
+            int error = GetLocaleInfo(localeId, localeInfo, locale, locale.Capacity);
+            return locale.ToString();
         }
 
         public static void SendKeyPress(Keys vkCode, bool shift = false)

@@ -33,8 +33,12 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.listviewKeyboarLayouts = new System.Windows.Forms.ListView();
+            this.switchKeyboardCheckox = new System.Windows.Forms.CheckBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.Language = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Hotkey = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -77,16 +81,42 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.listviewKeyboarLayouts);
+            this.groupBox1.Controls.Add(this.switchKeyboardCheckox);
             this.groupBox1.Controls.Add(this.textBox1);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.shortcutTextBox);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(281, 83);
+            this.groupBox1.Size = new System.Drawing.Size(281, 142);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Hotkey settings";
+            // 
+            // listviewKeyboarLayouts
+            // 
+            this.listviewKeyboarLayouts.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.Language,
+            this.Hotkey});
+            this.listviewKeyboarLayouts.Location = new System.Drawing.Point(9, 98);
+            this.listviewKeyboarLayouts.Name = "listviewKeyboarLayouts";
+            this.listviewKeyboarLayouts.Size = new System.Drawing.Size(258, 17);
+            this.listviewKeyboarLayouts.TabIndex = 14;
+            this.listviewKeyboarLayouts.UseCompatibleStateImageBehavior = false;
+            this.listviewKeyboarLayouts.View = System.Windows.Forms.View.List;
+            // 
+            // switchKeyboardCheckox
+            // 
+            this.switchKeyboardCheckox.AutoSize = true;
+            this.switchKeyboardCheckox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.switchKeyboardCheckox.Location = new System.Drawing.Point(6, 74);
+            this.switchKeyboardCheckox.Name = "switchKeyboardCheckox";
+            this.switchKeyboardCheckox.Size = new System.Drawing.Size(175, 17);
+            this.switchKeyboardCheckox.TabIndex = 13;
+            this.switchKeyboardCheckox.Text = "Switch keyboard layout by keys";
+            this.switchKeyboardCheckox.UseVisualStyleBackColor = true;
+            this.switchKeyboardCheckox.CheckedChanged += new System.EventHandler(this.switchKeyboard_CheckedChanged);
             // 
             // textBox1
             // 
@@ -135,6 +165,10 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.CheckBox switchKeyboardCheckox;
+        private System.Windows.Forms.ListView listviewKeyboarLayouts;
+        private System.Windows.Forms.ColumnHeader Language;
+        private System.Windows.Forms.ColumnHeader Hotkey;
 
     }
 }

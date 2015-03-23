@@ -15,6 +15,12 @@ namespace dotSwitcher
         public SettingsForm(Settings settings)
         {
             this.settings = settings;
+            var list = LowLevelAdapter.GetkeyboardLayouts();
+            foreach (var locale in list)
+            {
+                var item = new ListViewItem();
+                listviewKeyboarLayouts.Items.Add(item);
+            }
             currentTextBox = null;
             kbdHook = new KeyboardHook();
             kbdHook.KeyboardEvent += kbdHook_KeyboardEvent;
@@ -82,6 +88,11 @@ namespace dotSwitcher
             }
             DialogResult = DialogResult.OK;
             Close();
+        }
+
+        private void switchKeyboard_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

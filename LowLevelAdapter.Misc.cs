@@ -25,6 +25,10 @@ namespace dotSwitcher
         private static extern IntPtr GetForegroundWindow();
         [DllImport("User32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        public static extern int GetLocaleInfo(int Locale, int LCType, StringBuilder lpLCData, int cchData);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern uint GetKeyboardLayoutList(int size, [Out, MarshalAs(UnmanagedType.LPArray)] IntPtr[] hkls);
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr GetKeyboardLayout(uint WindowsThreadProcessID);
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
@@ -67,12 +71,17 @@ namespace dotSwitcher
         public const uint KEYEVENTF_KEYUP = 0x0002;
         public const uint WM_INPUTLANGCHANGEREQUEST = 0x50;
         public const uint INPUTLANGCHANGE_FORWARD = 0x02;
+        public const uint INPUTLANGCHANGE_SYSCHARSET = 0x01;
         public const uint HKL_NEXT = 1;
         public const uint WM_GETTEXT = 0x0D;
         public const uint WM_GETTEXTLENGTH = 0x0E;
         public const uint EM_GETSEL = 0xB0;
         public const uint EM_SETSEL = 0xB1;
         public const uint EM_REPLACESEL = 0xC2;
+
+        private const int LOCALE_SNATIVELANGNAME = 0x0004;
+        private const int KLF_SETFORPROCESS = 0x00000100;
+
 
         private static INPUT MakeKeyInput(Keys vkCode, bool down)
         {
