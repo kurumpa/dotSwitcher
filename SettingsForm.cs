@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Windows.Forms;
-
+using System.Linq;
 namespace dotSwitcher
 {
     public partial class SettingsForm : Form
@@ -22,6 +22,18 @@ namespace dotSwitcher
             InitializeComponent();
             InitializeValues();
 
+        }
+
+        public IEnumerable<ComboBox> ComboBoxes
+        {
+            get
+            {
+                foreach (var control in this.Controls)
+                {
+                    if (control.GetType() == typeof (ComboBox))
+                        yield return control as ComboBox;
+                }
+            }
         }
 
         void kbdHook_KeyboardEvent(object sender, KeyboardEventArgs e)
@@ -48,11 +60,19 @@ namespace dotSwitcher
             shortcutTextBox.GotFocus += setCurrentInput;
             shortcutTextBox.Enter += setCurrentInput;
             shortcutTextBox.Text = settings.SwitchHotkey.ToString();
+            InicializeSwitchSettingsLine(comboBoxKeyboarLayouts, comboBoxSwitchKey);
+        }
+
+        private void InicializeSwitchSettingsLine(ComboBox boxKeyboarLayouts, ComboBox boxHotkeys)
+        {
             var list = LowLevelAdapter.GetkeyboardLayouts();
+            var alreadySetLocale = ComboBoxes.Select(t => t.SelectedItem).ToList();
             foreach (var locale in list)
             {
-                comboBoxKeyboarLayouts.Items.Add(locale.Lang);
+                if(!alreadySetLocale.Contains(locale))
+                    boxKeyboarLayouts.Items.Add(locale.Lang);
             }
+
         }
 
 

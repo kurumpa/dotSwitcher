@@ -33,11 +33,16 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.switchKeyboardCheckox = new System.Windows.Forms.CheckBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.comboBoxKeyboarLayouts = new System.Windows.Forms.ComboBox();
+            this.switchKeyboardCheckox = new System.Windows.Forms.CheckBox();
+            this.switchKeyboardGroupbox = new System.Windows.Forms.GroupBox();
+            this.comboBoxSwitchKey = new System.Windows.Forms.ComboBox();
+            this.layoutLabel = new System.Windows.Forms.Label();
+            this.switchKeyLabel = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
+            this.switchKeyboardGroupbox.SuspendLayout();
             this.SuspendLayout();
             // 
             // shortcutTextBox
@@ -50,7 +55,7 @@
             // 
             // buttonSave
             // 
-            this.buttonSave.Location = new System.Drawing.Point(137, 225);
+            this.buttonSave.Location = new System.Drawing.Point(137, 359);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(75, 23);
             this.buttonSave.TabIndex = 7;
@@ -61,7 +66,7 @@
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(218, 225);
+            this.buttonCancel.Location = new System.Drawing.Point(218, 359);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 8;
@@ -79,30 +84,16 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.comboBoxKeyboarLayouts);
-            this.groupBox1.Controls.Add(this.switchKeyboardCheckox);
             this.groupBox1.Controls.Add(this.textBox1);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.shortcutTextBox);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(281, 142);
+            this.groupBox1.Size = new System.Drawing.Size(281, 91);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Hotkey settings";
-            // 
-            // switchKeyboardCheckox
-            // 
-            this.switchKeyboardCheckox.AutoSize = true;
-            this.switchKeyboardCheckox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.switchKeyboardCheckox.Location = new System.Drawing.Point(6, 74);
-            this.switchKeyboardCheckox.Name = "switchKeyboardCheckox";
-            this.switchKeyboardCheckox.Size = new System.Drawing.Size(175, 17);
-            this.switchKeyboardCheckox.TabIndex = 13;
-            this.switchKeyboardCheckox.Text = "Switch keyboard layout by keys";
-            this.switchKeyboardCheckox.UseVisualStyleBackColor = true;
-            this.switchKeyboardCheckox.CheckedChanged += new System.EventHandler(this.switchKeyboard_CheckedChanged);
+            this.groupBox1.Text = "Convert settings";
             // 
             // textBox1
             // 
@@ -126,17 +117,71 @@
             // 
             this.comboBoxKeyboarLayouts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxKeyboarLayouts.FormattingEnabled = true;
-            this.comboBoxKeyboarLayouts.Location = new System.Drawing.Point(6, 97);
+            this.comboBoxKeyboarLayouts.Location = new System.Drawing.Point(8, 69);
             this.comboBoxKeyboarLayouts.Name = "comboBoxKeyboarLayouts";
             this.comboBoxKeyboarLayouts.Size = new System.Drawing.Size(121, 21);
             this.comboBoxKeyboarLayouts.TabIndex = 11;
+            // 
+            // switchKeyboardCheckox
+            // 
+            this.switchKeyboardCheckox.AutoSize = true;
+            this.switchKeyboardCheckox.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.switchKeyboardCheckox.Location = new System.Drawing.Point(35, 19);
+            this.switchKeyboardCheckox.Name = "switchKeyboardCheckox";
+            this.switchKeyboardCheckox.Size = new System.Drawing.Size(175, 17);
+            this.switchKeyboardCheckox.TabIndex = 13;
+            this.switchKeyboardCheckox.Text = "Switch keyboard layout by keys";
+            this.switchKeyboardCheckox.UseVisualStyleBackColor = true;
+            this.switchKeyboardCheckox.CheckedChanged += new System.EventHandler(this.switchKeyboard_CheckedChanged);
+            // 
+            // switchKeyboardGroupbox
+            // 
+            this.switchKeyboardGroupbox.Controls.Add(this.switchKeyLabel);
+            this.switchKeyboardGroupbox.Controls.Add(this.layoutLabel);
+            this.switchKeyboardGroupbox.Controls.Add(this.comboBoxSwitchKey);
+            this.switchKeyboardGroupbox.Controls.Add(this.comboBoxKeyboarLayouts);
+            this.switchKeyboardGroupbox.Controls.Add(this.switchKeyboardCheckox);
+            this.switchKeyboardGroupbox.Location = new System.Drawing.Point(13, 106);
+            this.switchKeyboardGroupbox.Name = "switchKeyboardGroupbox";
+            this.switchKeyboardGroupbox.Size = new System.Drawing.Size(280, 117);
+            this.switchKeyboardGroupbox.TabIndex = 11;
+            this.switchKeyboardGroupbox.TabStop = false;
+            this.switchKeyboardGroupbox.Text = "Switch keyboard layout";
+            // 
+            // comboBoxSwitchKey
+            // 
+            this.comboBoxSwitchKey.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSwitchKey.FormattingEnabled = true;
+            this.comboBoxSwitchKey.Location = new System.Drawing.Point(135, 69);
+            this.comboBoxSwitchKey.Name = "comboBoxSwitchKey";
+            this.comboBoxSwitchKey.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxSwitchKey.TabIndex = 14;
+            // 
+            // layoutLabel
+            // 
+            this.layoutLabel.AutoSize = true;
+            this.layoutLabel.Location = new System.Drawing.Point(10, 47);
+            this.layoutLabel.Name = "layoutLabel";
+            this.layoutLabel.Size = new System.Drawing.Size(39, 13);
+            this.layoutLabel.TabIndex = 15;
+            this.layoutLabel.Text = "Layout";
+            // 
+            // switchKeyLabel
+            // 
+            this.switchKeyLabel.AutoSize = true;
+            this.switchKeyLabel.Location = new System.Drawing.Point(141, 47);
+            this.switchKeyLabel.Name = "switchKeyLabel";
+            this.switchKeyLabel.Size = new System.Drawing.Size(59, 13);
+            this.switchKeyLabel.TabIndex = 16;
+            this.switchKeyLabel.Text = "Switch key";
             // 
             // SettingsForm
             // 
             this.AcceptButton = this.buttonSave;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(305, 260);
+            this.ClientSize = new System.Drawing.Size(305, 394);
+            this.Controls.Add(this.switchKeyboardGroupbox);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonSave);
@@ -147,6 +192,8 @@
             this.Load += new System.EventHandler(this.SettingsForm_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.switchKeyboardGroupbox.ResumeLayout(false);
+            this.switchKeyboardGroupbox.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -162,5 +209,9 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox switchKeyboardCheckox;
         private System.Windows.Forms.ComboBox comboBoxKeyboarLayouts;
+        private System.Windows.Forms.GroupBox switchKeyboardGroupbox;
+        private System.Windows.Forms.Label layoutLabel;
+        private System.Windows.Forms.ComboBox comboBoxSwitchKey;
+        private System.Windows.Forms.Label switchKeyLabel;
     }
 }
