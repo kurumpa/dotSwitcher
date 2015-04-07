@@ -15,17 +15,13 @@ namespace dotSwitcher
         public SettingsForm(Settings settings)
         {
             this.settings = settings;
-            var list = LowLevelAdapter.GetkeyboardLayouts();
-            foreach (var locale in list)
-            {
-                var item = new ListViewItem();
-                listviewKeyboarLayouts.Items.Add(item);
-            }
+            
             currentTextBox = null;
             kbdHook = new KeyboardHook();
             kbdHook.KeyboardEvent += kbdHook_KeyboardEvent;
             InitializeComponent();
             InitializeValues();
+
         }
 
         void kbdHook_KeyboardEvent(object sender, KeyboardEventArgs e)
@@ -52,6 +48,11 @@ namespace dotSwitcher
             shortcutTextBox.GotFocus += setCurrentInput;
             shortcutTextBox.Enter += setCurrentInput;
             shortcutTextBox.Text = settings.SwitchHotkey.ToString();
+            var list = LowLevelAdapter.GetkeyboardLayouts();
+            foreach (var locale in list)
+            {
+                comboBoxKeyboarLayouts.Items.Add(locale.Lang);
+            }
         }
 
 

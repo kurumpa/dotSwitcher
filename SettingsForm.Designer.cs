@@ -33,12 +33,10 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.listviewKeyboarLayouts = new System.Windows.Forms.ListView();
             this.switchKeyboardCheckox = new System.Windows.Forms.CheckBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.Language = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.Hotkey = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.comboBoxKeyboarLayouts = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -81,7 +79,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.listviewKeyboarLayouts);
+            this.groupBox1.Controls.Add(this.comboBoxKeyboarLayouts);
             this.groupBox1.Controls.Add(this.switchKeyboardCheckox);
             this.groupBox1.Controls.Add(this.textBox1);
             this.groupBox1.Controls.Add(this.label2);
@@ -93,18 +91,6 @@
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Hotkey settings";
-            // 
-            // listviewKeyboarLayouts
-            // 
-            this.listviewKeyboarLayouts.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.Language,
-            this.Hotkey});
-            this.listviewKeyboarLayouts.Location = new System.Drawing.Point(9, 98);
-            this.listviewKeyboarLayouts.Name = "listviewKeyboarLayouts";
-            this.listviewKeyboarLayouts.Size = new System.Drawing.Size(258, 17);
-            this.listviewKeyboarLayouts.TabIndex = 14;
-            this.listviewKeyboarLayouts.UseCompatibleStateImageBehavior = false;
-            this.listviewKeyboarLayouts.View = System.Windows.Forms.View.List;
             // 
             // switchKeyboardCheckox
             // 
@@ -136,6 +122,15 @@
             this.label2.TabIndex = 11;
             this.label2.Text = "Convert selection";
             // 
+            // comboBoxKeyboarLayouts
+            // 
+            this.comboBoxKeyboarLayouts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxKeyboarLayouts.FormattingEnabled = true;
+            this.comboBoxKeyboarLayouts.Location = new System.Drawing.Point(6, 97);
+            this.comboBoxKeyboarLayouts.Name = "comboBoxKeyboarLayouts";
+            this.comboBoxKeyboarLayouts.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxKeyboarLayouts.TabIndex = 11;
+            // 
             // SettingsForm
             // 
             this.AcceptButton = this.buttonSave;
@@ -166,9 +161,6 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox switchKeyboardCheckox;
-        private System.Windows.Forms.ListView listviewKeyboarLayouts;
-        private System.Windows.Forms.ColumnHeader Language;
-        private System.Windows.Forms.ColumnHeader Hotkey;
-
+        private System.Windows.Forms.ComboBox comboBoxKeyboarLayouts;
     }
 }

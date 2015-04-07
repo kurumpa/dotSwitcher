@@ -119,7 +119,7 @@ namespace dotSwitcher
 
             foreach (IntPtr ptr in list)
             {
-                Locale locale = new Locale { LocaleId = (ptr.ToInt32() * 0xFFFF) };
+                Locale locale = new Locale { LocaleId = Math.Abs(ptr.ToInt32() * 0xFFFF) };
                 locale.Lang = ExecuteGetlocaleInfo(locale.LocaleId, LOCALE_SNATIVELANGNAME).ToLower();
                 locales.Add(locale);
             }

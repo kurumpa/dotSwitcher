@@ -25,7 +25,7 @@ namespace dotSwitcher
         private static extern IntPtr GetForegroundWindow();
         [DllImport("User32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern bool SetForegroundWindow(IntPtr hWnd);
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern int GetLocaleInfo(int Locale, int LCType, StringBuilder lpLCData, int cchData);
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern uint GetKeyboardLayoutList(int size, [Out, MarshalAs(UnmanagedType.LPArray)] IntPtr[] hkls);
