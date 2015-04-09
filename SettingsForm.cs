@@ -30,7 +30,7 @@ namespace dotSwitcher
             {
                 foreach (var control in this.Controls)
                 {
-                    if (control.GetType() == typeof (ComboBox))
+                    if (control.GetType() == typeof(ComboBox))
                         yield return control as ComboBox;
                 }
             }
@@ -60,7 +60,21 @@ namespace dotSwitcher
             shortcutTextBox.GotFocus += setCurrentInput;
             shortcutTextBox.Enter += setCurrentInput;
             shortcutTextBox.Text = settings.SwitchHotkey.ToString();
-            InicializeSwitchSettingsLine(comboBoxKeyboarLayouts, comboBoxSwitchKey);
+
+
+            comboBoxAdditionalSwitch.Items.Add(GetKeyCombinationString(new[] { Keys.CapsLock}));
+            comboBoxAdditionalSwitch.Items.Add(GetKeyCombinationString(new[] { Keys.Shift,Keys.Alt}));
+
+
+
+            //comboBoxAdditionalSwitch.Items.Add(Keys.);
+
+            if (settings.AdditionalSwitchHotkey != null)
+            {
+                checkboxAdditionalSwitch.Checked = true;
+
+                //comboBoxAdditionalSwitch.
+            }
         }
 
         private void InicializeSwitchSettingsLine(ComboBox boxKeyboarLayouts, ComboBox boxHotkeys)
@@ -111,9 +125,9 @@ namespace dotSwitcher
             Close();
         }
 
-        private void switchKeyboard_CheckedChanged(object sender, EventArgs e)
+        private void checkboxAdditionalSwitch_CheckedChanged(object sender, EventArgs e)
         {
-
+            comboBoxAdditionalSwitch.Enabled = (sender as CheckBox).Checked;
         }
     }
 }

@@ -19,6 +19,7 @@ namespace dotSwitcher
 
         public KeyboardEventArgs SwitchKeyboardLayout { get; set; }
         public KeyboardEventArgs ConvertSelectionHotkey { get; set; }
+        public KeyboardEventArgs AdditionalSwitch { get; set; }
 
 
         public Switcher()

@@ -47,6 +47,7 @@ namespace dotSwitcher
         private void SaveSettings()
         {
             engine.SwitchHotkey = settings.SwitchHotkey;
+            engine.AdditionalSwitch = settings.AdditionalSwitchHotkey;
             settings.Save();
         }
 
