@@ -89,6 +89,16 @@ namespace dotSwitcher
 
         }
 
+        private string GetKeyCombinationString(Keys[] keys)
+        {
+            var strings = keys.Select(KeyName);
+            return string.Join(" + ", strings);
+        }
+
+        private string KeyName(Keys key)
+        {
+            return Enum.GetName(typeof(Keys), key);
+        }
 
         private void SettingsForm_Load(object sender, EventArgs e)
         {
