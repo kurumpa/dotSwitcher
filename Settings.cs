@@ -28,11 +28,11 @@ namespace dotSwitcher
         {
             get
             {
-                return (KeyboardEventArgs)this["SwitchHotkey"];
+                return (KeyboardEventArgs)this["AdditionalSwitchHotkey"];
             }
             set
             {
-                this["SwitchHotkey"] = (KeyboardEventArgs)value; 
+                this["AdditionalSwitchHotkey"] = (KeyboardEventArgs)value; 
             }
         }
     }

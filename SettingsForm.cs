@@ -63,19 +63,27 @@ namespace dotSwitcher
 
             shortcutTextBox.Text = settings.SwitchHotkey.ToString();
 
+            List<string> keys = new List<string>
+            {
+                Utils.GetKeyCombinationString(new[] {Keys.CapsLock}),
+                Utils.GetKeyCombinationString(new[] {Keys.Shift, Keys.Alt}),
+                Utils.GetKeyCombinationString(new[] {Keys.ControlKey, Keys.Space}),
+                Utils.GetKeyCombinationString(new[] {Keys.Alt, Keys.Space}),
+                Utils.GetKeyCombinationString(new[] {Keys.ControlKey})
+            };
 
-            comboBoxAdditionalSwitch.Items.Add(GetKeyCombinationString(new[] { Keys.CapsLock}));
-            comboBoxAdditionalSwitch.Items.Add(GetKeyCombinationString(new[] { Keys.Shift,Keys.Alt}));
-
-
+            keys.ForEach(s => comboBoxAdditionalSwitch.Items.Add(s));
+            //settings.AdditionalSwitchHotkey = 
+            //comboBoxAdditionalSwitch.SelectedIndex = keys.IndexOf(GetKeyCombinationString())
 
             //comboBoxAdditionalSwitch.Items.Add(Keys.);
 
             if (settings.AdditionalSwitchHotkey != null)
             {
                 checkboxAdditionalSwitch.Checked = true;
-
-                //comboBoxAdditionalSwitch.
+                var additionalKeys = Utils.ParseKeys(settings.AdditionalSwitchHotkey);
+                string keyCombinationString = Utils.GetKeyCombinationString(additionalKeys);
+                comboBoxAdditionalSwitch.SelectedIndex = comboBoxAdditionalSwitch.Items.IndexOf(keyCombinationString);
             }
 
             var locales = LowLevelAdapter.GetkeyboardLayouts();
@@ -186,6 +194,15 @@ namespace dotSwitcher
         private void checkboxAdditionalSwitch_CheckedChanged(object sender, EventArgs e)
         {
             comboBoxAdditionalSwitch.Enabled = (sender as CheckBox).Checked;
+        }
+
+        private void comboBoxAdditionalSwitch_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var selectedValue = (sender as ComboBox).Text;
+            var items = selectedValue.Replace(" ", "").Replace("Ctrl", "Control").Split('+');
+            Keys key = items.Aggregate(Keys.None, (current, item) => current | (Keys)Enum.Parse(typeof(Keys), item));
+
+            settings.AdditionalSwitchHotkey = new KeyboardEventArgs(key, false);
         }
     }
 }

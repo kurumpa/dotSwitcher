@@ -37,10 +37,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.switchKeyboardCheckox = new System.Windows.Forms.CheckBox();
             this.switchKeyboardGroupbox = new System.Windows.Forms.GroupBox();
+            this.comboBoxAdditionalSwitch = new System.Windows.Forms.ComboBox();
             this.switchKeyLabel = new System.Windows.Forms.Label();
             this.layoutLabel = new System.Windows.Forms.Label();
             this.checkboxAdditionalSwitch = new System.Windows.Forms.CheckBox();
-            this.comboBoxAdditionalSwitch = new System.Windows.Forms.ComboBox();
             this.groupBox1.SuspendLayout();
             this.switchKeyboardGroupbox.SuspendLayout();
             this.SuspendLayout();
@@ -137,6 +137,16 @@
             this.switchKeyboardGroupbox.TabStop = false;
             this.switchKeyboardGroupbox.Text = "Switch keyboard layout";
             // 
+            // comboBoxAdditionalSwitch
+            // 
+            this.comboBoxAdditionalSwitch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxAdditionalSwitch.FormattingEnabled = true;
+            this.comboBoxAdditionalSwitch.Location = new System.Drawing.Point(8, 42);
+            this.comboBoxAdditionalSwitch.Name = "comboBoxAdditionalSwitch";
+            this.comboBoxAdditionalSwitch.Size = new System.Drawing.Size(222, 21);
+            this.comboBoxAdditionalSwitch.TabIndex = 17;
+            this.comboBoxAdditionalSwitch.SelectedIndexChanged += new System.EventHandler(this.comboBoxAdditionalSwitch_SelectedIndexChanged);
+            // 
             // switchKeyLabel
             // 
             this.switchKeyLabel.AutoSize = true;
@@ -165,15 +175,6 @@
             this.checkboxAdditionalSwitch.Text = "Additionaly switch keyboard layout by key";
             this.checkboxAdditionalSwitch.UseVisualStyleBackColor = true;
             this.checkboxAdditionalSwitch.CheckedChanged += new System.EventHandler(this.checkboxAdditionalSwitch_CheckedChanged);
-            // 
-            // comboBoxAdditionalSwitch
-            // 
-            this.comboBoxAdditionalSwitch.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxAdditionalSwitch.FormattingEnabled = true;
-            this.comboBoxAdditionalSwitch.Location = new System.Drawing.Point(8, 42);
-            this.comboBoxAdditionalSwitch.Name = "comboBoxAdditionalSwitch";
-            this.comboBoxAdditionalSwitch.Size = new System.Drawing.Size(222, 21);
-            this.comboBoxAdditionalSwitch.TabIndex = 17;
             // 
             // SettingsForm
             // 
