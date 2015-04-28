@@ -150,7 +150,7 @@
             // switchKeyLabel
             // 
             this.switchKeyLabel.AutoSize = true;
-            this.switchKeyLabel.Location = new System.Drawing.Point(139, 97);
+            this.switchKeyLabel.Location = new System.Drawing.Point(119, 97);
             this.switchKeyLabel.Name = "switchKeyLabel";
             this.switchKeyLabel.Size = new System.Drawing.Size(59, 13);
             this.switchKeyLabel.TabIndex = 16;
@@ -159,7 +159,7 @@
             // layoutLabel
             // 
             this.layoutLabel.AutoSize = true;
-            this.layoutLabel.Location = new System.Drawing.Point(8, 97);
+            this.layoutLabel.Location = new System.Drawing.Point(71, 97);
             this.layoutLabel.Name = "layoutLabel";
             this.layoutLabel.Size = new System.Drawing.Size(39, 13);
             this.layoutLabel.TabIndex = 15;

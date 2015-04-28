@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Windows.Forms;
 
@@ -18,7 +19,7 @@ namespace dotSwitcher
             }
             set
             {
-                this["SwitchHotkey"] = (KeyboardEventArgs)value; 
+                this["SwitchHotkey"] = value; 
             }
         }
         [UserScopedSetting]
@@ -32,9 +33,25 @@ namespace dotSwitcher
             }
             set
             {
-                this["AdditionalSwitchHotkey"] = (KeyboardEventArgs)value; 
+                this["AdditionalSwitchHotkey"] = value; 
             }
         }
+        [UserScopedSetting]
+        [SettingsSerializeAs(SettingsSerializeAs.Binary)]
+        [DefaultSettingValue("")]
+        public Dictionary<uint, Keys> SwitchToParticularLayout
+        {
+            get
+            {
+                return (Dictionary<uint, Keys>)this["SwitchToParticularLayout"];
+            }
+            set
+            {
+                this["SwitchToParticularLayout"] = value; 
+            }
+        }
+
+
     }
     
 }

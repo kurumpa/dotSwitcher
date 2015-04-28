@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace dotSwitcher
@@ -48,6 +49,7 @@ namespace dotSwitcher
         {
             engine.SwitchHotkey = settings.SwitchHotkey;
             engine.AdditionalSwitch = settings.AdditionalSwitchHotkey;
+            engine.SwitchToLocale = settings.SwitchToParticularLayout.Select(t=>new { Key = new KeyboardEventArgs(t.Value,false),Value = t.Key}).ToDictionary(t=>t.Key, t=>t.Value);
             settings.Save();
         }
 

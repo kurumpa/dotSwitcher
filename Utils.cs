@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Windows.Forms;
 
@@ -35,7 +36,21 @@ namespace dotSwitcher
 
         public static string GetKeyCombinationString(Keys[] keys)
         {
-            var strings = keys.Select(KeyName);
+            var strings = keys.Where(t => t != Keys.None).Select(KeyName).OrderBy(t =>
+                                {
+                                    switch (t)
+                                    {
+                                        case "Alt":
+                                            return 1;
+                                        case "Ctrl":
+                                            return 2;
+                                        case "Shift":
+                                            return 3;
+                                        default:
+                                            return 4;
+                                    }
+                                }
+                            ).ThenBy(t => t);
 
             return string.Join(" + ", strings);
         }
@@ -43,7 +58,7 @@ namespace dotSwitcher
         public static string KeyName(Keys key)
         {
             var keyName = Enum.GetName(typeof(Keys), key);
-            if (keyName == "ControlKey")
+            if (keyName == "Control")
             {
                 return "Ctrl";
             }

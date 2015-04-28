@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Linq;
+
 namespace dotSwitcher
 {
     public partial class SettingsForm : Form
@@ -89,34 +90,35 @@ namespace dotSwitcher
             var locales = LowLevelAdapter.GetkeyboardLayouts();
             for (int i = 0; i < locales.Length; i++)
             {
-                ComboBox comboBoxKeyboarLayouts = new ComboBox();
+                Keys userSettings = Keys.None;
+                if (settings.SwitchToParticularLayout != null)
+                {
+                    var result = settings.SwitchToParticularLayout.TryGetValue(locales[i].LocaleId, out userSettings);
+                }
+
+                Label comboBoxKeyboarLayouts = new Label();
                 ComboBox comboBoxSwitchKey = new ComboBox();
                 GenerateCombox(locales[i].Lang, i, comboBoxKeyboarLayouts, comboBoxSwitchKey);
-                InicializeSwitchSettingsLine(comboBoxKeyboarLayouts, comboBoxSwitchKey);
+                InicializeSwitchSettingsLine(comboBoxKeyboarLayouts, comboBoxSwitchKey,locales[i].Lang, userSettings);
             }
         }
 
-
-
-        private void InicializeSwitchSettingsLine(ComboBox boxKeyboarLayouts, ComboBox boxHotkeys)
+        private void InicializeSwitchSettingsLine(Label textBoxLayout, ComboBox boxHotkeys, string currentLocale, Keys userSettings)
         {
-            var locales = LowLevelAdapter.GetkeyboardLayouts();
             var keys = new List<Keys> { Keys.LShiftKey, Keys.RShiftKey, Keys.LControlKey, Keys.RControlKey };
 
+            textBoxLayout.Text = currentLocale;
+
             var usedItems = ComboBoxes.Select(t => t.SelectedItem).ToList();
-            foreach (var locale in locales)
-            {
-                if (!usedItems.Contains(locale))
-                    boxKeyboarLayouts.Items.Add(locale.Lang);
-            }
             foreach (var key in keys)
             {
                 if (!usedItems.Contains(key))
                     boxHotkeys.Items.Add(key);
             }
+            boxHotkeys.SelectedIndex = boxHotkeys.Items.IndexOf(userSettings);
         }
 
-        private bool GenerateCombox(string locale, int counter, ComboBox comboBoxKeyboarLayouts, ComboBox comboBoxSwitchKey)
+        private bool GenerateCombox(string locale, int counter, Label comboBoxKeyboarLayouts, ComboBox comboBoxSwitchKey)
         {
 
             const int SHIFT = 25;
@@ -124,24 +126,24 @@ namespace dotSwitcher
             try
             {
                 //
-                // comboBoxSwitchKey
-                //
-                comboBoxSwitchKey.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-                comboBoxSwitchKey.FormattingEnabled = true;
-                comboBoxSwitchKey.Location = new System.Drawing.Point(135, 115 + counter * SHIFT);
-                comboBoxSwitchKey.Name = "comboBoxSwitchKey" + locale;
-                comboBoxSwitchKey.Size = new System.Drawing.Size(121, 21);
-                comboBoxSwitchKey.TabIndex = 14;
-
-                //
                 // comboBoxKeyboarLayouts
                 //
-                comboBoxKeyboarLayouts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-                comboBoxKeyboarLayouts.FormattingEnabled = true;
-                comboBoxKeyboarLayouts.Location = new System.Drawing.Point(8, 115 + counter * SHIFT);
+                comboBoxKeyboarLayouts.Location = new Point(8, 115 + counter * SHIFT);
                 comboBoxKeyboarLayouts.Name = "comboBoxKeyboarLayouts" + locale;
-                comboBoxKeyboarLayouts.Size = new System.Drawing.Size(121, 21);
+                comboBoxKeyboarLayouts.Size = new Size(100, 21);
                 comboBoxKeyboarLayouts.TabIndex = 11;
+                comboBoxKeyboarLayouts.TextAlign = ContentAlignment.MiddleRight;
+
+
+                //
+                // comboBoxSwitchKey
+                //
+                comboBoxSwitchKey.DropDownStyle = ComboBoxStyle.DropDownList;
+                comboBoxSwitchKey.FormattingEnabled = true;
+                comboBoxSwitchKey.Location = new Point(121, 115 + counter * SHIFT);
+                comboBoxSwitchKey.Name = "comboBoxSwitchKey" + locale;
+                comboBoxSwitchKey.Size = new Size(140, 21);
+                comboBoxSwitchKey.TabIndex = 14;
 
                 this.switchKeyboardGroupbox.Controls.Add(comboBoxSwitchKey);
                 this.switchKeyboardGroupbox.Controls.Add(comboBoxKeyboarLayouts);
@@ -204,5 +206,6 @@ namespace dotSwitcher
 
             settings.AdditionalSwitchHotkey = new KeyboardEventArgs(key, false);
         }
+        
     }
 }
