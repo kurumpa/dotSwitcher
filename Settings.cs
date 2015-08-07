@@ -1,11 +1,28 @@
 ﻿using System;
 using System.Configuration;
+using System.Windows.Forms;
 
 namespace dotSwitcher
 {
     [Serializable]
-    public sealed class Settings : ApplicationSettingsBase
+    public sealed class Settings : ApplicationSettingsBase, ISettings
     {
+        public static Settings Init()
+        {
+            var settings = new Settings();
+            settings.Reload();
+            if (settings.SwitchHotkey.KeyData == Keys.None)
+            {
+                settings.SwitchHotkey = new KeyboardEventArgs(Keys.Pause, false);
+            }
+            if (settings.ShowTrayIcon == null)
+            {
+                settings.ShowTrayIcon = true;
+            }
+            settings.Save();
+            return settings;
+        }
+
         [UserScopedSetting]
         [SettingsSerializeAs(SettingsSerializeAs.Binary)]
         [DefaultSettingValue("")]
@@ -18,6 +35,48 @@ namespace dotSwitcher
             set
             {
                 this["SwitchHotkey"] = (KeyboardEventArgs)value; 
+            }
+        }
+
+        public KeyboardEventArgs ConvertSelectionHotkey
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        [UserScopedSetting]
+        [SettingsSerializeAs(SettingsSerializeAs.Binary)]
+        [DefaultSettingValue("")]
+        public bool? AutoStart
+        {
+            get
+            {
+                return (bool?)this["AutoStart"];
+            }
+            set
+            {
+                this["AutoStart"] = (bool?)value;
+            }
+        }
+
+        [UserScopedSetting]
+        [SettingsSerializeAs(SettingsSerializeAs.Binary)]
+        [DefaultSettingValue("")]
+        public bool? ShowTrayIcon
+        {
+            get
+            {
+                return (bool?)this["ShowTrayIcon"];
+            }
+            set
+            {
+                this["ShowTrayIcon"] = (bool?)value;
             }
         }
     }

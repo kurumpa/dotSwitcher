@@ -148,5 +148,10 @@ namespace dotSwitcher
             return true;
         }
 
+        public static void SendShowSettingsMessage()
+        {
+            PostMessage((IntPtr)HWND_BROADCAST, WM_SHOW_SETTINGS, 0, 0);
+        }
+
     }
 }

@@ -56,7 +56,6 @@ namespace dotSwitcher
                 if (nCode < 0)
                     return false;
 
-                Func<Keys, bool> KeyPressed = LowLevelAdapter.KeyPressed;
                 switch (wParam.ToInt32())
                 {
                     case LowLevelAdapter.WM_KEYDOWN:
@@ -65,11 +64,11 @@ namespace dotSwitcher
                         var keybdinput = (KEYBDINPUT)Marshal.PtrToStructure(lParam, typeof(KEYBDINPUT));
                         var keyData = (Keys)keybdinput.Vk;
 
-                        keyData |= KeyPressed(Keys.ControlKey) ? Keys.Control : 0;
-                        keyData |= KeyPressed(Keys.Menu) ? Keys.Alt : 0;
-                        keyData |= KeyPressed(Keys.ShiftKey) ? Keys.Shift : 0;
+                        keyData |= LowLevelAdapter.KeyPressed(Keys.ControlKey) ? Keys.Control : 0;
+                        keyData |= LowLevelAdapter.KeyPressed(Keys.Menu) ? Keys.Alt : 0;
+                        keyData |= LowLevelAdapter.KeyPressed(Keys.ShiftKey) ? Keys.Shift : 0;
 
-                        var winPressed = KeyPressed(Keys.LWin) || KeyPressed(Keys.RWin);
+                        var winPressed = LowLevelAdapter.KeyPressed(Keys.LWin) || LowLevelAdapter.KeyPressed(Keys.RWin);
 
                         var args = new KeyboardEventArgs(keyData, winPressed);
                         OnKeyboardEvent(args);

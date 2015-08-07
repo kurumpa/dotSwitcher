@@ -53,8 +53,12 @@ namespace dotSwitcher
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool GetGUIThreadInfo(uint idThread, ref GUITHREADINFO lpgui);
+        [DllImport("user32.dll")]
+        public static extern uint RegisterWindowMessage(string message);
         #endregion
 
+        public static uint WM_SHOW_SETTINGS = RegisterWindowMessage("WM_SHOW_SETTINGS");
+        public const int HWND_BROADCAST = 0xffff;
         public const int WH_KEYBOARD_LL = 13;
         public const int WH_MOUSE_LL = 14;
         public const int WM_KEYDOWN = 0x0100;

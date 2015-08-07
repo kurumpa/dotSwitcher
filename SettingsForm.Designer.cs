@@ -28,52 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.shortcutTextBox = new System.Windows.Forms.TextBox();
-            this.buttonSave = new System.Windows.Forms.Button();
-            this.buttonCancel = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.shortcutTextBox = new System.Windows.Forms.TextBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkBoxTrayIcon = new System.Windows.Forms.CheckBox();
+            this.checkBoxAutorun = new System.Windows.Forms.CheckBox();
+            this.buttonCancelSettings = new System.Windows.Forms.Button();
+            this.buttonSaveSettings = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // shortcutTextBox
-            // 
-            this.shortcutTextBox.Location = new System.Drawing.Point(98, 24);
-            this.shortcutTextBox.Name = "shortcutTextBox";
-            this.shortcutTextBox.Size = new System.Drawing.Size(169, 20);
-            this.shortcutTextBox.TabIndex = 6;
-            this.shortcutTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.shortcutTextBox_KeyUp);
-            // 
-            // buttonSave
-            // 
-            this.buttonSave.Location = new System.Drawing.Point(137, 225);
-            this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(75, 23);
-            this.buttonSave.TabIndex = 7;
-            this.buttonSave.Text = "&Save";
-            this.buttonSave.UseVisualStyleBackColor = true;
-            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
-            // 
-            // buttonCancel
-            // 
-            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(218, 225);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(75, 23);
-            this.buttonCancel.TabIndex = 8;
-            this.buttonCancel.Text = "&Cancel";
-            this.buttonCancel.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 27);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(89, 13);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "Convert last word";
             // 
             // groupBox1
             // 
@@ -84,7 +52,7 @@
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(281, 83);
-            this.groupBox1.TabIndex = 10;
+            this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Hotkey settings";
             // 
@@ -106,35 +74,114 @@
             this.label2.TabIndex = 11;
             this.label2.Text = "Convert selection";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 27);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(89, 13);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Convert last word";
+            // 
+            // shortcutTextBox
+            // 
+            this.shortcutTextBox.Location = new System.Drawing.Point(98, 24);
+            this.shortcutTextBox.Name = "shortcutTextBox";
+            this.shortcutTextBox.Size = new System.Drawing.Size(169, 20);
+            this.shortcutTextBox.TabIndex = 6;
+            this.shortcutTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.shortcutTextBox_KeyUp);
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.checkBoxTrayIcon);
+            this.groupBox2.Controls.Add(this.checkBoxAutorun);
+            this.groupBox2.Location = new System.Drawing.Point(12, 101);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(281, 75);
+            this.groupBox2.TabIndex = 13;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Hotkey settings";
+            // 
+            // checkBoxTrayIcon
+            // 
+            this.checkBoxTrayIcon.AutoSize = true;
+            this.checkBoxTrayIcon.Enabled = false;
+            this.checkBoxTrayIcon.Location = new System.Drawing.Point(9, 48);
+            this.checkBoxTrayIcon.Name = "checkBoxTrayIcon";
+            this.checkBoxTrayIcon.Size = new System.Drawing.Size(96, 17);
+            this.checkBoxTrayIcon.TabIndex = 13;
+            this.checkBoxTrayIcon.Text = "Show tray icon";
+            this.checkBoxTrayIcon.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxAutorun
+            // 
+            this.checkBoxAutorun.AutoSize = true;
+            this.checkBoxAutorun.Enabled = false;
+            this.checkBoxAutorun.Location = new System.Drawing.Point(9, 25);
+            this.checkBoxAutorun.Name = "checkBoxAutorun";
+            this.checkBoxAutorun.Size = new System.Drawing.Size(142, 17);
+            this.checkBoxAutorun.TabIndex = 12;
+            this.checkBoxAutorun.Text = "Start on windows startup";
+            this.checkBoxAutorun.UseVisualStyleBackColor = true;
+            // 
+            // buttonCancelSettings
+            // 
+            this.buttonCancelSettings.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonCancelSettings.Location = new System.Drawing.Point(217, 188);
+            this.buttonCancelSettings.Name = "buttonCancelSettings";
+            this.buttonCancelSettings.Size = new System.Drawing.Size(75, 23);
+            this.buttonCancelSettings.TabIndex = 14;
+            this.buttonCancelSettings.Text = "Cancel";
+            this.buttonCancelSettings.UseVisualStyleBackColor = true;
+            this.buttonCancelSettings.Click += new System.EventHandler(this.buttonCancelSettings_Click);
+            // 
+            // buttonSaveSettings
+            // 
+            this.buttonSaveSettings.Location = new System.Drawing.Point(136, 188);
+            this.buttonSaveSettings.Name = "buttonSaveSettings";
+            this.buttonSaveSettings.Size = new System.Drawing.Size(75, 23);
+            this.buttonSaveSettings.TabIndex = 15;
+            this.buttonSaveSettings.Text = "Apply";
+            this.buttonSaveSettings.UseVisualStyleBackColor = true;
+            this.buttonSaveSettings.Click += new System.EventHandler(this.buttonSaveSettings_Click);
+            // 
             // SettingsForm
             // 
-            this.AcceptButton = this.buttonSave;
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(305, 260);
+            this.AcceptButton = this.buttonSaveSettings;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.buttonCancelSettings;
+            this.ClientSize = new System.Drawing.Size(304, 224);
+            this.Controls.Add(this.buttonSaveSettings);
+            this.Controls.Add(this.buttonCancelSettings);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.buttonCancel);
-            this.Controls.Add(this.buttonSave);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SettingsForm";
             this.Text = "dotSwitcher Settings";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SettingsForm_FormClosing);
-            this.Load += new System.EventHandler(this.SettingsForm_Load);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.SettingsForm_FormClosed);
+            this.Shown += new System.EventHandler(this.SettingsForm_Shown);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TextBox shortcutTextBox;
-        private System.Windows.Forms.Button buttonSave;
-        private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label2;
-
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox shortcutTextBox;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.CheckBox checkBoxTrayIcon;
+        private System.Windows.Forms.CheckBox checkBoxAutorun;
+        private System.Windows.Forms.Button buttonCancelSettings;
+        private System.Windows.Forms.Button buttonSaveSettings;
     }
 }

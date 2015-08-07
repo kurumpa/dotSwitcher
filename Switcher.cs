@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -13,13 +14,10 @@ namespace dotSwitcher
         private List<KeyboardEventArgs> currentWord = new List<KeyboardEventArgs>();
         private KeyboardHook kbdHook;
         private MouseHook mouseHook;
-
-        public KeyboardEventArgs SwitchHotkey { get; set; }
-        public KeyboardEventArgs ConvertSelectionHotkey { get; set; }
-
-
-        public Switcher()
+        private ISettings settings;
+        public Switcher(ISettings settings)
         {
+            this.settings = settings;
             kbdHook = new KeyboardHook();
             kbdHook.KeyboardEvent += ProcessKeyPress;
             mouseHook = new MouseHook();
@@ -85,40 +83,40 @@ namespace dotSwitcher
             return ctrl || alt || win;
         }
 
-      private bool HaveTrackingKeys(KeyboardEventArgs evtData)
-      {
-          var vkCode = evtData.KeyCode;
+        private bool HaveTrackingKeys(KeyboardEventArgs evtData)
+        {
+            var vkCode = evtData.KeyCode;
 
-          return evtData.KeyCode == Keys.ControlKey ||
-            vkCode == Keys.LControlKey ||
-            vkCode == Keys.RControlKey ||
-            // yes, don't interrupt the tracking on PrtSc!
-            vkCode == Keys.PrintScreen ||
-            vkCode == Keys.ShiftKey ||
-            vkCode == Keys.RShiftKey ||
-            vkCode == Keys.LShiftKey ||
-            vkCode == Keys.NumLock || 
-            vkCode == Keys.Scroll;
-      }
+            return evtData.KeyCode == Keys.ControlKey ||
+              vkCode == Keys.LControlKey ||
+              vkCode == Keys.RControlKey ||
+                // yes, don't interrupt the tracking on PrtSc!
+              vkCode == Keys.PrintScreen ||
+              vkCode == Keys.ShiftKey ||
+              vkCode == Keys.RShiftKey ||
+              vkCode == Keys.LShiftKey ||
+              vkCode == Keys.NumLock ||
+              vkCode == Keys.Scroll;
+        }
 
         private void OnKeyPress(KeyboardEventArgs evtData)
         {
-            var vkCode = evtData.KeyCode;           
+            var vkCode = evtData.KeyCode;
 
-            if (evtData.Equals(SwitchHotkey))
+            if (evtData.Equals(settings.SwitchHotkey))
             {
                 ConvertLast();
                 evtData.Handled = true;
                 return;
             }
 
-            if (evtData.Equals(ConvertSelectionHotkey))
-            {
-                ConvertSelection();
-            }
+            //if (evtData.Equals(settings.ConvertSelectionHotkey))
+            //{
+            //    ConvertSelection();
+            //}
 
             if (this.HaveTrackingKeys(evtData))
-              return;
+                return;
 
             var notModified = !this.HaveModifiers(evtData);
 
@@ -147,7 +145,7 @@ namespace dotSwitcher
         private Keys GetPreviousVkCode()
         {
             if (currentWord.Count == 0) { return Keys.None; }
-            return currentWord.Last().KeyCode;
+            return currentWord[currentWord.Count - 1].KeyCode;
         }
         private void BeginNewWord() { currentWord.Clear(); }
         private void AddToCurrentWord(KeyboardEventArgs data) { currentWord.Add(data); }
