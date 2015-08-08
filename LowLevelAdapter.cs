@@ -7,6 +7,7 @@ using System.Threading;
 using System.ComponentModel;
 using IWshRuntimeLibrary;
 using System.Reflection;
+using System.Windows.Automation;
 
 namespace dotSwitcher
 {
@@ -33,18 +34,6 @@ namespace dotSwitcher
         {
             return (GetKeyState((int)keyCode) & 0x8000) == 0x8000;
         }
-
-
-        //[DllImport("USER32.DLL")]
-        //public static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
-
-        //private static string GetClassName(IntPtr handle)
-        //{
-        //    StringBuilder className = new StringBuilder(100);
-        //    GetClassName(handle, className, className.Capacity);
-        //    return className.ToString();
-        //}
-
 
         private static IntPtr GetFocusedHandle()
         {
@@ -182,6 +171,35 @@ namespace dotSwitcher
             System.IO.File.Delete(GetAutorunPath());
         }
 
+        public static string GetSelection()
+        {
+            string sel = null;
+            //Thread thread = new Thread(() =>
+            //{
+            //    try
+            //    {
+            //        var element = AutomationElement.FocusedElement;
+            //        if (element == null) return;
+
+            //        object pattern = null;
+            //        if (element.TryGetCurrentPattern(TextPattern.Pattern, out pattern))
+            //        {
+            //            var tp = (TextPattern)pattern;
+            //            var sb = new StringBuilder();
+            //            var trs = tp.GetSelection();
+            //            if (trs.Length < 1) { return; }
+            //            sel = trs[0].GetText(-1);
+            //        }
+            //        return;
+            //    }
+            //    catch { }
+            //    return;
+            //});
+            //thread.Start();
+            //thread.Join();
+            return sel;
+            
+        }
 
     }
 }
