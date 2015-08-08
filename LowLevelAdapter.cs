@@ -5,6 +5,8 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.ComponentModel;
+using IWshRuntimeLibrary;
+using System.Reflection;
 
 namespace dotSwitcher
 {
@@ -152,6 +154,34 @@ namespace dotSwitcher
         {
             PostMessage((IntPtr)HWND_BROADCAST, WM_SHOW_SETTINGS, 0, 0);
         }
+
+
+        private static string GetAutorunPath()
+        {
+            return System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.Startup),
+                "dotSwitcher.lnk");
+        }
+        public static void CreateAutorunShortcut()
+        {
+            var currentPath = Assembly.GetExecutingAssembly().Location;
+            var shortcutLocation = GetAutorunPath();
+            var description = "Simple keyboard layout switcher";
+            if (System.IO.File.Exists(shortcutLocation))
+            {
+                return;
+            }
+            WshShell shell = new WshShell();
+            IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutLocation);
+            shortcut.Description = description;
+            shortcut.TargetPath = currentPath;
+            shortcut.Save();
+        }
+        public static void DeleteAutorunShortcut()
+        {
+            System.IO.File.Delete(GetAutorunPath());
+        }
+
 
     }
 }

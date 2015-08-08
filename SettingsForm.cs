@@ -30,14 +30,7 @@ namespace dotSwitcher
             UpdateUi();
         }
 
-        void OnExit()
-        {
-            engine.Stop();
-            if (Exit != null)
-            {
-                Exit(this, null);
-            }
-        }
+        
 
         /**
          * SETTINGS FORM
@@ -73,7 +66,7 @@ namespace dotSwitcher
         // also ESC
         void buttonCancelSettings_Click(object sender, EventArgs e)
         {
-            settings.Reload();
+            ResetSettings();
             HideForm();
         }
         void buttonSaveSettings_Click(object sender, EventArgs e)
@@ -83,12 +76,12 @@ namespace dotSwitcher
                 MessageBox.Show("Sorry, win+ and alt+ hotkeys are not supported yet");
                 return;
             }
-            settings.Save();
+            SaveSettings();
             HideForm();
         }
-        private void buttonExit_Click(object sender, EventArgs e)
+        void buttonExit_Click(object sender, EventArgs e)
         {
-            settings.Reload();
+            ResetSettings();
             OnExit();
         }
         // initial hidden state
@@ -106,7 +99,7 @@ namespace dotSwitcher
             }
 
             e.Cancel = true;
-            settings.Reset();
+            ResetSettings();
             HideForm();
         }     
         // receive window message from another instance
@@ -245,6 +238,29 @@ namespace dotSwitcher
         void checkBoxAutorun_CheckStateChanged(object sender, EventArgs e)
         {
             settings.AutoStart = checkBoxAutorun.Checked;
+        }
+        
+        
+        /**
+         * MISC
+         */
+        void OnExit()
+        {
+            engine.Stop();
+            if (Exit != null)
+            {
+                Exit(this, null);
+            }
+        }
+        void SaveSettings()
+        {
+            settings.Save();
+            if (settings.AutoStart == true) { LowLevelAdapter.CreateAutorunShortcut(); }
+            else { LowLevelAdapter.DeleteAutorunShortcut(); }
+        }
+        void ResetSettings()
+        {
+            settings.Reload();
         }
     }
 }
