@@ -62,6 +62,7 @@ namespace dotSwitcher
         {
             textBoxSwitchHotkey.Text = settings.SwitchHotkey.ToString();
             checkBoxAutorun.Checked = settings.AutoStart == true;
+            checkBoxTrayIcon.Checked = settings.ShowTrayIcon == true;
             DisplaySwitchDelay(settings.SwitchDelay);
             icon.SetRunning(engine.IsStarted());
         }
@@ -244,6 +245,7 @@ namespace dotSwitcher
         void SaveSettings()
         {
             settings.Save();
+
             if (settings.AutoStart == true) { LowLevelAdapter.CreateAutorunShortcut(); }
             else { LowLevelAdapter.DeleteAutorunShortcut(); }
         }
@@ -258,6 +260,10 @@ namespace dotSwitcher
         void checkBoxAutorun_CheckStateChanged(object sender, EventArgs e)
         {
             settings.AutoStart = checkBoxAutorun.Checked;
+        }
+        private void checkBoxTrayIcon_CheckedChanged(object sender, EventArgs e)
+        {
+            settings.ShowTrayIcon = checkBoxTrayIcon.Checked;
         }
         void DisplaySwitchDelay(int delay)
         {
@@ -285,11 +291,10 @@ namespace dotSwitcher
                 Exit(this, null);
             }
         }
-
         private void buttonGithub_Click(object sender, EventArgs e)
         {
             Process.Start("https://github.com/kurumpa/dotSwitcher/issues");
         }
-        
+
     }
 }

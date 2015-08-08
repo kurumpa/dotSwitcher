@@ -77,13 +77,13 @@
             // checkBoxTrayIcon
             // 
             this.checkBoxTrayIcon.AutoSize = true;
-            this.checkBoxTrayIcon.Enabled = false;
             this.checkBoxTrayIcon.Location = new System.Drawing.Point(12, 45);
             this.checkBoxTrayIcon.Name = "checkBoxTrayIcon";
             this.checkBoxTrayIcon.Size = new System.Drawing.Size(96, 17);
             this.checkBoxTrayIcon.TabIndex = 20;
             this.checkBoxTrayIcon.Text = "Show tray icon";
             this.checkBoxTrayIcon.UseVisualStyleBackColor = true;
+            this.checkBoxTrayIcon.CheckedChanged += new System.EventHandler(this.checkBoxTrayIcon_CheckedChanged);
             // 
             // checkBoxAutorun
             // 
