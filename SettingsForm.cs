@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -59,8 +60,9 @@ namespace dotSwitcher
         // Update input values and icon state
         void UpdateUi()
         {
-            shortcutTextBox.Text = settings.SwitchHotkey.ToString();
+            textBoxSwitchHotkey.Text = settings.SwitchHotkey.ToString();
             checkBoxAutorun.Checked = settings.AutoStart == true;
+            DisplaySwitchDelay(settings.SwitchDelay);
             icon.SetRunning(engine.IsStarted());
         }
         // also ESC
@@ -159,10 +161,10 @@ namespace dotSwitcher
         enum HotKeyType { None, Switch, Convert }
         void InitializeHotkeyBoxes()
         {
-            shortcutTextBox.GotFocus += (s, e) => currentHotkeyType = HotKeyType.Switch;
-            shortcutTextBox.Enter += (s, e) => currentHotkeyType = HotKeyType.Switch;
-            shortcutTextBox.LostFocus += (s, e) => ApplyCurrentHotkey();
-            shortcutTextBox.Leave += (s, e) => ApplyCurrentHotkey();
+            textBoxSwitchHotkey.GotFocus += (s, e) => currentHotkeyType = HotKeyType.Switch;
+            textBoxSwitchHotkey.Enter += (s, e) => currentHotkeyType = HotKeyType.Switch;
+            textBoxSwitchHotkey.LostFocus += (s, e) => ApplyCurrentHotkey();
+            textBoxSwitchHotkey.Leave += (s, e) => ApplyCurrentHotkey();
             currentHotkeyType = HotKeyType.None;
             kbdHook = new KeyboardHook();
             kbdHook.KeyboardEvent += kbdHook_KeyboardEvent;
@@ -195,7 +197,7 @@ namespace dotSwitcher
             switch (currentHotkeyType)
             {
                 case HotKeyType.Switch:
-                    currentTextBox = shortcutTextBox;
+                    currentTextBox = textBoxSwitchHotkey;
                     break;
                 default:
                     currentTextBox = null;
@@ -221,6 +223,10 @@ namespace dotSwitcher
 
         void ApplyCurrentHotkey()
         {
+            if (currentHotkey == null)
+            {
+                return;
+            }
             switch (currentHotkeyType)
             {
                 case HotKeyType.Switch:
@@ -253,8 +259,21 @@ namespace dotSwitcher
         {
             settings.AutoStart = checkBoxAutorun.Checked;
         }
-        
-        
+        void DisplaySwitchDelay(int delay)
+        {
+            textBoxDelay.Text = delay.ToString() + " ms";
+        }
+        private void textBoxDelay_TextChanged(object sender, EventArgs e)
+        {
+            short delay = 0;
+            if (!Int16.TryParse(Regex.Replace(textBoxDelay.Text, "[^0-9]", ""), out delay) || delay < 1)
+            {
+                delay = 1;
+            }
+            settings.SwitchDelay = delay;
+            DisplaySwitchDelay(delay);
+        }
+
         /**
          * MISC
          */
@@ -271,5 +290,6 @@ namespace dotSwitcher
         {
             Process.Start("https://github.com/kurumpa/dotSwitcher/issues");
         }
+        
     }
 }

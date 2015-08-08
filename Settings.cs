@@ -19,6 +19,10 @@ namespace dotSwitcher
             {
                 settings.ShowTrayIcon = true;
             }
+            if (settings.SwitchDelay < 1)
+            {
+                settings.SwitchDelay = 20;
+            }
             settings.Save();
             return settings;
         }
@@ -77,6 +81,21 @@ namespace dotSwitcher
             set
             {
                 this["ShowTrayIcon"] = (bool?)value;
+            }
+        }
+
+        [UserScopedSetting]
+        [SettingsSerializeAs(SettingsSerializeAs.Binary)]
+        [DefaultSettingValue("")]
+        public int SwitchDelay
+        {
+            get
+            {
+                return (int)this["SwitchDelay"];
+            }
+            set
+            {
+                this["SwitchDelay"] = (int)value;
             }
         }
     }

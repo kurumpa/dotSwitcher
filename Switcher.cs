@@ -167,8 +167,8 @@ namespace dotSwitcher
             var backspaces = Enumerable.Repeat<Keys>(Keys.Back, word.Count);
 
             foreach (var vkCode in backspaces) { LowLevelAdapter.SendKeyPress(vkCode, false); }
-            // funny fix for my skype
-            Thread.Sleep(20);
+            // Fix for skype
+            Thread.Sleep(settings.SwitchDelay);
             LowLevelAdapter.SetNextKeyboardLayout();
             foreach (var data in word)
             {
