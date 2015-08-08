@@ -14,7 +14,10 @@ Usage
 Improvements to be implemented
 ------------------------------
 * Conversion of text selection
-* Customizable hotkeys
+
+Credits
+-------
+GitHub icon by [Picons.me](https://picons.me/)
 
 Known bugs
 ----------

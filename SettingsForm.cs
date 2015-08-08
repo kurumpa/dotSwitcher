@@ -233,6 +233,20 @@ namespace dotSwitcher
         }
 
         /**
+         * SETTINGS
+         */
+        void SaveSettings()
+        {
+            settings.Save();
+            if (settings.AutoStart == true) { LowLevelAdapter.CreateAutorunShortcut(); }
+            else { LowLevelAdapter.DeleteAutorunShortcut(); }
+        }
+        void ResetSettings()
+        {
+            settings.Reload();
+        }
+
+        /**
          * OTHER INPUTS
          */
         void checkBoxAutorun_CheckStateChanged(object sender, EventArgs e)
@@ -252,15 +266,10 @@ namespace dotSwitcher
                 Exit(this, null);
             }
         }
-        void SaveSettings()
+
+        private void buttonGithub_Click(object sender, EventArgs e)
         {
-            settings.Save();
-            if (settings.AutoStart == true) { LowLevelAdapter.CreateAutorunShortcut(); }
-            else { LowLevelAdapter.DeleteAutorunShortcut(); }
-        }
-        void ResetSettings()
-        {
-            settings.Reload();
+            Process.Start("https://github.com/kurumpa/dotSwitcher/issues");
         }
     }
 }

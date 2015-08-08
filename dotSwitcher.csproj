@@ -85,6 +85,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <None Include="github.png" />
     <Content Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
