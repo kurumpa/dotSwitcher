@@ -11,6 +11,8 @@ Usage
 * Press Pause/Break until the word is typed in a right layout
 * Profit!
 
+Launching the program the second time shows the settings window, even if it is a hidden mode (no tray icon shown)
+
 Improvements to be implemented
 ------------------------------
 * Conversion of text selection
