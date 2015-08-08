@@ -257,7 +257,7 @@ namespace dotSwitcher
         /**
          * OTHER INPUTS
          */
-        void checkBoxAutorun_CheckStateChanged(object sender, EventArgs e)
+        void checkBoxAutorun_CheckedChanged(object sender, EventArgs e)
         {
             settings.AutoStart = checkBoxAutorun.Checked;
         }

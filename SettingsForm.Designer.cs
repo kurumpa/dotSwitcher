@@ -94,6 +94,7 @@
             this.checkBoxAutorun.TabIndex = 19;
             this.checkBoxAutorun.Text = "Start on windows startup";
             this.checkBoxAutorun.UseVisualStyleBackColor = true;
+            this.checkBoxAutorun.CheckedChanged += new System.EventHandler(this.checkBoxAutorun_CheckedChanged);
             // 
             // textBoxConvertHotkey
             // 
