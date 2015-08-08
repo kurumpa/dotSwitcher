@@ -14,68 +14,69 @@ namespace dotSwitcher
     public partial class SettingsForm : Form
     {
         public event EventHandler<EventArgs> Exit;
-        private Settings settings;
-        private Switcher engine;
-        private TrayIcon icon;
-        private bool exiting = false;
-
-        KeyboardHook kbdHook;
-        KeyboardEventArgs currentHotkey;
-        TextBox currentTextBox;
+        Settings settings;
+        Switcher engine;
 
         public SettingsForm(Settings settings, Switcher engine)
         {
             this.settings = settings;
             this.engine = engine;
             engine.Error += OnEngineError;
-
-            icon = new TrayIcon(settings.ShowTrayIcon);
-            icon.DoubleClick += icon_SettingsClick;
-            icon.ExitClick += icon_ExitClick;
-            icon.SettingsClick += icon_SettingsClick;
-            icon.TogglePowerClick += icon_TogglePowerClick;
-            icon.SetRunning(engine.IsStarted());
-
-            currentTextBox = null;
-            kbdHook = new KeyboardHook();
-            kbdHook.KeyboardEvent += kbdHook_KeyboardEvent;
-
+            
             InitializeComponent();
-            InitializeValues();
+            InitializeTrayIcon();
+            InitializeHotkeyBoxes();
+
+            UpdateUi();
         }
 
-        private void ShowForm()
+        void OnExit()
         {
+            engine.Stop();
+            if (Exit != null)
+            {
+                Exit(this, null);
+            }
+        }
+
+        /**
+         * SETTINGS FORM
+         */
+        void ShowForm()
+        {
+            engine.Stop();
             kbdHook.Start();
             icon.Hide();
-            engine.Stop();
             TopMost = true;
+            UpdateUi();
             Show();
         }
-        private void HideForm()
+        void HideForm()
         {
             kbdHook.Stop();
-            if (!exiting)
+            engine.Start();
+            if (settings.ShowTrayIcon == true)
             {
-                engine.Start();
-                if (settings.ShowTrayIcon == true)
-                {
-                    icon.SetRunning(true);
-                    icon.Show();
-                }
+                icon.Show();
             }
             TopMost = false;
+            UpdateUi();
             Hide();
         }
-
-        private void buttonCancelSettings_Click(object sender, EventArgs e)
+        // Update input values and icon state
+        void UpdateUi()
+        {
+            shortcutTextBox.Text = settings.SwitchHotkey.ToString();
+            checkBoxAutorun.Checked = settings.AutoStart == true;
+            icon.SetRunning(engine.IsStarted());
+        }
+        // also ESC
+        void buttonCancelSettings_Click(object sender, EventArgs e)
         {
             settings.Reload();
-            shortcutTextBox.Text = settings.SwitchHotkey.ToString();
             HideForm();
         }
-
-        private void buttonSaveSettings_Click(object sender, EventArgs e)
+        void buttonSaveSettings_Click(object sender, EventArgs e)
         {
             if (settings.SwitchHotkey.Alt || settings.SwitchHotkey.Win)
             {
@@ -85,94 +86,105 @@ namespace dotSwitcher
             settings.Save();
             HideForm();
         }
-        private void OnEngineError(object sender, SwitcherErrorArgs e)
+        private void buttonExit_Click(object sender, EventArgs e)
         {
-            icon.ShowTooltip(e.Error.Message, ToolTipIcon.Error);
+            settings.Reload();
+            OnExit();
         }
-        private void InitializeValues()
+        // initial hidden state
+        void SettingsForm_Shown(object sender, EventArgs e)
         {
-            shortcutTextBox.LostFocus += unsetCurrentInput;
-            shortcutTextBox.Leave += unsetCurrentInput;
-            shortcutTextBox.GotFocus += setCurrentInput;
-            shortcutTextBox.Enter += setCurrentInput;
-            shortcutTextBox.Text = settings.SwitchHotkey.ToString();
+            HideForm();
         }
-        private void setCurrentInput(object sender, EventArgs e)
+        // prevent the form from user-initiated closing ([x] click, Alt+F4, closing from taskbar)
+        // (acts as Cancel)
+        void SettingsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            currentTextBox = (TextBox)sender;
-        }
-        private void unsetCurrentInput(object sender, EventArgs e)
-        {
-            currentTextBox = null;
-        }
-
-        private void shortcutTextBox_KeyUp(object sender, KeyEventArgs e)
-        {
-            settings.SwitchHotkey = currentHotkey;
-        }
-
-        void icon_TogglePowerClick(object sender, EventArgs e)
-        {
-            if (engine.IsStarted())
+            if (e.CloseReason != CloseReason.UserClosing)
             {
-                engine.Stop();
-                icon.SetRunning(false);
+                return;
             }
-            else
-            {
-                engine.Start();
-                icon.SetRunning(true);
-            }
-        }
 
-        void icon_SettingsClick(object sender, EventArgs e)
-        {
-            ShowForm();
-        }
-
-        void icon_ExitClick(object sender, EventArgs e)
-        {
-            exiting = true;
-            engine.Stop();
-            if (Exit != null)
-            {
-                Exit(this, null);
-            }
-        }
-
+            e.Cancel = true;
+            settings.Reset();
+            HideForm();
+        }     
+        // receive window message from another instance
         protected override void WndProc(ref Message m)
         {
-
             if (m.Msg == LowLevelAdapter.WM_SHOW_SETTINGS)
             {
                 ShowForm();
             }
             base.WndProc(ref m);
         }
-        private void SettingsForm_Shown(object sender, EventArgs e)
-        {
-            HideForm();
-        }
-        private void SettingsForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            e.Cancel = !exiting;
-            if (e.CloseReason == CloseReason.UserClosing)
-            {
-                buttonCancelSettings_Click(this, e);
-                return;
-            }
-            HideForm();
-        }
 
-        private void SettingsForm_FormClosed(object sender, FormClosedEventArgs e)
+        /**
+         * TRAY ICON
+         */
+        TrayIcon icon;
+        void InitializeTrayIcon()
         {
-            engine.Error -= OnEngineError;
+            icon = new TrayIcon(settings.ShowTrayIcon);
+            icon.DoubleClick += icon_SettingsClick;
+            icon.ExitClick += icon_ExitClick;
+            icon.SettingsClick += icon_SettingsClick;
+            icon.TogglePowerClick += icon_TogglePowerClick;
+        }
+        void icon_TogglePowerClick(object sender, EventArgs e)
+        {
+            if (engine.IsStarted())
+            {
+                engine.Stop();
+                UpdateUi();
+            }
+            else
+            {
+                engine.Start();
+                UpdateUi();
+            }
+        }
+        void icon_SettingsClick(object sender, EventArgs e)
+        {
+            ShowForm();
+        }
+        void icon_ExitClick(object sender, EventArgs e)
+        {
+            OnExit();
+        }
+        void OnEngineError(object sender, SwitcherErrorArgs e)
+        {
+            icon.ShowTooltip(e.Error.Message, ToolTipIcon.Error);
+        }
+        
+        /**
+         * HOTKEY INPUTS
+         */
+        KeyboardHook kbdHook;
+        KeyboardEventArgs currentHotkey;
+        HotKeyType currentHotkeyType;
+        enum HotKeyType { None, Switch, Convert }
+        void InitializeHotkeyBoxes()
+        {
+            shortcutTextBox.GotFocus += (s, e) => currentHotkeyType = HotKeyType.Switch;
+            shortcutTextBox.Enter += (s, e) => currentHotkeyType = HotKeyType.Switch;
+            shortcutTextBox.LostFocus += (s, e) => ApplyCurrentHotkey();
+            shortcutTextBox.Leave += (s, e) => ApplyCurrentHotkey();
+            currentHotkeyType = HotKeyType.None;
+            kbdHook = new KeyboardHook();
+            kbdHook.KeyboardEvent += kbdHook_KeyboardEvent;
         }
         void kbdHook_KeyboardEvent(object sender, KeyboardEventArgs e)
         {
-            if (currentTextBox != null)
+            if (currentHotkeyType != HotKeyType.None)
             {
                 var vk = e.KeyCode;
+                if (vk == Keys.Escape)
+                {
+                    e.Handled = true;
+                    ResetCurrentHotkey();
+                    return;
+                }
                 if (vk != Keys.LMenu && vk != Keys.RMenu
                     && vk != Keys.LWin && vk != Keys.RWin
                     && vk != Keys.LShiftKey && vk != Keys.RShiftKey
@@ -180,11 +192,59 @@ namespace dotSwitcher
                 {
                     e.Handled = true;
                 }
-                Invoke((MethodInvoker)delegate { currentTextBox.Text = e.ToString(); });
+                SetCurrentHotkeyInputText(e.ToString());
                 currentHotkey = e;
             }
         }
-        
-        
+        void SetCurrentHotkeyInputText(string text)
+        {
+            TextBox currentTextBox;
+            switch (currentHotkeyType)
+            {
+                case HotKeyType.Switch:
+                    currentTextBox = shortcutTextBox;
+                    break;
+                default:
+                    currentTextBox = null;
+                    break;
+            }
+            if (currentTextBox == null) { return; }
+            Invoke((MethodInvoker)delegate { currentTextBox.Text = text; });
+        }
+
+        void ResetCurrentHotkey()
+        {
+            switch (currentHotkeyType)
+            {
+                case HotKeyType.Switch:
+                    currentHotkey = settings.SwitchHotkey;
+                    break;
+                default:
+                    currentHotkey = null;
+                    break;
+            }
+            SetCurrentHotkeyInputText(currentHotkey == null ? "" : currentHotkey.ToString());
+        }
+
+        void ApplyCurrentHotkey()
+        {
+            switch (currentHotkeyType)
+            {
+                case HotKeyType.Switch:
+                    settings.SwitchHotkey = currentHotkey;
+                    break;
+                default:
+                    break;
+            }
+            currentHotkeyType = HotKeyType.None;
+        }
+
+        /**
+         * OTHER INPUTS
+         */
+        void checkBoxAutorun_CheckStateChanged(object sender, EventArgs e)
+        {
+            settings.AutoStart = checkBoxAutorun.Checked;
+        }
     }
 }
