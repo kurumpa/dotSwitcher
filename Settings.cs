@@ -15,6 +15,10 @@ namespace dotSwitcher
             {
                 settings.SwitchHotkey = new KeyboardEventArgs(Keys.Pause, false);
             }
+            if (settings.ConvertSelectionHotkey.KeyData == Keys.None)
+            {
+                settings.ConvertSelectionHotkey = new KeyboardEventArgs(Keys.Pause | Keys.Shift, false);
+            }
             if (settings.ShowTrayIcon == null)
             {
                 settings.ShowTrayIcon = true;
@@ -42,15 +46,18 @@ namespace dotSwitcher
             }
         }
 
+        [UserScopedSetting]
+        [SettingsSerializeAs(SettingsSerializeAs.Binary)]
+        [DefaultSettingValue("")]
         public KeyboardEventArgs ConvertSelectionHotkey
         {
             get
             {
-                throw new NotImplementedException();
+                return (KeyboardEventArgs)this["ConvertSelectionHotkey"];
             }
             set
             {
-                throw new NotImplementedException();
+                this["ConvertSelectionHotkey"] = (KeyboardEventArgs)value;
             }
         }
 

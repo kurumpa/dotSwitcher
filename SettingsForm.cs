@@ -61,6 +61,7 @@ namespace dotSwitcher
         void UpdateUi()
         {
             textBoxSwitchHotkey.Text = settings.SwitchHotkey.ToString();
+            textBoxConvertHotkey.Text = settings.ConvertSelectionHotkey.ToString();
             checkBoxAutorun.Checked = settings.AutoStart == true;
             checkBoxTrayIcon.Checked = settings.ShowTrayIcon == true;
             DisplaySwitchDelay(settings.SwitchDelay);
@@ -166,6 +167,10 @@ namespace dotSwitcher
             textBoxSwitchHotkey.Enter += (s, e) => currentHotkeyType = HotKeyType.Switch;
             textBoxSwitchHotkey.LostFocus += (s, e) => ApplyCurrentHotkey();
             textBoxSwitchHotkey.Leave += (s, e) => ApplyCurrentHotkey();
+            textBoxConvertHotkey.GotFocus += (s, e) => currentHotkeyType = HotKeyType.Convert;
+            textBoxConvertHotkey.Enter += (s, e) => currentHotkeyType = HotKeyType.Convert;
+            textBoxConvertHotkey.LostFocus += (s, e) => ApplyCurrentHotkey();
+            textBoxConvertHotkey.Leave += (s, e) => ApplyCurrentHotkey();
             currentHotkeyType = HotKeyType.None;
             kbdHook = new KeyboardHook();
             kbdHook.KeyboardEvent += kbdHook_KeyboardEvent;
@@ -192,6 +197,7 @@ namespace dotSwitcher
                 currentHotkey = e;
             }
         }
+        // TODO: refactor this (make HotkeyInput : TextBox)
         void SetCurrentHotkeyInputText(string text)
         {
             TextBox currentTextBox;
@@ -199,6 +205,9 @@ namespace dotSwitcher
             {
                 case HotKeyType.Switch:
                     currentTextBox = textBoxSwitchHotkey;
+                    break;
+                case HotKeyType.Convert:
+                    currentTextBox = textBoxConvertHotkey;
                     break;
                 default:
                     currentTextBox = null;
@@ -215,6 +224,9 @@ namespace dotSwitcher
                 case HotKeyType.Switch:
                     currentHotkey = settings.SwitchHotkey;
                     break;
+                case HotKeyType.Convert:
+                    currentHotkey = settings.ConvertSelectionHotkey;
+                    break;
                 default:
                     currentHotkey = null;
                     break;
@@ -224,7 +236,7 @@ namespace dotSwitcher
 
         void ApplyCurrentHotkey()
         {
-            if (currentHotkey == null)
+            if (!Visible || currentHotkey == null)
             {
                 return;
             }
@@ -232,6 +244,9 @@ namespace dotSwitcher
             {
                 case HotKeyType.Switch:
                     settings.SwitchHotkey = currentHotkey;
+                    break;
+                case HotKeyType.Convert:
+                    settings.ConvertSelectionHotkey = currentHotkey;
                     break;
                 default:
                     break;

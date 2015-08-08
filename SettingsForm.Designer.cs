@@ -98,7 +98,6 @@
             // 
             // textBoxConvertHotkey
             // 
-            this.textBoxConvertHotkey.Enabled = false;
             this.textBoxConvertHotkey.Location = new System.Drawing.Point(165, 78);
             this.textBoxConvertHotkey.Name = "textBoxConvertHotkey";
             this.textBoxConvertHotkey.Size = new System.Drawing.Size(169, 20);
@@ -107,7 +106,6 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Enabled = false;
             this.label2.Location = new System.Drawing.Point(165, 62);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(127, 13);
