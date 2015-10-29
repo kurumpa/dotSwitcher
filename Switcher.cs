@@ -103,6 +103,13 @@ namespace dotSwitcher
         {
             var vkCode = evtData.KeyCode;
 
+            if (evtData.Equals(settings.SwitchLayoutHotkey))
+            {
+                SwitchLayout();
+                evtData.Handled = true;
+                return;
+            }
+
             if (evtData.Equals(settings.SwitchHotkey))
             {
                 ConvertLast();
@@ -159,6 +166,11 @@ namespace dotSwitcher
         private void ConvertSelection()
         {
             throw new NotImplementedException();
+        }
+        private void SwitchLayout()
+        {
+            BeginNewWord();
+            LowLevelAdapter.SetNextKeyboardLayout();
         }
         private void ConvertLast()
         {

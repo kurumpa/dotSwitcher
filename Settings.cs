@@ -64,6 +64,21 @@ namespace dotSwitcher
         [UserScopedSetting]
         [SettingsSerializeAs(SettingsSerializeAs.Binary)]
         [DefaultSettingValue("")]
+        public KeyboardEventArgs SwitchLayoutHotkey
+        {
+            get
+            {
+                return (KeyboardEventArgs)this["SwitchLayoutHotkey"];
+            }
+            set
+            {
+                this["SwitchLayoutHotkey"] = (KeyboardEventArgs)value;
+            }
+        }
+
+        [UserScopedSetting]
+        [SettingsSerializeAs(SettingsSerializeAs.Binary)]
+        [DefaultSettingValue("")]
         public bool? AutoStart
         {
             get

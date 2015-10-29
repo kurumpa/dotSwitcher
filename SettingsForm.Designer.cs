@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsForm));
             this.buttonCancelSettings = new System.Windows.Forms.Button();
             this.buttonSaveSettings = new System.Windows.Forms.Button();
@@ -41,12 +42,18 @@
             this.textBoxDelay = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.buttonGithub = new System.Windows.Forms.Button();
+            this.textBoxSwitchLayoutHotkey = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.label5 = new System.Windows.Forms.Label();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonCancelSettings
             // 
             this.buttonCancelSettings.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancelSettings.Location = new System.Drawing.Point(259, 168);
+            this.buttonCancelSettings.Location = new System.Drawing.Point(285, 179);
             this.buttonCancelSettings.Name = "buttonCancelSettings";
             this.buttonCancelSettings.Size = new System.Drawing.Size(75, 23);
             this.buttonCancelSettings.TabIndex = 17;
@@ -56,7 +63,7 @@
             // 
             // buttonSaveSettings
             // 
-            this.buttonSaveSettings.Location = new System.Drawing.Point(178, 168);
+            this.buttonSaveSettings.Location = new System.Drawing.Point(204, 179);
             this.buttonSaveSettings.Name = "buttonSaveSettings";
             this.buttonSaveSettings.Size = new System.Drawing.Size(75, 23);
             this.buttonSaveSettings.TabIndex = 15;
@@ -66,7 +73,7 @@
             // 
             // buttonExit
             // 
-            this.buttonExit.Location = new System.Drawing.Point(12, 168);
+            this.buttonExit.Location = new System.Drawing.Point(33, 179);
             this.buttonExit.Name = "buttonExit";
             this.buttonExit.Size = new System.Drawing.Size(75, 23);
             this.buttonExit.TabIndex = 18;
@@ -98,32 +105,33 @@
             // 
             // textBoxConvertHotkey
             // 
-            this.textBoxConvertHotkey.Location = new System.Drawing.Point(165, 78);
+            this.textBoxConvertHotkey.Location = new System.Drawing.Point(6, 77);
             this.textBoxConvertHotkey.Name = "textBoxConvertHotkey";
+            this.textBoxConvertHotkey.ReadOnly = true;
             this.textBoxConvertHotkey.Size = new System.Drawing.Size(169, 20);
             this.textBoxConvertHotkey.TabIndex = 24;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(165, 62);
+            this.label2.Location = new System.Drawing.Point(6, 61);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(127, 13);
+            this.label2.Size = new System.Drawing.Size(92, 13);
             this.label2.TabIndex = 23;
-            this.label2.Text = "Convert selection hotkey:";
+            this.label2.Text = "Convert selection:";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(165, 23);
+            this.label1.Location = new System.Drawing.Point(6, 22);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(127, 13);
+            this.label1.Size = new System.Drawing.Size(92, 13);
             this.label1.TabIndex = 22;
-            this.label1.Text = "Convert last word hotkey:";
+            this.label1.Text = "Convert last word:";
             // 
             // textBoxSwitchHotkey
             // 
-            this.textBoxSwitchHotkey.Location = new System.Drawing.Point(165, 39);
+            this.textBoxSwitchHotkey.Location = new System.Drawing.Point(6, 38);
             this.textBoxSwitchHotkey.Name = "textBoxSwitchHotkey";
             this.textBoxSwitchHotkey.Size = new System.Drawing.Size(169, 20);
             this.textBoxSwitchHotkey.TabIndex = 21;
@@ -151,7 +159,7 @@
             this.buttonGithub.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonGithub.Image = global::dotSwitcher.Properties.Resources.github;
             this.buttonGithub.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonGithub.Location = new System.Drawing.Point(12, 126);
+            this.buttonGithub.Location = new System.Drawing.Point(12, 137);
             this.buttonGithub.Name = "buttonGithub";
             this.buttonGithub.Size = new System.Drawing.Size(114, 23);
             this.buttonGithub.TabIndex = 28;
@@ -160,20 +168,66 @@
             this.buttonGithub.UseVisualStyleBackColor = true;
             this.buttonGithub.Click += new System.EventHandler(this.buttonGithub_Click);
             // 
+            // textBoxSwitchLayoutHotkey
+            // 
+            this.textBoxSwitchLayoutHotkey.Location = new System.Drawing.Point(6, 116);
+            this.textBoxSwitchLayoutHotkey.Name = "textBoxSwitchLayoutHotkey";
+            this.textBoxSwitchLayoutHotkey.Size = new System.Drawing.Size(169, 20);
+            this.textBoxSwitchLayoutHotkey.TabIndex = 30;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 100);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(120, 13);
+            this.label4.TabIndex = 29;
+            this.label4.Text = "Switch keyboard layout:";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label5);
+            this.groupBox1.Controls.Add(this.label1);
+            this.groupBox1.Controls.Add(this.textBoxSwitchLayoutHotkey);
+            this.groupBox1.Controls.Add(this.textBoxSwitchHotkey);
+            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.textBoxConvertHotkey);
+            this.groupBox1.Location = new System.Drawing.Point(178, 12);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(182, 148);
+            this.groupBox1.TabIndex = 31;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Hotkeys";
+            // 
+            // toolTip1
+            // 
+            this.toolTip1.AutoPopDelay = 5000;
+            this.toolTip1.InitialDelay = 100;
+            this.toolTip1.ReshowDelay = 100;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(162, 100);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(13, 13);
+            this.label5.TabIndex = 31;
+            this.label5.Text = "?";
+            this.label5.MouseLeave += new System.EventHandler(this.label5_MouseLeave);
+            this.label5.MouseHover += new System.EventHandler(this.label5_MouseHover);
+            // 
             // SettingsForm
             // 
             this.AcceptButton = this.buttonSaveSettings;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancelSettings;
-            this.ClientSize = new System.Drawing.Size(348, 207);
+            this.ClientSize = new System.Drawing.Size(387, 214);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonGithub);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBoxDelay);
-            this.Controls.Add(this.textBoxConvertHotkey);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBoxSwitchHotkey);
             this.Controls.Add(this.checkBoxTrayIcon);
             this.Controls.Add(this.checkBoxAutorun);
             this.Controls.Add(this.buttonExit);
@@ -185,6 +239,8 @@
             this.Text = "dotSwitcher Settings";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SettingsForm_FormClosing);
             this.Shown += new System.EventHandler(this.SettingsForm_Shown);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -204,5 +260,10 @@
         private System.Windows.Forms.TextBox textBoxDelay;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button buttonGithub;
+        private System.Windows.Forms.TextBox textBoxSwitchLayoutHotkey;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
