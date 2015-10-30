@@ -15,7 +15,9 @@ Launching the program the second time shows the settings window, even if it is a
 
 Improvements to be implemented
 ------------------------------
-* Conversion of text selection
+* Restoring clipboard contents after transformation of selected text 
+* Build script
+* Promo-page and form for donations :)
 
 Credits
 -------
