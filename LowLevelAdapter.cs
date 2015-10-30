@@ -8,6 +8,7 @@ using System.ComponentModel;
 using IWshRuntimeLibrary;
 using System.Reflection;
 using System.Windows.Automation;
+using System.Collections.Generic;
 
 namespace dotSwitcher
 {
@@ -51,6 +52,12 @@ namespace dotSwitcher
             return focusedHandle;
         }
 
+        public static IntPtr GetCurrentLayout()
+        {
+            var wndThreadId = GetWindowThreadProcessId(GetForegroundWindow(), IntPtr.Zero);
+            return GetKeyboardLayout(wndThreadId);
+        }
+
 
         public static void SetNextKeyboardLayout()
         {
@@ -88,6 +95,17 @@ namespace dotSwitcher
             if(hWnd == IntPtr.Zero) { hWnd = GetForegroundWindow();  }
 
             PostMessage(hWnd, WM_INPUTLANGCHANGEREQUEST, INPUTLANGCHANGE_FORWARD, HKL_NEXT);
+        }
+
+        public static void SendCopy()
+        {
+            var ctrlDown = MakeKeyInput(Keys.LControlKey, true);
+            var ctrlUp = MakeKeyInput(Keys.LControlKey, false);
+            var cDown = MakeKeyInput(Keys.C, true);
+            var cUp = MakeKeyInput(Keys.C, false);
+            SendInput(2, new INPUT[2] { ctrlDown, cDown }, Marshal.SizeOf(typeof(INPUT)));
+            Thread.Sleep(20);
+            SendInput(2, new INPUT[2] { ctrlUp, cUp }, Marshal.SizeOf(typeof(INPUT)));
         }
 
         public static void SendKeyPress(Keys vkCode, bool shift = false)
@@ -171,34 +189,51 @@ namespace dotSwitcher
             System.IO.File.Delete(GetAutorunPath());
         }
 
-        public static string GetSelection()
-        {
-            string sel = null;
-            //Thread thread = new Thread(() =>
-            //{
-            //    try
-            //    {
-            //        var element = AutomationElement.FocusedElement;
-            //        if (element == null) return;
+        static Dictionary<string, object> lBackup = new Dictionary<string, object>();
+        static IDataObject lDataObject = null;
+        static string[] lFormats = new string[] {};
 
-            //        object pattern = null;
-            //        if (element.TryGetCurrentPattern(TextPattern.Pattern, out pattern))
-            //        {
-            //            var tp = (TextPattern)pattern;
-            //            var sb = new StringBuilder();
-            //            var trs = tp.GetSelection();
-            //            if (trs.Length < 1) { return; }
-            //            sel = trs[0].GetText(-1);
-            //        }
-            //        return;
-            //    }
-            //    catch { }
+        public static Keys ToKey(char ch)
+        {
+            var layout = GetCurrentLayout();
+
+            short keyNumber = VkKeyScanEx(ch, layout);
+            if (keyNumber == -1)
+            {
+                return System.Windows.Forms.Keys.None;
+            }
+            return (System.Windows.Forms.Keys)(((keyNumber & 0xFF00) << 8) | (keyNumber & 0xFF));
+        }
+        public static void BackupClipboard()
+        {
+            //lDataObject = Clipboard.GetDataObject();
+            //if (lDataObject == null) 
+            //{
             //    return;
-            //});
-            //thread.Start();
-            //thread.Join();
-            return sel;
-            
+            //}
+            //lFormats = lDataObject.GetFormats(false);
+            //lBackup = new Dictionary<string, object>();
+            //foreach(var lFormat in lFormats)
+            //{
+            //  lBackup.Add(lFormat, lDataObject.GetData(lFormat, false));
+            //}
+            //Debug.WriteLine(lDataObject);
+            //Debug.WriteLine(lFormats);
+        }
+
+        public static void RestoreClipboard()
+        {
+            //Debug.WriteLine(lDataObject);
+            //Debug.WriteLine(lFormats);
+            //if (lDataObject == null)
+            //{
+            //    return;
+            //}
+            //foreach (var lFormat in lFormats)
+            //{
+            //    lDataObject.SetData(lBackup[lFormat]);
+            //}
+            //Clipboard.SetDataObject(lDataObject);
         }
 
     }

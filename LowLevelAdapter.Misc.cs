@@ -55,6 +55,8 @@ namespace dotSwitcher
         static extern bool GetGUIThreadInfo(uint idThread, ref GUITHREADINFO lpgui);
         [DllImport("user32.dll")]
         public static extern uint RegisterWindowMessage(string message);
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        static extern short VkKeyScanEx(char ch, IntPtr dwhkl);
         #endregion
 
         public static uint WM_SHOW_SETTINGS = RegisterWindowMessage("WM_SHOW_SETTINGS");

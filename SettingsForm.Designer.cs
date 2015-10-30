@@ -45,8 +45,8 @@
             this.textBoxSwitchLayoutHotkey = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.label5 = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -107,7 +107,6 @@
             // 
             this.textBoxConvertHotkey.Location = new System.Drawing.Point(6, 77);
             this.textBoxConvertHotkey.Name = "textBoxConvertHotkey";
-            this.textBoxConvertHotkey.ReadOnly = true;
             this.textBoxConvertHotkey.Size = new System.Drawing.Size(169, 20);
             this.textBoxConvertHotkey.TabIndex = 24;
             // 
@@ -200,12 +199,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Hotkeys";
             // 
-            // toolTip1
-            // 
-            this.toolTip1.AutoPopDelay = 5000;
-            this.toolTip1.InitialDelay = 100;
-            this.toolTip1.ReshowDelay = 100;
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -216,6 +209,12 @@
             this.label5.Text = "?";
             this.label5.MouseLeave += new System.EventHandler(this.label5_MouseLeave);
             this.label5.MouseHover += new System.EventHandler(this.label5_MouseHover);
+            // 
+            // toolTip1
+            // 
+            this.toolTip1.AutoPopDelay = 5000;
+            this.toolTip1.InitialDelay = 100;
+            this.toolTip1.ReshowDelay = 100;
             // 
             // SettingsForm
             // 

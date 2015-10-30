@@ -117,10 +117,10 @@ namespace dotSwitcher
                 return;
             }
 
-            //if (evtData.Equals(settings.ConvertSelectionHotkey))
-            //{
-            //    ConvertSelection();
-            //}
+            if (evtData.Equals(settings.ConvertSelectionHotkey))
+            {
+                ConvertSelection();
+            }
 
             if (this.HaveTrackingKeys(evtData))
                 return;
@@ -165,7 +165,34 @@ namespace dotSwitcher
 
         private void ConvertSelection()
         {
-            throw new NotImplementedException();
+            LowLevelAdapter.BackupClipboard();
+            LowLevelAdapter.SendCopy();
+            var selection = Clipboard.GetText();
+            LowLevelAdapter.RestoreClipboard();
+            if (String.IsNullOrEmpty(selection))
+            {
+                return;
+            }
+
+            
+            LowLevelAdapter.ReleasePressedFnKeys();
+
+            var keys = new List<Keys>(selection.Length);
+            for(var i = 0; i < selection.Length; i++)
+            {
+                keys.Add(LowLevelAdapter.ToKey(selection[i]));
+            }
+            LowLevelAdapter.SetNextKeyboardLayout();
+
+            foreach (var key in keys)
+            {
+                Debug.Write(key);
+                if (key != Keys.None)
+                {
+                    LowLevelAdapter.SendKeyPress(key, (key & Keys.Shift) != Keys.None);
+                }
+            }
+
         }
         private void SwitchLayout()
         {
