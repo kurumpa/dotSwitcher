@@ -15,6 +15,7 @@ Launching the program the second time shows the settings window, even if it is a
 
 Improvements to be implemented
 ------------------------------
+* Code refactoring and many comments
 * Restoring clipboard contents after transformation of selected text 
 * Build script
 * Promo-page and form for donations :)
