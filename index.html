@@ -70,18 +70,23 @@
                     <h4 class="modal-title" id="donateTitle">Support dotSwitcher</h4>
                 </div>
                 <div class="modal-body">
+                    <div class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        Unfortunately donations are temporarily off. You can drop a few lines to my
+                        <a href="mailto:kiev.programmer@gmail.com">letter box</a> instead.
+                    </div>
                     <p>Thank you so much for your support! People like you make our world a better place to live.
                         May the Force be with you, <span id="usernameDispl">Anonymous</span>!</p>
                     <div class="form-group">
                         <label for="username">Your name</label>
-                        <input type="text" class="form-control" id="username" placeholder="You can leave it blank">
+                        <input type="text" disabled class="form-control" id="username" placeholder="You can leave it blank">
                     </div>
                     <div class="form-group">
                         <label for="amount">Amount</label>
                         <div class="input-group">
-                            <input id="amount" autofocus type="text" class="form-control" value="$5">
+                            <input id="amount" disabled autofocus type="text" class="form-control" value="$5">
                             <div class="input-group-btn">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select<span class="caret"></span></button>
+                                <button type="button" class="btn btn-default dropdown-toggle disabled" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select<span class="caret"></span></button>
                                 <ul class="dropdown-menu dropdown-menu-right">
                                     <li><a class="set-amount" href="#">$5</a></li>
                                     <li><a class="set-amount" href="#">$10</a></li>
@@ -95,7 +100,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" data-analytics="donate-close" class="btn btn-default" data-dismiss="modal">Not today</button>
-                    <button class="btn btn-success" id="donateSubmit">Donate</button>
+                    <button class="btn btn-success disabled" id="donateSubmit">Donate</button>
                 </div>
             </div>
         </div>
