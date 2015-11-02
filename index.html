@@ -51,7 +51,7 @@
                                 <a href="https://github.com/kurumpa/dotSwitcher" class="btn btn-default btn-lg"><i class="fa fa-github fa-fw"></i> <span class="network-name">Github</span></a>
                             </li>
                             <li>
-                                <a href="#gimmemoney" data-analytics="donate-open-splash" class="btn btn-warning btn-lg"><i class="fa fa-thumbs-o-up fa-fw"></i> <span class="network-name">Donate</span></a>
+                                <a href="#gimmemoney" data-analytics="donate-open-splash" data-toggle="modal" data-target="#donateModal" class="btn btn-warning btn-lg"><i class="fa fa-thumbs-o-up fa-fw"></i> <span class="network-name">Donate</span></a>
                             </li>
                         </ul>
                     </div>
@@ -61,6 +61,44 @@
         </div>
         <!-- /.container -->
 
+    </div>
+    <div class="modal fade" id="donateModal" tabindex="-1" role="dialog" aria-labelledby="donateTitle">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-analytics="donate-close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="donateTitle">Support dotSwitcher</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Thank you so much for your support! People like you make our world a better place to live.
+                        May the Force be with you, <span id="usernameDispl">Anonymous</span>!</p>
+                    <div class="form-group">
+                        <label for="username">Your name</label>
+                        <input type="text" class="form-control" id="username" placeholder="You can leave it blank">
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Amount</label>
+                        <div class="input-group">
+                            <input id="amount" autofocus type="text" class="form-control" value="$5">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select<span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a class="set-amount" href="#">$5</a></li>
+                                    <li><a class="set-amount" href="#">$10</a></li>
+                                    <li><a class="set-amount" href="#">$20</a></li>
+                                    <li><a class="set-amount" href="#">$30</a></li>
+                                    <li><a class="set-amount" href="#">$100</a></li>
+                                </ul>
+                            </div><!-- /btn-group -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" data-analytics="donate-close" class="btn btn-default" data-dismiss="modal">Not today</button>
+                    <button class="btn btn-success" id="donateSubmit">Donate</button>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- /.intro-header -->
 
@@ -94,7 +132,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-analytics="download-close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="downloadTitle">Few words before you start using dotSwitcher</h4>
                 </div>
                 <div class="modal-body">
@@ -125,12 +163,12 @@
                     <p class="lead">
                         I've created this tool for myself and I'm just cheerful if someone find the switcher useful for his needs.
                         Will it be the workflow optimization for you or just an example how to use WinAPI from C# code,
-                        i appreciate your interest. If you feel grateful - don't hesitate to use the <a href="#gimmemoney" data-analytics="donate-open-pandatext">donate button</a>,
+                        i appreciate your interest. If you feel grateful - don't hesitate to use the <a href="#gimmemoney" data-toggle="modal" data-target="#donateModal" data-analytics="donate-open-pandatext">donate button</a>,
                         it will make me a very happy panda!
                     </p>
                 </div>
                 <div class="col-lg-5 col-sm-pull-6  col-sm-6">
-                    <a href="#gimmemoney" data-analytics="donate-open-pandaimage" class="screenshot-link"><img class="img-responsive img-rounded" src="img/panda.jpg" alt=""></a>
+                    <a href="#gimmemoney" data-analytics="donate-open-pandaimage" data-toggle="modal" data-target="#donateModal" class="screenshot-link"><img class="img-responsive img-rounded" src="img/panda.jpg" alt=""></a>
                 </div>
             </div>
 
@@ -214,7 +252,7 @@
                         </li>
                         <li class="footer-menu-divider">&sdot;</li>
                         <li>
-                            <a href="#gimmemoney" data-analytics="donate-open-footer">Gimme money</a>
+                            <a href="#gimmemoney" data-toggle="modal" data-target="#donateModal" data-analytics="donate-open-footer">Gimme money</a>
                         </li>
                     </ul>
                     <p class="copyright text-muted small">
@@ -234,8 +272,8 @@
         $(document).ready(function () {
             document.title = document.title.replace("Download ", "");
             getLatestReleaseInfo();
-            setupAnalytics();
-            //setupStripe();
+            //setupAnalytics();
+            setupStripe();
         });
         function setupAnalytics() {
             $("[data-analytics]").each(function () {
@@ -255,7 +293,7 @@
 
         function setupStripe() {
             var handler = StripeCheckout.configure({
-                key: 'pk_test_VBHQnBecztkPqz2rVjjuFmdx',
+                key: 'pk_live_73xtMarpYz0fQmWDiO6sOqCK',
                 image: '/img/icon.png',
                 locale: 'auto',
                 token: function(token) {
@@ -263,13 +301,50 @@
                 }
             });
 
-            $('[href="#gimmemoney"]').on('click', function(e) {
-                handler.open({
-                    name: 'dotSwitcher donate',
-                    description: 'Thank you for supporting my project!',
-                    amount: 50
-                });
+            var $userNameDispl = $("#usernameDispl");
+            var $amount = $("#amount");
+            var $donateSubmit = $("#donateSubmit");
+            var $username = $("#username");
+
+            var $modal = $("#donateModal");
+            $username.bind("change click keyup input paste", function () {
+                $userNameDispl.text($username.val() || "Anonymous");
+            });
+            $(".set-amount").click(function (e) {
                 e.preventDefault();
+                var val = $(this).text();
+                $amount.val(val);
+                var value = parseInt(val.replace("$", ""));
+                $donateSubmit.html("Donate $" + value);
+            });
+            $amount.bind("change click paste keyup", function (e) {
+                var value = parseInt($amount.val().replace("$", ""));
+                if (isNaN(value) || !value || value <0) {
+                    value = 5;
+                }
+                if (value >= 2000) {
+                    value = 2000;
+                }
+                if (e.type !== "keyup") {
+                    $amount.val("$" + value);
+                }
+                $donateSubmit.html("Donate $" + value);
+
+            });
+            $donateSubmit.click(function () {
+
+                var value = parseInt($amount.val().replace("$", ""));
+
+                $modal.modal("hide");
+
+                handler.open({
+                    name: 'Donate to dotSwitcher team',
+                    description: 'Thank you, ' + $userNameDispl.text() + '!',
+                    amount: Math.floor(value * 100)
+                });
+
+                ga.send("send", "event", "donate", "success", JSON.stringify(token));
+
             });
         }
     </script>
