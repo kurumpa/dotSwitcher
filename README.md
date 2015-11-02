@@ -18,7 +18,7 @@ Improvements to be implemented
 * Code refactoring and many comments
 * Restoring clipboard contents after transformation of selected text 
 * Build script
-* Promo-page and form for donations :)
+* Donation form :)
 
 Credits
 -------
