@@ -1,0 +1,275 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style x:Key="BasicStyleForAllUIElement" TargetType="{x:Type FrameworkElement}">
+        <Setter Property="UserControl.FontFamily" Value="calibri" />
+        <Setter Property="UserControl.FontSize" Value="13" />
+    </Style>
+
+    <Style x:Key="SettingsWindowStyle"
+           BasedOn="{StaticResource BasicStyleForAllUIElement}"
+           TargetType="{x:Type Window}">
+        <Setter Property="Title" Value="dotSwitcher Settings" />
+        <Setter Property="Width" Value="525" />
+        <Setter Property="Height" Value="310" />
+        <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="AllowsTransparency" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <!-- Set this style for all current and future textboxes! -->
+    <Style TargetType="{x:Type TextBox}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBoxBase}">
+
+                    <Border x:Name="Bd"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Border.Padding}">
+                        <ScrollViewer x:Name="PART_ContentHost" Margin="0" />
+
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Bd" Property="Background" Value="#FFFBFBFB" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="lightgray" />
+                        </Trigger>
+
+                        <EventTrigger RoutedEvent="GotFocus">
+                            <BeginStoryboard x:Name="BeginStoryboard">
+                                <Storyboard>
+                                    <ThicknessAnimationUsingKeyFrames
+                                        Storyboard.TargetProperty="(Border.BorderThickness)">
+                                        <EasingThicknessKeyFrame KeyTime="0:0:0.2" Value="3,1" />
+                                    </ThicknessAnimationUsingKeyFrames>
+                                    <ColorAnimationUsingKeyFrames
+                                        Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)">
+                                        <EasingColorKeyFrame KeyTime="0:0:0.2" Value="#FFFCFFE6" />
+                                    </ColorAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+
+                        <EventTrigger RoutedEvent="LostFocus">
+                            <StopStoryboard BeginStoryboardName="BeginStoryboard" />
+                        </EventTrigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="#FFFFFEF9" />
+        <Setter Property="BorderBrush" Value="#FF595959" />
+        <Setter Property="Width" Value="205" />
+        <Setter Property="Height" Value="23" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="BorderThickness" Value=".4" />
+        <Setter Property="Padding" Value="3,0,0,0" />
+    </Style>
+
+    <!-- Basic style for all button control -->
+    <Style x:Key="ButtonBaseStyle" TargetType="{x:Type ButtonBase}">
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+
+    <Style x:Key="ButtonYellowStyle"
+           BasedOn="{StaticResource ButtonBaseStyle}"
+           TargetType="{x:Type Button}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="2"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter x:Name="ButtonContentPresenter"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard Name="BeginStoryboard">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0:0:.2"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="1" />
+                                        <ColorAnimation Duration="0:0:0.2"
+                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                        To="Cornsilk" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="BeginStoryboard" />
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ButtonGreenStyle"
+           BasedOn="{StaticResource ButtonBaseStyle}"
+           TargetType="{x:Type ButtonBase}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter x:Name="ButtonContentPresenter"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard Name="BeginStoryboard">
+                                    <Storyboard>
+                                        <ColorAnimation Duration="0:0:0.2"
+                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                        To="LightGreen" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="BeginStoryboard" />
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ButtonOrangeStyle"
+           BasedOn="{StaticResource ButtonBaseStyle}"
+           TargetType="{x:Type Button}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter x:Name="ButtonContentPresenter"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard Name="BeginStoryboard">
+                                    <Storyboard>
+                                        <ColorAnimation Duration="0:0:0.2"
+                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                        To="LightSalmon" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="BeginStoryboard" />
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ButtonRedStyle"
+           BasedOn="{StaticResource ButtonBaseStyle}"
+           TargetType="{x:Type Button}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="1"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter x:Name="ButtonContentPresenter"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard Name="BeginStoryboard">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0:0:.2"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="1" />
+                                        <ColorAnimation Duration="0:0:0.2"
+                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                        To="DarkOrange" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="BeginStoryboard" />
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ToggleButtonStyle"
+           BasedOn="{StaticResource ButtonBaseStyle}"
+           TargetType="{x:Type ToggleButton}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter x:Name="ButtonContentPresenter"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="ButtonContentPresenter" Property="Content" Value="x" />
+                            <Setter Property="FontWeight" Value="Bold" />
+                            <Setter Property="Foreground" Value="Red" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard Name="BeginStoryboard">
+                                    <Storyboard>
+                                        <ColorAnimation Duration="0:0:0.2"
+                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                        To="LightGreen" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <StopStoryboard BeginStoryboardName="BeginStoryboard" />
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+</ResourceDictionary>
