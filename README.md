@@ -1,5 +1,7 @@
 dotSwitcher
 ===========
+![dotSwitcher](ScreenShot.png?raw=true "dotSwitcher, Simple keyboard layout switcher ")
+
 *If you're paranoid enough not to use [Punto switcher](http://punto.yandex.ru "closed source software")*
 
 Simple keyboard layout switcher. As lightweight as you can easily ensure it doesn't contain any spyware, even if you're not a programming guru.
