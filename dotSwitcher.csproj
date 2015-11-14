@@ -50,23 +50,27 @@
     <Reference Include="UIAutomationTypes" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="KeyboardHook.cs" />
-    <Compile Include="KeyboardEventArgs.cs" />
-    <Compile Include="LowLevelAdapter.cs" />
-    <Compile Include="LowLevelAdapter.Misc.cs" />
-    <Compile Include="MouseHook.cs" />
-    <Compile Include="ISettings.cs" />
+    <Compile Include="Data\ISettings.cs" />
+    <Compile Include="Data\KeyboardEventArgs.cs" />
+    <Compile Include="Data\Settings.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SettingsForm.cs">
+    <Compile Include="Switcher\KeyboardHook.cs" />
+    <Compile Include="Switcher\MouseHook.cs" />
+    <Compile Include="Switcher\Switcher.cs" />
+    <Compile Include="UI\SettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SettingsForm.Designer.cs">
+    <Compile Include="UI\SettingsForm.Designer.cs">
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Switcher.cs" />
-    <Compile Include="Settings.cs" />
-    <Compile Include="TrayIcon.cs" />
+    <Compile Include="UI\TrayIcon.cs" />
+    <Compile Include="Winapi\LowLevelAdapter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Winapi\LowLevelAdapter.Misc.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
@@ -77,7 +81,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="SettingsForm.resx">
+    <EmbeddedResource Include="UI\SettingsForm.resx">
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
@@ -87,8 +91,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="github.png" />
     <Content Include="icon.ico" />
+    <Content Include="UI\github.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -106,6 +110,7 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

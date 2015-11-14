@@ -1,11 +1,13 @@
-﻿using System;
+﻿using dotSwitcher.Data;
+using dotSwitcher.WinApi;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
-namespace dotSwitcher
+namespace dotSwitcher.Switcher
 {
     public class KeyboardHook
     {

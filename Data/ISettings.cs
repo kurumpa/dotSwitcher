@@ -1,4 +1,4 @@
-﻿namespace dotSwitcher
+﻿namespace dotSwitcher.Data
 {
     public interface ISettings
     {

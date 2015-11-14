@@ -1,4 +1,4 @@
-﻿namespace dotSwitcher
+﻿namespace dotSwitcher.UI
 {
     partial class SettingsForm
     {

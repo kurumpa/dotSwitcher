@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Windows.Forms;
 
-namespace dotSwitcher
+namespace dotSwitcher.Data
 {
     [Serializable]
     public class KeyboardEventArgs : KeyEventArgs, ISerializable

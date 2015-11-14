@@ -1,4 +1,8 @@
-﻿using System;
+﻿using dotSwitcher.Data;
+using dotSwitcher.Switcher;
+using dotSwitcher.UI;
+using dotSwitcher.WinApi;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Forms;
@@ -20,7 +24,7 @@ namespace dotSwitcher
                 Application.SetCompatibleTextRenderingDefault(false);
 
                 var settings = Settings.Init();
-                var engine = new Switcher(settings);
+                var engine = new SwitcherCore(settings);
                 Application.ApplicationExit += (s, a) => { engine.Dispose(); };
                 var app = new SettingsForm(settings, engine);
                 app.Exit += (s, e) => Application.Exit();

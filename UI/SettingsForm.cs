@@ -1,4 +1,7 @@
-﻿using System;
+﻿using dotSwitcher.Data;
+using dotSwitcher.Switcher;
+using dotSwitcher.WinApi;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,15 +13,15 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace dotSwitcher
+namespace dotSwitcher.UI
 {
     public partial class SettingsForm : Form
     {
         public event EventHandler<EventArgs> Exit;
         Settings settings;
-        Switcher engine;
+        SwitcherCore engine;
 
-        public SettingsForm(Settings settings, Switcher engine)
+        public SettingsForm(Settings settings, SwitcherCore engine)
         {
             this.settings = settings;
             this.engine = engine;

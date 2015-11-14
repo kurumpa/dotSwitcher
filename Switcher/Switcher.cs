@@ -1,4 +1,6 @@
-﻿using System;
+﻿using dotSwitcher.Data;
+using dotSwitcher.WinApi;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -6,16 +8,16 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace dotSwitcher
+namespace dotSwitcher.Switcher
 {
-    public class Switcher : IDisposable
+    public class SwitcherCore : IDisposable
     {
         public event EventHandler<SwitcherErrorArgs> Error;
         private List<KeyboardEventArgs> currentWord = new List<KeyboardEventArgs>();
         private KeyboardHook kbdHook;
         private MouseHook mouseHook;
         private ISettings settings;
-        public Switcher(ISettings settings)
+        public SwitcherCore(ISettings settings)
         {
             this.settings = settings;
             kbdHook = new KeyboardHook();

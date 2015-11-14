@@ -10,7 +10,7 @@ using System.Reflection;
 using System.Windows.Automation;
 using System.Collections.Generic;
 
-namespace dotSwitcher
+namespace dotSwitcher.WinApi
 {
     public static partial class LowLevelAdapter
     {

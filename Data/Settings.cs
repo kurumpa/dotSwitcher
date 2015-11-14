@@ -2,7 +2,7 @@
 using System.Configuration;
 using System.Windows.Forms;
 
-namespace dotSwitcher
+namespace dotSwitcher.Data
 {
     [Serializable]
     public sealed class Settings : ApplicationSettingsBase, ISettings

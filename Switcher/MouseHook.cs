@@ -1,8 +1,9 @@
-﻿using System;
+﻿using dotSwitcher.WinApi;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace dotSwitcher
+namespace dotSwitcher.Switcher
 {
     public class MouseHook
     {
