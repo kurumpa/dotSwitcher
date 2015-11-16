@@ -15,6 +15,7 @@ namespace dotSwitcher
         private KeyboardHook kbdHook;
         private MouseHook mouseHook;
         private ISettings settings;
+        private bool readyToSwitch;
         public Switcher(ISettings settings)
         {
             this.settings = settings;
@@ -22,6 +23,7 @@ namespace dotSwitcher
             kbdHook.KeyboardEvent += ProcessKeyPress;
             mouseHook = new MouseHook();
             mouseHook.MouseEvent += ProcessMousePress;
+            readyToSwitch = false;
         }
 
 
@@ -31,6 +33,8 @@ namespace dotSwitcher
             var keyCode = evtData.KeyCode;
             if (keyCode >= Keys.D0 && keyCode <= Keys.Z) { return true; }
             if (keyCode >= Keys.Oem1 && keyCode <= Keys.OemBackslash) { return true; }
+            if (keyCode >= Keys.NumPad0 && keyCode <=Keys.NumPad9) { return true; }
+            if (keyCode == Keys.Decimal) { return true; }
             return false;
         }
 
@@ -54,7 +58,10 @@ namespace dotSwitcher
         {
             try
             {
-                OnKeyPress(evtData);
+                if (evtData.Pressed)
+                    OnKeyPress(evtData);
+                else
+                    onKeyRelease(evtData);
             }
             catch (Exception ex)
             {
@@ -99,16 +106,27 @@ namespace dotSwitcher
               vkCode == Keys.Scroll;
         }
 
+        private void onKeyRelease(KeyboardEventArgs evtData)
+        {
+            if (evtData.Equals(settings.SwitchLayoutHotkey) && readyToSwitch)
+            {
+                SwitchLayout();
+                evtData.Handled = false;
+                return;
+            }
+        }
+
         private void OnKeyPress(KeyboardEventArgs evtData)
         {
             var vkCode = evtData.KeyCode;
 
             if (evtData.Equals(settings.SwitchLayoutHotkey))
             {
-                SwitchLayout();
-                evtData.Handled = true;
+                readyToSwitch = true;
                 return;
             }
+
+            readyToSwitch = false;
 
             if (evtData.Equals(settings.SwitchHotkey))
             {

@@ -10,15 +10,18 @@ namespace dotSwitcher
     {
         public KeyboardEventArgs() : base(Keys.None) { }
         public bool Win { get; private set; }
+        public bool Pressed { get; private set; }
         public KeyboardEventArgs(SerializationInfo info, StreamingContext context)
             : base((Keys)info.GetValue("keyData", typeof(Keys)))
         {
             Win = (bool)info.GetValue("winMod", typeof(bool));
+            Pressed = true;
         }
-        public KeyboardEventArgs(Keys keyData, bool isWinDown)
+        public KeyboardEventArgs(Keys keyData, bool isWinDown, bool pressed = true)
             : base(keyData)
         {
             Win = isWinDown;
+            Pressed = pressed;
         }
         public override bool Equals(Object obj)
         {
