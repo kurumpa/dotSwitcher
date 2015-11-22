@@ -58,6 +58,12 @@
     <Compile Include="Switcher\KeyboardHook.cs" />
     <Compile Include="Switcher\MouseHook.cs" />
     <Compile Include="Switcher\Switcher.cs" />
+    <Compile Include="UI\HotKeyBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\HotKeyBox.Designer.cs">
+      <DependentUpon>HotKeyBox.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\SettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>

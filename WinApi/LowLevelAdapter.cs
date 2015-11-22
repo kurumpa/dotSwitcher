@@ -94,7 +94,15 @@ namespace dotSwitcher.WinApi
             }
             if(hWnd == IntPtr.Zero) { hWnd = GetForegroundWindow();  }
 
-            PostMessage(hWnd, WM_INPUTLANGCHANGEREQUEST, INPUTLANGCHANGE_FORWARD, HKL_NEXT);
+            //PostMessage(hWnd, WM_INPUTLANGCHANGEREQUEST, INPUTLANGCHANGE_FORWARD, HKL_NEXT);
+
+            var shiftDown = MakeKeyInput(Keys.LShiftKey, true);
+            var shiftUp = MakeKeyInput(Keys.LShiftKey, false);
+            var altDown = MakeKeyInput(Keys.LMenu, true);
+            var altUp = MakeKeyInput(Keys.LMenu, false);
+
+            SendInput(2, new INPUT[2] { altDown, shiftDown }, Marshal.SizeOf(typeof(INPUT)));
+            SendInput(2, new INPUT[2] { altUp, shiftUp }, Marshal.SizeOf(typeof(INPUT)));
         }
 
         public static void SendCopy()
