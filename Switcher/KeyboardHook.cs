@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace dotSwitcher.Switcher
 {
-    public class KeyboardHook
+    public sealed class KeyboardHook
     {
         public event EventHandler<KeyboardEventArgs> KeyboardEvent;
         private HookProc callback;
@@ -25,7 +25,7 @@ namespace dotSwitcher.Switcher
         public void Start()
         {
             if (IsStarted()) { return; }
-            hookId = LowLevelAdapter.SetHook(LowLevelAdapter.WH_KEYBOARD_LL, callback);
+            hookId = LowLevelAdapter.SetHook(LowLevelAdapter.WH_KEYBOARD_LL, ProcessKeyPress);
         }
         public void Stop()
         {
