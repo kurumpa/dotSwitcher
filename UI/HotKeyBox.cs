@@ -23,7 +23,7 @@ namespace dotSwitcher.UI
             set 
             {
                 hotKey = value == null ? KeyboardEventArgs.Empty : value;
-                SetText(hotKey);
+                base.Text = hotKey.ToString();
             } 
         }
 
@@ -41,33 +41,20 @@ namespace dotSwitcher.UI
         {
             var vk = e.KeyCode;
 
+            // we're mostly interested in KeyDown
             if (e.Type == KeyboardEventType.KeyUp)
             {
-                // e.Handled should be true for Apps KeyUp to prevent the button's default action
-                if (vk == Keys.Apps)
-                {
-                    e.Handled = true;
-                }
-                if (vk == Keys.LWin || vk == Keys.RWin)
-                {
-                    winIsPressed = false;
-                }
+                // prevent some of the buttons' default actions
+                if (vk == Keys.Apps) { e.Handled = true; }
+                // "release" the handled Win button
+                if (vk == Keys.LWin || vk == Keys.RWin) { winIsPressed = false; }
                 return;
             }
 
 
             // e.Handled should be true for Win KeyDown to prevent the button's default action
             // winIsPressed is used for save Win button state for Win + SomeButton combinations
-            if (vk == Keys.LWin || vk == Keys.RWin)
-            {
-                winIsPressed = true;
-                e.Handled = true;
-            }
-
-            if (vk == Keys.Apps)
-            {
-                e.Handled = true;
-            }
+            if (vk == Keys.LWin || vk == Keys.RWin) { winIsPressed = true; }
 
             // disable Ctrl + LControlKey and so on
             if (((vk == Keys.LControlKey || vk == Keys.RControlKey) && e.Control) ||
@@ -75,45 +62,44 @@ namespace dotSwitcher.UI
                  ((vk == Keys.LShiftKey || vk == Keys.RShiftKey) && e.Shift) ||
                  ((vk == Keys.LWin || vk == Keys.RWin) && e.Win))
             {
+                e.Handled = true;
                 return;
             }
 
-            if ((vk == Keys.Escape || vk == Keys.Back) && !e.HasModifiers())
+            // clear the hotkey
+            if (vk == Keys.Back && !e.HasModifiers())
+            {
+                e = KeyboardEventArgs.Empty;
+            }
+
+            // reset the hotkey
+            if (vk == Keys.Escape && !e.HasModifiers())
             {
                 e.Handled = true;
-                //ResetCurrentHotkey(vk == Keys.Back);
+                OnReset();
                 return;
             }
+
+            // prevent any default action possible
             if (vk != Keys.LMenu && vk != Keys.RMenu
-                && vk != Keys.LWin && vk != Keys.RWin
                 && vk != Keys.LShiftKey && vk != Keys.RShiftKey
                 && vk != Keys.LControlKey && vk != Keys.RControlKey)
             {
                 e.Handled = true;
             }
 
-            if (vk != Keys.LWin && vk != Keys.RWin)
-            {
-                e.Win = winIsPressed;
-            }
+            // add Win modifier if the button is not Win itself
+            if (vk != Keys.LWin && vk != Keys.RWin) { e.Win = winIsPressed; }
             hotKey = e;
             OnHotKeyChanged();
 
-            Invoke((MethodInvoker)delegate { SetText(e); });
-        }
-
-        
-
-        private void SetText(KeyboardEventArgs hotkey)
-        {
-            base.Text = hotkey.ToString();
+            Invoke((MethodInvoker)delegate { base.Text = e.ToString(); });
         }
         
         private void HandleReset(object sender, EventArgs e)
         {
             OnReset();
         }
-
         protected override void OnGotFocus(EventArgs e)
         {
             kbdHook.Start();
@@ -124,8 +110,7 @@ namespace dotSwitcher.UI
             kbdHook.Stop();
             base.OnLostFocus(e);
         }
-
-        [Obsolete("Don't use this", true)]
+        [Obsolete("Use HotKey property instead", true)]
         public new string Text { get; set; }
         protected override void OnKeyDown(KeyEventArgs e) { }
         protected override void OnKeyUp(KeyEventArgs e) { }
