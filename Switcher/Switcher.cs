@@ -17,6 +17,7 @@ namespace dotSwitcher.Switcher
         private KeyboardHook kbdHook;
         private MouseHook mouseHook;
         private ISettings settings;
+        private bool readyToSwitch;
         public SwitcherCore(ISettings settings)
         {
             this.settings = settings;
@@ -59,7 +60,7 @@ namespace dotSwitcher.Switcher
         {
             try
             {
-                if (evtData.Pressed)
+                if (evtData.Type == KeyboardEventType.KeyDown)
                     OnKeyPress(evtData);
                 else
                     onKeyRelease(evtData);

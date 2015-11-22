@@ -9,15 +9,11 @@ using System.Windows.Forms;
 
 namespace dotSwitcher.Switcher
 {
-    public sealed class KeyboardHook
+    public sealed class KeyboardHook : IDisposable
     {
         public event EventHandler<KeyboardEventArgs> KeyboardEvent;
-        private HookProc callback;
         private IntPtr hookId = IntPtr.Zero;
-        public KeyboardHook()
-        {
-            callback = ProcessKeyPress;
-        }
+
         public bool IsStarted()
         {
             return hookId != IntPtr.Zero;
@@ -25,7 +21,7 @@ namespace dotSwitcher.Switcher
         public void Start()
         {
             if (IsStarted()) { return; }
-            hookId = LowLevelAdapter.SetHook(LowLevelAdapter.WH_KEYBOARD_LL, ProcessKeyPress);
+            hookId = LowLevelAdapter.SetHook(LowLevelAdapter.WH_KEYBOARD_LL, KeyboardEventHook);
         }
         public void Stop()
         {
@@ -42,28 +38,31 @@ namespace dotSwitcher.Switcher
         }
 
 
-        private IntPtr ProcessKeyPress(int nCode, IntPtr wParam, IntPtr lParam)
+        private IntPtr KeyboardEventHook(int nCode, IntPtr wParam, IntPtr lParam)
         {
-            return ProcessKeyPressInt(nCode, wParam, lParam) ?
+            bool isHandled;
+            ProcessKeyboardEvent(nCode, wParam, lParam, out isHandled);
+            return isHandled?
                 new IntPtr(1) :
                 LowLevelAdapter.NextHook(nCode, wParam, lParam);
         }
 
         // returns true if event is handled
-        private bool ProcessKeyPressInt(int nCode, IntPtr wParam, IntPtr lParam)
+        private void ProcessKeyboardEvent(int nCode, IntPtr wParam, IntPtr lParam, out bool isHandled)
         {
+            isHandled = false;
             try
             {
 
                 if (nCode < 0)
-                    return false;
+                    return;
 
-                bool key_down = false;
+                bool isKeyDownEvent = false;
                 switch (wParam.ToInt32())
                 {
                     case LowLevelAdapter.WM_KEYDOWN:
                     case LowLevelAdapter.WM_SYSKEYDOWN:
-                        key_down = true;
+                        isKeyDownEvent = true;
                         goto case LowLevelAdapter.WM_KEYUP;
 
                     case LowLevelAdapter.WM_KEYUP:
@@ -78,16 +77,21 @@ namespace dotSwitcher.Switcher
 
                         var winPressed = LowLevelAdapter.KeyPressed(Keys.LWin) || LowLevelAdapter.KeyPressed(Keys.RWin);
 
-                        var args = new KeyboardEventArgs(keyData, winPressed, key_down);
+                        var args = new KeyboardEventArgs(keyData, winPressed, isKeyDownEvent ? KeyboardEventType.KeyDown : KeyboardEventType.KeyUp);
                         OnKeyboardEvent(args);
 
-                        return args.Handled;
+                        isHandled = args.Handled;
+                        break;
                 }
 
             }
             catch { }
-            return false;
         }
 
+
+        public void Dispose()
+        {
+            Stop();
+        }
     }
 }

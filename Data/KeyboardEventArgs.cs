@@ -5,23 +5,26 @@ using System.Windows.Forms;
 
 namespace dotSwitcher.Data
 {
+    public enum KeyboardEventType { Unknown, KeyDown, KeyUp }
     [Serializable]
     public class KeyboardEventArgs : KeyEventArgs, ISerializable
     {
         public KeyboardEventArgs() : base(Keys.None) { }
         public bool Win { get; private set; }
-        public bool Pressed { get; private set; }
+
+        public KeyboardEventType Type;
+
         public KeyboardEventArgs(SerializationInfo info, StreamingContext context)
             : base((Keys)info.GetValue("keyData", typeof(Keys)))
         {
             Win = (bool)info.GetValue("winMod", typeof(bool));
-            Pressed = true;
+            Type = KeyboardEventType.KeyDown;
         }
-        public KeyboardEventArgs(Keys keyData, bool isWinDown, bool pressed = true)
+        public KeyboardEventArgs(Keys keyData, bool isWinDown, KeyboardEventType type = KeyboardEventType.KeyDown)
             : base(keyData)
         {
             Win = isWinDown;
-            Pressed = pressed;
+            Type = type;
         }
         public override bool Equals(Object obj)
         {
