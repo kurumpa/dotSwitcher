@@ -36,15 +36,49 @@ namespace dotSwitcher.UI
             kbdHook.KeyboardEvent += AcceptKeyboardEvent;
         }
 
+        private bool winIsPressed;
         public void AcceptKeyboardEvent(object sender, KeyboardEventArgs e)
         {
+            var vk = e.KeyCode;
+
             if (e.Type == KeyboardEventType.KeyUp)
+            {
+                // e.Handled should be true for Apps KeyUp to prevent the button's default action
+                if (vk == Keys.Apps)
+                {
+                    e.Handled = true;
+                }
+                if (vk == Keys.LWin || vk == Keys.RWin)
+                {
+                    winIsPressed = false;
+                }
+                return;
+            }
+
+
+            // e.Handled should be true for Win KeyDown to prevent the button's default action
+            // winIsPressed is used for save Win button state for Win + SomeButton combinations
+            if (vk == Keys.LWin || vk == Keys.RWin)
+            {
+                winIsPressed = true;
+                e.Handled = true;
+            }
+
+            if (vk == Keys.Apps)
+            {
+                e.Handled = true;
+            }
+
+            // disable Ctrl + LControlKey and so on
+            if (((vk == Keys.LControlKey || vk == Keys.RControlKey) && e.Control) ||
+                 ((vk == Keys.LMenu || vk == Keys.RMenu) && e.Alt) ||
+                 ((vk == Keys.LShiftKey || vk == Keys.RShiftKey) && e.Shift) ||
+                 ((vk == Keys.LWin || vk == Keys.RWin) && e.Win))
             {
                 return;
             }
 
-            var vk = e.KeyCode;
-            if (vk == Keys.Escape || vk == Keys.Back)
+            if ((vk == Keys.Escape || vk == Keys.Back) && !e.HasModifiers())
             {
                 e.Handled = true;
                 //ResetCurrentHotkey(vk == Keys.Back);
@@ -58,6 +92,10 @@ namespace dotSwitcher.UI
                 e.Handled = true;
             }
 
+            if (vk != Keys.LWin && vk != Keys.RWin)
+            {
+                e.Win = winIsPressed;
+            }
             hotKey = e;
             OnHotKeyChanged();
 

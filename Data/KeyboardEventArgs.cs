@@ -10,7 +10,7 @@ namespace dotSwitcher.Data
     public class KeyboardEventArgs : KeyEventArgs, ISerializable
     {
         public KeyboardEventArgs() : base(Keys.None) { }
-        public bool Win { get; private set; }
+        public bool Win { get; set; }
 
         public KeyboardEventType Type;
 
@@ -51,6 +51,11 @@ namespace dotSwitcher.Data
         {
             return (int)(base.GetHashCode() ^  Win.GetHashCode());
         }
+
+        public bool HasModifiers()
+        {
+            return Modifiers != Keys.None || Win;
+        }
         public override string ToString()
         {
             var result =
@@ -59,7 +64,8 @@ namespace dotSwitcher.Data
                 (Alt ? Keys.Alt.ToString() + " + " : "") +
                 (Win ? "Win + " : "") +
                 ((Keys)KeyCode).ToString();
-            return result;
+            // TODO: add more readable key names (Oem-stuff and so on)
+            return result.Replace("Cancel", "Pause");
         }
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
