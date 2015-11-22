@@ -197,9 +197,9 @@ namespace dotSwitcher.WinApi
             System.IO.File.Delete(GetAutorunPath());
         }
 
-        static Dictionary<string, object> lBackup = new Dictionary<string, object>();
-        static IDataObject lDataObject = null;
-        static string[] lFormats = new string[] {};
+        //static Dictionary<string, object> lBackup = new Dictionary<string, object>();
+        //static IDataObject lDataObject = null;
+        //static string[] lFormats = new string[] {};
 
         public static Keys ToKey(char ch)
         {

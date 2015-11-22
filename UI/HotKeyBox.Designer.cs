@@ -13,6 +13,7 @@
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
+            kbdHook.Stop();
             if (disposing && (components != null))
             {
                 components.Dispose();
@@ -28,9 +29,23 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.components = new System.ComponentModel.Container();
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.SuspendLayout();
+            // 
+            // contextMenu
+            // 
+            this.contextMenu.Name = "contextMenu";
+            // 
+            // HotKeyBox
+            // 
+            this.ContextMenuStrip = this.contextMenu;
+            this.ResumeLayout(false);
+
         }
 
         #endregion
+
+        private System.Windows.Forms.ContextMenuStrip contextMenu;
     }
 }

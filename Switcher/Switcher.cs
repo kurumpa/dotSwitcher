@@ -58,6 +58,10 @@ namespace dotSwitcher.Switcher
         // evtData.Handled must be set to true if the key is recognized as hotkey and doesn't need further processing
         private void ProcessKeyPress(object sender, KeyboardEventArgs evtData)
         {
+            if (evtData.Type == KeyboardEventType.KeyUp)
+            {
+                Debug.WriteLine(evtData.ToString());
+            }
             try
             {
                 if (evtData.Type == KeyboardEventType.KeyDown)

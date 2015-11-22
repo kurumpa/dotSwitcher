@@ -26,6 +26,8 @@ namespace dotSwitcher.Data
             Win = isWinDown;
             Type = type;
         }
+        public new static readonly KeyboardEventArgs Empty = new KeyboardEventArgs(Keys.None, false, KeyboardEventType.Unknown);
+
         public override bool Equals(Object obj)
         {
             if (obj == null)

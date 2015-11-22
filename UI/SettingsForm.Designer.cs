@@ -35,10 +35,8 @@
             this.buttonExit = new System.Windows.Forms.Button();
             this.checkBoxTrayIcon = new System.Windows.Forms.CheckBox();
             this.checkBoxAutorun = new System.Windows.Forms.CheckBox();
-            this.textBoxConvertHotkey = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBoxSwitchHotkey = new System.Windows.Forms.TextBox();
             this.textBoxDelay = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.buttonGithub = new System.Windows.Forms.Button();
@@ -47,6 +45,9 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.textBoxConvertHotkey = new System.Windows.Forms.TextBox();
+            this.textBoxSwitchHotkey = new System.Windows.Forms.TextBox();
+            this.hotKeyBox1 = new dotSwitcher.UI.HotKeyBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -103,13 +104,6 @@
             this.checkBoxAutorun.UseVisualStyleBackColor = true;
             this.checkBoxAutorun.CheckedChanged += new System.EventHandler(this.checkBoxAutorun_CheckedChanged);
             // 
-            // textBoxConvertHotkey
-            // 
-            this.textBoxConvertHotkey.Location = new System.Drawing.Point(6, 77);
-            this.textBoxConvertHotkey.Name = "textBoxConvertHotkey";
-            this.textBoxConvertHotkey.Size = new System.Drawing.Size(169, 20);
-            this.textBoxConvertHotkey.TabIndex = 24;
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -127,13 +121,6 @@
             this.label1.Size = new System.Drawing.Size(92, 13);
             this.label1.TabIndex = 22;
             this.label1.Text = "Convert last word:";
-            // 
-            // textBoxSwitchHotkey
-            // 
-            this.textBoxSwitchHotkey.Location = new System.Drawing.Point(6, 38);
-            this.textBoxSwitchHotkey.Name = "textBoxSwitchHotkey";
-            this.textBoxSwitchHotkey.Size = new System.Drawing.Size(169, 20);
-            this.textBoxSwitchHotkey.TabIndex = 21;
             // 
             // textBoxDelay
             // 
@@ -169,7 +156,7 @@
             // 
             // textBoxSwitchLayoutHotkey
             // 
-            this.textBoxSwitchLayoutHotkey.Location = new System.Drawing.Point(6, 116);
+            this.textBoxSwitchLayoutHotkey.Location = new System.Drawing.Point(535, 191);
             this.textBoxSwitchLayoutHotkey.Name = "textBoxSwitchLayoutHotkey";
             this.textBoxSwitchLayoutHotkey.Size = new System.Drawing.Size(169, 20);
             this.textBoxSwitchLayoutHotkey.TabIndex = 30;
@@ -187,11 +174,8 @@
             // 
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.textBoxSwitchLayoutHotkey);
-            this.groupBox1.Controls.Add(this.textBoxSwitchHotkey);
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.textBoxConvertHotkey);
             this.groupBox1.Location = new System.Drawing.Point(178, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(182, 148);
@@ -216,17 +200,43 @@
             this.toolTip1.InitialDelay = 100;
             this.toolTip1.ReshowDelay = 100;
             // 
+            // textBoxConvertHotkey
+            // 
+            this.textBoxConvertHotkey.Location = new System.Drawing.Point(544, 105);
+            this.textBoxConvertHotkey.Name = "textBoxConvertHotkey";
+            this.textBoxConvertHotkey.Size = new System.Drawing.Size(169, 20);
+            this.textBoxConvertHotkey.TabIndex = 24;
+            // 
+            // textBoxSwitchHotkey
+            // 
+            this.textBoxSwitchHotkey.Location = new System.Drawing.Point(544, 45);
+            this.textBoxSwitchHotkey.Name = "textBoxSwitchHotkey";
+            this.textBoxSwitchHotkey.Size = new System.Drawing.Size(169, 20);
+            this.textBoxSwitchHotkey.TabIndex = 21;
+            // 
+            // hotKeyBox1
+            // 
+            this.hotKeyBox1.HotKey = ((dotSwitcher.Data.KeyboardEventArgs)(resources.GetObject("hotKeyBox1.HotKey")));
+            this.hotKeyBox1.Location = new System.Drawing.Point(388, 291);
+            this.hotKeyBox1.Name = "hotKeyBox1";
+            this.hotKeyBox1.Size = new System.Drawing.Size(229, 20);
+            this.hotKeyBox1.TabIndex = 32;
+            // 
             // SettingsForm
             // 
             this.AcceptButton = this.buttonSaveSettings;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancelSettings;
-            this.ClientSize = new System.Drawing.Size(387, 214);
+            this.ClientSize = new System.Drawing.Size(762, 448);
+            this.Controls.Add(this.hotKeyBox1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonGithub);
+            this.Controls.Add(this.textBoxSwitchLayoutHotkey);
             this.Controls.Add(this.label3);
+            this.Controls.Add(this.textBoxSwitchHotkey);
             this.Controls.Add(this.textBoxDelay);
+            this.Controls.Add(this.textBoxConvertHotkey);
             this.Controls.Add(this.checkBoxTrayIcon);
             this.Controls.Add(this.checkBoxAutorun);
             this.Controls.Add(this.buttonExit);
@@ -252,10 +262,8 @@
         private System.Windows.Forms.Button buttonExit;
         private System.Windows.Forms.CheckBox checkBoxTrayIcon;
         private System.Windows.Forms.CheckBox checkBoxAutorun;
-        private System.Windows.Forms.TextBox textBoxConvertHotkey;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBoxSwitchHotkey;
         private System.Windows.Forms.TextBox textBoxDelay;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button buttonGithub;
@@ -264,5 +272,8 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.TextBox textBoxSwitchHotkey;
+        private System.Windows.Forms.TextBox textBoxConvertHotkey;
+        private HotKeyBox hotKeyBox1;
     }
 }

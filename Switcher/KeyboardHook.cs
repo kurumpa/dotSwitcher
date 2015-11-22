@@ -13,7 +13,13 @@ namespace dotSwitcher.Switcher
     {
         public event EventHandler<KeyboardEventArgs> KeyboardEvent;
         private IntPtr hookId = IntPtr.Zero;
+        private HookProc keyboardEventHook;
 
+        public KeyboardHook()
+        {
+            // prevents the hook method from being GCed: do not remove this member.
+            keyboardEventHook = KeyboardEventHook;
+        }
         public bool IsStarted()
         {
             return hookId != IntPtr.Zero;
@@ -21,7 +27,7 @@ namespace dotSwitcher.Switcher
         public void Start()
         {
             if (IsStarted()) { return; }
-            hookId = LowLevelAdapter.SetHook(LowLevelAdapter.WH_KEYBOARD_LL, KeyboardEventHook);
+            hookId = LowLevelAdapter.SetHook(LowLevelAdapter.WH_KEYBOARD_LL, keyboardEventHook);
         }
         public void Stop()
         {
