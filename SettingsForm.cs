@@ -182,6 +182,7 @@ namespace dotSwitcher
         }
         void kbdHook_KeyboardEvent(object sender, KeyboardEventArgs e)
         {
+            if (!e.Pressed) return;
             if (currentHotkeyType != HotKeyType.None)
             {
                 var vk = e.KeyCode;

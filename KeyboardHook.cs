@@ -70,10 +70,19 @@ namespace dotSwitcher
                         var keybdinput = (KEYBDINPUT)Marshal.PtrToStructure(lParam, typeof(KEYBDINPUT));
                         var keyData = (Keys)keybdinput.Vk;
 
-                        keyData |= LowLevelAdapter.KeyPressed(Keys.ControlKey) ? Keys.Control : 0;
-                        keyData |= LowLevelAdapter.KeyPressed(Keys.Menu) ? Keys.Alt : 0;
-                        keyData |= LowLevelAdapter.KeyPressed(Keys.ShiftKey) ? Keys.Shift : 0;
+                        bool modifiers = 
+                             (Keys)keybdinput.Vk == Keys.RControlKey
+                            || (Keys)keybdinput.Vk == Keys.LControlKey
+                            || (Keys)keybdinput.Vk == Keys.RShiftKey
+                            || (Keys)keybdinput.Vk == Keys.LShiftKey
+                            || (Keys)keybdinput.Vk == Keys.Alt;
 
+                        if (!modifiers)
+                        {
+                            keyData |= LowLevelAdapter.KeyPressed(Keys.ControlKey) ? Keys.Control : 0;
+                            keyData |= LowLevelAdapter.KeyPressed(Keys.Menu) ? Keys.Alt : 0;
+                            keyData |= LowLevelAdapter.KeyPressed(Keys.ShiftKey) ? Keys.Shift : 0;
+                        }
                         var winPressed = LowLevelAdapter.KeyPressed(Keys.LWin) || LowLevelAdapter.KeyPressed(Keys.RWin);
 
                         var args = new KeyboardEventArgs(keyData, winPressed, key_down);

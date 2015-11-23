@@ -120,13 +120,11 @@ namespace dotSwitcher
         {
             var vkCode = evtData.KeyCode;
 
+            readyToSwitch = false;
             if (evtData.Equals(settings.SwitchLayoutHotkey))
             {
                 readyToSwitch = true;
-                return;
             }
-
-            readyToSwitch = false;
 
             if (evtData.Equals(settings.SwitchHotkey))
             {
