@@ -312,7 +312,11 @@
                 image: '/img/icon.png',
                 locale: 'auto',
                 token: function(token) {
-                    ga("send", "event", "donate", "success", JSON.stringify(token));
+                    if (token) {
+                        ga("send", "event", "donate", "success", JSON.stringify(token));
+                    } else {
+                        ga("send", "event", "donate", "abort");
+                    }
                 }
             });
 
