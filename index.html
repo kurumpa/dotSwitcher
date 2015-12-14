@@ -361,9 +361,7 @@
                     description: 'Thank you, ' + $userNameDispl.text() + '!',
                     amount: Math.floor(value * 100)
                 });
-
-                ga.send("send", "event", "donate", "success", JSON.stringify(token));
-
+                
             });
         }
     </script>
