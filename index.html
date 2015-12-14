@@ -89,14 +89,14 @@
                         May the Force be with you, <span id="usernameDispl">Anonymous</span>!</p>
                     <div class="form-group">
                         <label for="username">Your name</label>
-                        <input type="text" disabled class="form-control" id="username" placeholder="You can leave it blank">
+                        <input type="text" class="form-control" id="username" placeholder="You can leave it blank">
                     </div>
                     <div class="form-group">
                         <label for="amount">Amount</label>
                         <div class="input-group">
-                            <input id="amount" disabled autofocus type="text" class="form-control" value="$5">
+                            <input id="amount" autofocus type="text" class="form-control" value="$5">
                             <div class="input-group-btn">
-                                <button type="button" class="btn btn-default dropdown-toggle disabled" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select<span class="caret"></span></button>
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select<span class="caret"></span></button>
                                 <ul class="dropdown-menu dropdown-menu-right">
                                     <li><a class="set-amount" href="#">$5</a></li>
                                     <li><a class="set-amount" href="#">$10</a></li>
@@ -110,7 +110,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" data-analytics="donate-close" class="btn btn-default" data-dismiss="modal">Not today</button>
-                    <button class="btn btn-success disabled" id="donateSubmit">Donate</button>
+                    <button class="btn btn-success" id="donateSubmit">Donate</button>
                 </div>
             </div>
         </div>
@@ -281,7 +281,7 @@
 
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+    <script type="text/javascript" src="https://checkout.stripe.com/checkout.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
