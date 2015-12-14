@@ -80,23 +80,23 @@
                     <h4 class="modal-title" id="donateTitle">Support dotSwitcher</h4>
                 </div>
                 <div class="modal-body">
-                    <!-- <div class="alert alert-danger" role="alert">
+                    <div class="alert alert-danger" role="alert">
                         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                         Unfortunately donations are temporarily off. You can drop a few lines to my
                         <a href="mailto:kiev.programmer@gmail.com">letter box</a> instead.
-                    </div> -->
+                    </div>
                     <p>Thank you so much for your support! People like you make our world a better place to live.
                         May the Force be with you, <strong><span id="usernameDispl">Anonymous</span></strong>!</p>
                     <div class="form-group">
                         <label for="username">Your name</label>
-                        <input type="text" autofocus class="form-control" id="username" placeholder="You can leave it blank">
+                        <input type="text" disabled autofocus class="form-control" id="username" placeholder="You can leave it blank">
                     </div>
                     <div class="form-group">
                         <label for="amount">Amount</label>
                         <div class="input-group">
-                            <input id="amount" autofocus type="text" class="form-control" value="$5">
+                            <input id="amount" disabled type="text" class="form-control" value="$5">
                             <div class="input-group-btn">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select<span class="caret"></span></button>
+                                <button type="button" class="disabled btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select<span class="caret"></span></button>
                                 <ul class="dropdown-menu dropdown-menu-right">
                                     <li><a class="set-amount" href="#">$5</a></li>
                                     <li><a class="set-amount" href="#">$10</a></li>
@@ -110,7 +110,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" data-analytics="donate-close" class="btn btn-default" data-dismiss="modal">Not today</button>
-                    <button class="btn btn-success" id="donateSubmit">Donate</button>
+                    <button class="disabled btn btn-success" id="donateSubmit">Donate</button>
                 </div>
             </div>
         </div>
@@ -281,14 +281,14 @@
 
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://checkout.stripe.com/checkout.js"></script>
+    <!-- <script type="text/javascript" src="https://checkout.stripe.com/checkout.js"></script> -->
 
     <script type="text/javascript">
         $(document).ready(function () {
             document.title = document.title.replace("Download ", "");
             getLatestReleaseInfo();
             setupAnalytics();
-            setupStripe();
+            //setupStripe();
         });
         function setupAnalytics() {
             $("[data-analytics]").each(function () {
@@ -361,7 +361,7 @@
                     description: 'Thank you, ' + $userNameDispl.text() + '!',
                     amount: Math.floor(value * 100)
                 });
-                
+
             });
         }
     </script>
