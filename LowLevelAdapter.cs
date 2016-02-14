@@ -131,7 +131,8 @@ namespace dotSwitcher
         public static bool SetLayout(uint locale)
         {
             var hWnd = WindowPtr();
-            return PostMessage(hWnd, WM_INPUTLANGCHANGEREQUEST, INPUTLANGCHANGE_SYSCHARSET, locale * 0xFFFF);
+//            return PostMessage(hWnd, WM_INPUTLANGCHANGEREQUEST, INPUTLANGCHANGE_SYSCHARSET, locale * 0xFFFF);
+            return PostMessage(hWnd, WM_INPUTLANGCHANGEREQUEST, INPUTLANGCHANGE_SYSCHARSET, locale );
         }
 
         private static string ExecuteGetlocaleInfo(uint localeId, int localeInfo)

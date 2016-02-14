@@ -14,6 +14,8 @@ namespace dotSwitcher
         private Settings settings;
         private KeyboardEventArgs currentHotkey;
 
+        private List<Control> switchToLayoutControls = new List<Control>();
+
         public SettingsForm(Settings settings)
         {
             this.settings = settings;
@@ -30,11 +32,9 @@ namespace dotSwitcher
         {
             get
             {
-                foreach (var control in this.Controls)
-                {
-                    if (control.GetType() == typeof(ComboBox))
-                        yield return control as ComboBox;
-                }
+                return Controls.Cast<object>()
+                    .Where(control => control.GetType() == typeof (ComboBox))
+                    .Select(control => control as ComboBox);
             }
         }
 
@@ -98,7 +98,7 @@ namespace dotSwitcher
 
                 Label comboBoxKeyboarLayouts = new Label();
                 ComboBox comboBoxSwitchKey = new ComboBox();
-                GenerateCombox(locales[i].Lang, i, comboBoxKeyboarLayouts, comboBoxSwitchKey);
+                GenerateCombox(locales[i], i, comboBoxKeyboarLayouts, comboBoxSwitchKey);
                 InicializeSwitchSettingsLine(comboBoxKeyboarLayouts, comboBoxSwitchKey,locales[i].Lang, userSettings);
             }
         }
@@ -112,13 +112,15 @@ namespace dotSwitcher
             var usedItems = ComboBoxes.Select(t => t.SelectedItem).ToList();
             foreach (var key in keys)
             {
-                if (!usedItems.Contains(key))
-                    boxHotkeys.Items.Add(key);
+                string keyName = Utils.GetKeyCombinationString(key);
+                if (!usedItems.Contains(keyName))
+                    boxHotkeys.Items.Add(keyName);
             }
-            boxHotkeys.SelectedIndex = boxHotkeys.Items.IndexOf(userSettings);
+            boxHotkeys.SelectedIndex = boxHotkeys.Items.IndexOf(Utils.GetKeyCombinationString(userSettings));
+            switchToLayoutControls.Add(boxHotkeys);
         }
 
-        private bool GenerateCombox(string locale, int counter, Label comboBoxKeyboarLayouts, ComboBox comboBoxSwitchKey)
+        private bool GenerateCombox(Locale locale, int counter, Label comboBoxKeyboarLayouts, ComboBox comboBoxSwitchKey)
         {
 
             const int SHIFT = 25;
@@ -129,7 +131,7 @@ namespace dotSwitcher
                 // comboBoxKeyboarLayouts
                 //
                 comboBoxKeyboarLayouts.Location = new Point(8, 115 + counter * SHIFT);
-                comboBoxKeyboarLayouts.Name = "comboBoxKeyboarLayouts" + locale;
+                comboBoxKeyboarLayouts.Name = "comboBoxKeyboarLayouts" + locale.Lang;
                 comboBoxKeyboarLayouts.Size = new Size(100, 21);
                 comboBoxKeyboarLayouts.TabIndex = 11;
                 comboBoxKeyboarLayouts.TextAlign = ContentAlignment.MiddleRight;
@@ -141,7 +143,7 @@ namespace dotSwitcher
                 comboBoxSwitchKey.DropDownStyle = ComboBoxStyle.DropDownList;
                 comboBoxSwitchKey.FormattingEnabled = true;
                 comboBoxSwitchKey.Location = new Point(121, 115 + counter * SHIFT);
-                comboBoxSwitchKey.Name = "comboBoxSwitchKey" + locale;
+                comboBoxSwitchKey.Name = "comboBoxSwitchKey" + locale.Lang;
                 comboBoxSwitchKey.Size = new Size(140, 21);
                 comboBoxSwitchKey.TabIndex = 14;
 
@@ -150,6 +152,18 @@ namespace dotSwitcher
                 Size initialSize = this.switchKeyboardGroupbox.Size;
                 this.switchKeyboardGroupbox.Size = new System.Drawing.Size(initialSize.Width, initialSize.Height + SHIFT);
 
+                comboBoxSwitchKey.DropDownClosed += (sender, args) =>
+                {
+                    uint localeId = locale.LocaleId;
+                    var selectedItem = (sender as ComboBox).SelectedItem as string;
+                    Keys selectedKey = Utils.GetKeyByName(selectedItem);
+                    if (settings.SwitchToParticularLayout.ContainsKey(localeId)) {
+                        settings.SwitchToParticularLayout[localeId] = selectedKey;
+                    } else {
+                        settings.SwitchToParticularLayout.Add(locale.LocaleId, selectedKey);
+                    }
+
+                };
                 return true;
             }
             catch (Exception e)
@@ -206,6 +220,13 @@ namespace dotSwitcher
 
             settings.AdditionalSwitchHotkey = new KeyboardEventArgs(key, false);
         }
-        
+
+        private void switchKeyboardCheckox_CheckedChanged(object sender, EventArgs e)
+        {
+            foreach (var control in switchToLayoutControls)
+            {
+                control.Enabled = (sender as CheckBox).Checked;
+            }
+        }
     }
 }

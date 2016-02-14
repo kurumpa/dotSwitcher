@@ -65,5 +65,19 @@ namespace dotSwitcher
             return keyName;
         }
 
+        internal static string GetKeyCombinationString(Keys key)
+        {
+            return GetKeyCombinationString(new[] { key });
+        }
+
+        internal static Keys GetKeyByName(string keyName)
+        {
+            Keys keyValue;
+            if (!Enum.TryParse(keyName, true, out keyValue)) {
+                return Keys.None;
+            }
+
+            return keyValue;
+        }
     }
 }

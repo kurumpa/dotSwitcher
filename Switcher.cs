@@ -124,9 +124,9 @@ namespace dotSwitcher
                 return;
             }
 
-            if (SwitchToLocale.ContainsKey(evtData))
+            if (SwitchToLocale.Keys.Any(t=>t.Equals(evtData)))
             {
-                uint locale = SwitchToLocale[evtData];
+                uint locale = SwitchToLocale.First(t=>Equals(t.Key, evtData)).Value;
                 LowLevelAdapter.SetLayout(locale);
             }
 

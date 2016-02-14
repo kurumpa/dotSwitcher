@@ -122,6 +122,7 @@
             this.switchKeyboardCheckox.TabIndex = 13;
             this.switchKeyboardCheckox.Text = "Switch keyboard layouts by keys";
             this.switchKeyboardCheckox.UseVisualStyleBackColor = true;
+            this.switchKeyboardCheckox.CheckedChanged += new System.EventHandler(this.switchKeyboardCheckox_CheckedChanged);
             // 
             // switchKeyboardGroupbox
             // 
