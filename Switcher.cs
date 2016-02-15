@@ -19,7 +19,8 @@ namespace dotSwitcher
 
         public KeyboardEventArgs SwitchKeyboardLayout { get; set; }
         public KeyboardEventArgs ConvertSelectionHotkey { get; set; }
-
+        public KeyboardEventArgs AdditionalSwitch { get; set; }
+        public Dictionary<KeyboardEventArgs,uint> SwitchToLocale { get; set; }
 
         public Switcher()
         {
@@ -27,6 +28,7 @@ namespace dotSwitcher
             kbdHook.KeyboardEvent += ProcessKeyPress;
             mouseHook = new MouseHook();
             mouseHook.MouseEvent += ProcessMousePress;
+            SwitchToLocale = new Dictionary<KeyboardEventArgs, uint>();
         }
 
 
@@ -106,7 +108,7 @@ namespace dotSwitcher
 
         private void OnKeyPress(KeyboardEventArgs evtData)
         {
-            var vkCode = evtData.KeyCode;           
+            var vkCode = evtData.KeyCode;
 
             if (evtData.Equals(SwitchHotkey))
             {
@@ -115,9 +117,17 @@ namespace dotSwitcher
                 return;
             }
 
-            if (evtData.Equals(SwitchKeyboardLayout))
+            if (evtData.Equals(AdditionalSwitch))
             {
                 LowLevelAdapter.SetNextKeyboardLayout();
+                evtData.Handled = true;
+                return;
+            }
+
+            if (SwitchToLocale.Keys.Any(t=>t.Equals(evtData)))
+            {
+                uint locale = SwitchToLocale.First(t=>Equals(t.Key, evtData)).Value;
+                LowLevelAdapter.SetLayout(locale);
             }
 
             if (evtData.Equals(ConvertSelectionHotkey))

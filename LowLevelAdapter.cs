@@ -119,27 +119,24 @@ namespace dotSwitcher
 
             foreach (IntPtr ptr in list)
             {
-                Locale locale = new Locale { LocaleId = Math.Abs(ptr.ToInt32() * 0xFFFF) };
+                Locale locale = new Locale { LocaleId = (uint)Math.Abs(ptr.ToInt32()*0xFFFF)};
                 locale.Lang = ExecuteGetlocaleInfo(locale.LocaleId, LOCALE_SNATIVELANGNAME).ToLower();
                 locales.Add(locale);
             }
             return locales.ToArray();
-
         }
 
-        public struct Locale
-        {
-            public string Lang { get; set; }
-            public int LocaleId { get; set; }
-        }
 
-        public static bool SetLayout(int locale)
+
+        public static bool SetLayout(uint locale)
         {
             var hWnd = WindowPtr();
-            return PostMessage(hWnd, WM_INPUTLANGCHANGEREQUEST, INPUTLANGCHANGE_SYSCHARSET, (uint)locale * 0xFFFF);
+            //In win10 you should use direct locale, but in win7 or less you should multiple it on 0xFFFF
+            //return PostMessage(hWnd, WM_INPUTLANGCHANGEREQUEST, INPUTLANGCHANGE_SYSCHARSET, locale * 0xFFFF);
+            return PostMessage(hWnd, WM_INPUTLANGCHANGEREQUEST, INPUTLANGCHANGE_SYSCHARSET, locale );
         }
 
-        private static string ExecuteGetlocaleInfo(int localeId, int localeInfo)
+        private static string ExecuteGetlocaleInfo(uint localeId, int localeInfo)
         {
             StringBuilder locale = new StringBuilder();
             int error = GetLocaleInfo(localeId, localeInfo, locale, locale.Capacity);
@@ -194,6 +191,11 @@ namespace dotSwitcher
             }
             return true;
         }
+    }
 
+    public struct Locale
+    {
+        public string Lang { get; set; }
+        public uint LocaleId { get; set; }
     }
 }
