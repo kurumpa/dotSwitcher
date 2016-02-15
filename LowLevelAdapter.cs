@@ -131,7 +131,8 @@ namespace dotSwitcher
         public static bool SetLayout(uint locale)
         {
             var hWnd = WindowPtr();
-//            return PostMessage(hWnd, WM_INPUTLANGCHANGEREQUEST, INPUTLANGCHANGE_SYSCHARSET, locale * 0xFFFF);
+            //In win10 you should use direct locale, but in win7 or less you should multiple it on 0xFFFF
+            //return PostMessage(hWnd, WM_INPUTLANGCHANGEREQUEST, INPUTLANGCHANGE_SYSCHARSET, locale * 0xFFFF);
             return PostMessage(hWnd, WM_INPUTLANGCHANGEREQUEST, INPUTLANGCHANGE_SYSCHARSET, locale );
         }
 

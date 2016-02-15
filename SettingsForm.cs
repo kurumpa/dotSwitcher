@@ -33,24 +33,22 @@ namespace dotSwitcher
             get
             {
                 return Controls.Cast<object>()
-                    .Where(control => control.GetType() == typeof (ComboBox))
+                    .Where(control => control.GetType() == typeof(ComboBox))
                     .Select(control => control as ComboBox);
             }
         }
 
         private void kbdHook_KeyboardEvent(object sender, KeyboardEventArgs e)
         {
-            if (currentTextBox != null)
-            {
+            if (currentTextBox != null) {
                 var vk = e.KeyCode;
                 if (vk != Keys.LMenu && vk != Keys.RMenu
                     && vk != Keys.LWin && vk != Keys.RWin
                     && vk != Keys.LShiftKey && vk != Keys.RShiftKey
-                    && vk != Keys.LControlKey && vk != Keys.RControlKey)
-                {
+                    && vk != Keys.LControlKey && vk != Keys.RControlKey) {
                     e.Handled = true;
                 }
-                Invoke((MethodInvoker)delegate { currentTextBox.Text = e.ToString(); });
+                Invoke((MethodInvoker) delegate { currentTextBox.Text = e.ToString(); });
                 currentHotkey = e;
             }
         }
@@ -79,8 +77,7 @@ namespace dotSwitcher
 
             //comboBoxAdditionalSwitch.Items.Add(Keys.);
 
-            if (settings.AdditionalSwitchHotkey != null)
-            {
+            if (settings.AdditionalSwitchHotkey != null) {
                 checkboxAdditionalSwitch.Checked = true;
                 var additionalKeys = Utils.ParseKeys(settings.AdditionalSwitchHotkey);
                 string keyCombinationString = Utils.GetKeyCombinationString(additionalKeys);
@@ -88,18 +85,27 @@ namespace dotSwitcher
             }
 
             var locales = LowLevelAdapter.GetkeyboardLayouts();
-            for (int i = 0; i < locales.Length; i++)
-            {
+
+
+            for (int i = 0; i < locales.Length; i++) {
                 Keys userSettings = Keys.None;
-                if (settings.SwitchToParticularLayout != null)
-                {
+                if (settings.SwitchToParticularLayout != null) {
                     var result = settings.SwitchToParticularLayout.TryGetValue(locales[i].LocaleId, out userSettings);
                 }
 
                 Label comboBoxKeyboarLayouts = new Label();
                 ComboBox comboBoxSwitchKey = new ComboBox();
                 GenerateCombox(locales[i], i, comboBoxKeyboarLayouts, comboBoxSwitchKey);
-                InicializeSwitchSettingsLine(comboBoxKeyboarLayouts, comboBoxSwitchKey,locales[i].Lang, userSettings);
+                InicializeSwitchSettingsLine(comboBoxKeyboarLayouts, comboBoxSwitchKey, locales[i].Lang, userSettings);
+            }
+
+            if (settings.SwitchToParticularLayout?.Any() ?? false) {
+                switchKeyboardCheckox.Checked = true;
+                switchToLayoutControls.ForEach(c => c.Enabled = true);
+
+            } else {
+                switchKeyboardCheckox.Checked = false;
+                switchToLayoutControls.ForEach(c => c.Enabled = false);
             }
         }
 
@@ -110,8 +116,7 @@ namespace dotSwitcher
             textBoxLayout.Text = currentLocale;
 
             var usedItems = ComboBoxes.Select(t => t.SelectedItem).ToList();
-            foreach (var key in keys)
-            {
+            foreach (var key in keys) {
                 string keyName = Utils.GetKeyCombinationString(key);
                 if (!usedItems.Contains(keyName))
                     boxHotkeys.Items.Add(keyName);
@@ -125,8 +130,7 @@ namespace dotSwitcher
 
             const int SHIFT = 25;
 
-            try
-            {
+            try {
                 //
                 // comboBoxKeyboarLayouts
                 //
@@ -152,8 +156,7 @@ namespace dotSwitcher
                 Size initialSize = this.switchKeyboardGroupbox.Size;
                 this.switchKeyboardGroupbox.Size = new System.Drawing.Size(initialSize.Width, initialSize.Height + SHIFT);
 
-                comboBoxSwitchKey.DropDownClosed += (sender, args) =>
-                {
+                comboBoxSwitchKey.DropDownClosed += (sender, args) => {
                     uint localeId = locale.LocaleId;
                     var selectedItem = (sender as ComboBox).SelectedItem as string;
                     Keys selectedKey = Utils.GetKeyByName(selectedItem);
@@ -166,8 +169,7 @@ namespace dotSwitcher
                 };
                 return true;
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 return false;
             }
         }
@@ -184,7 +186,7 @@ namespace dotSwitcher
 
         private void setCurrentInput(object sender, EventArgs e)
         {
-            currentTextBox = (TextBox)sender;
+            currentTextBox = (TextBox) sender;
         }
         private void unsetCurrentInput(object sender, EventArgs e)
         {
@@ -198,8 +200,7 @@ namespace dotSwitcher
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            if (settings.SwitchHotkey.Alt || settings.SwitchHotkey.Win)
-            {
+            if (settings.SwitchHotkey.Alt || settings.SwitchHotkey.Win) {
                 MessageBox.Show("Sorry, win+ and alt+ hotkeys are not supported yet");
                 return;
             }
@@ -216,17 +217,19 @@ namespace dotSwitcher
         {
             var selectedValue = (sender as ComboBox).Text;
             var items = selectedValue.Replace(" ", "").Replace("Ctrl", "Control").Split('+');
-            Keys key = items.Aggregate(Keys.None, (current, item) => current | (Keys)Enum.Parse(typeof(Keys), item));
+            Keys key = items.Aggregate(Keys.None, (current, item) => current | (Keys) Enum.Parse(typeof(Keys), item));
 
             settings.AdditionalSwitchHotkey = new KeyboardEventArgs(key, false);
         }
 
         private void switchKeyboardCheckox_CheckedChanged(object sender, EventArgs e)
         {
-            foreach (var control in switchToLayoutControls)
-            {
-                control.Enabled = (sender as CheckBox).Checked;
+            CheckBox checkBox = sender as CheckBox;
+            bool switchEnabled = checkBox != null && checkBox.Checked;
+            if (!switchEnabled) {
+                settings.SwitchToParticularLayout.Clear();
             }
+            switchToLayoutControls.ForEach(c=>c.Enabled = switchEnabled);
         }
     }
 }
