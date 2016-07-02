@@ -97,7 +97,7 @@ namespace dotSwitcher
                   .Replace("OemPeriod", ".")
                   .Replace("Oemcomma", ",")
                   .Replace("OemQuestion", "/");
-        } 
+        }
         #region Form/Controls Events
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -207,9 +207,9 @@ namespace dotSwitcher
                 HKConvertSelection.Unregister();
             }
             CheckModifiers(dSMain.Conf.HKCSMods);
-            HKConvertLast = new HotkeyHandler((alt ? Modifiers.ALT : 0x0000) + (ctrl ? Modifiers.CTRL : 0x0000) + (shift ? Modifiers.SHIFT : 0x0000), (Keys)dSMain.Conf.HKCSKey, this);
-            HKConvertLast.Register();
-            HKCLReg = true;
+            HKSelectionLast = new HotkeyHandler((alt ? Modifiers.ALT : 0x0000) + (ctrl ? Modifiers.CTRL : 0x0000) + (shift ? Modifiers.SHIFT : 0x0000), (Keys)dSMain.Conf.HKCSKey, this);
+            HKSelectionLast.Register();
+            HKCSReg = true;
             RefreshIconVisibility();
         }
         private void btnCancel_Click(object sender, EventArgs e)
@@ -358,7 +358,7 @@ namespace dotSwitcher
         private void RefreshLocales() // This is used often to check if user will have at least 2 locales,else program will exit...
         {                                                                                                                     // |
             dSMain.locales = Locales.AllList();                                                                               // |
-            cbLangOne.Items.Clear();                                                                                          // | 
+            cbLangOne.Items.Clear();                                                                                          // |
             cbLangTwo.Items.Clear();                                                                                          // |
             Locales.IfLessThan2();                                                                                            //<-
             foreach (Locales.Locale lc in dSMain.locales)
