@@ -68,6 +68,7 @@ namespace dotSwitcher.UI
             textBoxSwitchLayoutHotkey.Text = ReplaceCtrls(settings.SwitchLayoutHotkey.ToString());
             checkBoxAutorun.Checked = settings.AutoStart == true;
             checkBoxTrayIcon.Checked = settings.ShowTrayIcon == true;
+            checkBoxSmartSelection.Checked = settings.SmartSelection == true;
             DisplaySwitchDelay(settings.SwitchDelay);
             icon.SetRunning(engine.IsStarted());
         }
@@ -349,5 +350,14 @@ namespace dotSwitcher.UI
             toolTip1.Hide(label5);
         }
 
+        private void toolTip1_Popup(object sender, PopupEventArgs e)
+        {
+
+        }
+
+        private void smartSelection_CheckedChanged(object sender, EventArgs e)
+        {
+            settings.SmartSelection = checkBoxSmartSelection.Checked;
+        }
     }
 }

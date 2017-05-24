@@ -13,7 +13,7 @@ namespace dotSwitcher.Switcher
     public class SwitcherCore : IDisposable
     {
         public event EventHandler<SwitcherErrorArgs> Error;
-        private List<KeyboardEventArgs> currentWord = new List<KeyboardEventArgs>();
+        private List<KeyboardEventArgs> currentSelection = new List<KeyboardEventArgs>();
         private KeyboardHook kbdHook;
         private MouseHook mouseHook;
         private ISettings settings;
@@ -75,7 +75,7 @@ namespace dotSwitcher.Switcher
         {
             try
             {
-                BeginNewWord();
+                BeginNewSelection();
             }
             catch (Exception ex)
             {
@@ -147,17 +147,17 @@ namespace dotSwitcher.Switcher
 
             var notModified = !this.HaveModifiers(evtData);
 
-            if (vkCode == Keys.Space && notModified) { AddToCurrentWord(evtData); return; }
+            if (vkCode == Keys.Space && notModified) { AddToCurrentSelection(evtData); return; }
             if (vkCode == Keys.Back && notModified) { RemoveLast(); return; }
             if (IsPrintable(evtData))
             {
-                if (GetPreviousVkCode() == Keys.Space) { BeginNewWord(); }
-                AddToCurrentWord(evtData);
+                if (GetPreviousVkCode() == Keys.Space && settings.SmartSelection == false) { BeginNewSelection(); }
+                AddToCurrentSelection(evtData);
                 return;
             }
 
             // default: 
-            BeginNewWord();
+            BeginNewSelection();
         }
 
         private void OnError(Exception ex)
@@ -168,18 +168,18 @@ namespace dotSwitcher.Switcher
             }
         }
 
-        #region word manipulation
+        #region selection manipulation
         private Keys GetPreviousVkCode()
         {
-            if (currentWord.Count == 0) { return Keys.None; }
-            return currentWord[currentWord.Count - 1].KeyCode;
+            if (currentSelection.Count == 0) { return Keys.None; }
+            return currentSelection[currentSelection.Count - 1].KeyCode;
         }
-        private void BeginNewWord() { currentWord.Clear(); }
-        private void AddToCurrentWord(KeyboardEventArgs data) { currentWord.Add(data); }
+        private void BeginNewSelection() { currentSelection.Clear(); }
+        private void AddToCurrentSelection(KeyboardEventArgs data) { currentSelection.Add(data); }
         private void RemoveLast()
         {
-            if (currentWord.Count == 0) { return; }
-            currentWord.RemoveAt(currentWord.Count - 1);
+            if (currentSelection.Count == 0) { return; }
+            currentSelection.RemoveAt(currentSelection.Count - 1);
         }
         #endregion
 
@@ -216,20 +216,20 @@ namespace dotSwitcher.Switcher
         }
         private void SwitchLayout()
         {
-            BeginNewWord();
+            BeginNewSelection();
             LowLevelAdapter.SetNextKeyboardLayout();
         }
         private void ConvertLast()
         {
             LowLevelAdapter.ReleasePressedFnKeys();
-            var word = currentWord.ToList();
-            var backspaces = Enumerable.Repeat<Keys>(Keys.Back, word.Count);
+            var selection = currentSelection.ToList();
+            var backspaces = Enumerable.Repeat<Keys>(Keys.Back, selection.Count);
 
             foreach (var vkCode in backspaces) { LowLevelAdapter.SendKeyPress(vkCode, false); }
             // Fix for skype
             Thread.Sleep(settings.SwitchDelay);
             LowLevelAdapter.SetNextKeyboardLayout();
-            foreach (var data in word)
+            foreach (var data in selection)
             {
                 LowLevelAdapter.SendKeyPress(data.KeyCode, data.Shift);
             }

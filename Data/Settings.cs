@@ -120,6 +120,21 @@ namespace dotSwitcher.Data
                 this["SwitchDelay"] = (int)value;
             }
         }
+
+        [UserScopedSetting]
+        [SettingsSerializeAs(SettingsSerializeAs.Binary)]
+        [DefaultSettingValue("")]
+        public bool? SmartSelection
+        {
+            get
+            {
+                return (bool?)this["SmartSelection"];
+            }
+            set
+            {
+                this["SmartSelection"] = (bool?)value;
+            }
+        }
     }
     
 }
