@@ -18,24 +18,22 @@ namespace dotSwitcher
         [STAThread]
         static void Main()
         {
-            if (mutex.WaitOne(TimeSpan.Zero, true))
-            {
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-
-                var settings = Settings.Init();
-                var engine = new SwitcherCore(settings);
-                Application.ApplicationExit += (s, a) => { engine.Dispose(); };
-                var app = new SettingsForm(settings, engine);
-                app.Exit += (s, e) => Application.Exit();
-                var context = new ApplicationContext(app);
-                Application.Run(context);
-                mutex.ReleaseMutex();
-            }
-            else
+            if (!mutex.WaitOne(TimeSpan.Zero, true))
             {
                 LowLevelAdapter.SendShowSettingsMessage();
+                return;
             }
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+
+            var settings = Settings.Init();
+            var engine = new SwitcherCore(settings);
+            Application.ApplicationExit += (s, a) => { engine.Dispose(); };
+            var app = new SettingsForm(settings, engine);
+            app.Exit += (s, e) => Application.Exit();
+            var context = new ApplicationContext(app);
+            Application.Run(context);
+            mutex.ReleaseMutex();
         }
     }
 }
