@@ -106,7 +106,7 @@
             this.checkBoxAutorun.Name = "checkBoxAutorun";
             this.checkBoxAutorun.Size = new System.Drawing.Size(250, 29);
             this.checkBoxAutorun.TabIndex = 19;
-            this.checkBoxAutorun.Text = "Start on windows startup";
+            this.checkBoxAutorun.Text = "Start on Windows startup";
             this.checkBoxAutorun.UseVisualStyleBackColor = true;
             this.checkBoxAutorun.CheckedChanged += new System.EventHandler(this.checkBoxAutorun_CheckedChanged);
             // 
@@ -118,7 +118,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(169, 25);
             this.label2.TabIndex = 23;
-            this.label2.Text = "Convert selection:";
+            this.label2.Text = "Convert-selection:";
             // 
             // label1
             // 
@@ -128,7 +128,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(169, 25);
             this.label1.TabIndex = 22;
-            this.label1.Text = "Convert last word:";
+            this.label1.Text = "Convert-last-word:";
             // 
             // textBoxDelay
             // 
